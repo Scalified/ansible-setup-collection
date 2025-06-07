@@ -1,0 +1,26 @@
+---
+- name: Update package cache
+  ansible.builtin.dnf:
+    update_cache: true
+  retries: 3
+  delay: 10
+  become: true
+
+- name: Upgrade packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest # noqa package-latest
+  retries: 2
+  delay: 30
+  become: true
+
+- name: Remove unnecessary packages
+  ansible.builtin.dnf:
+    autoremove: true
+  become: true
+  when: system_update_autoremove
+
+- name: Request reboot after updates
+  ansible.builtin.debug:
+    msg: "Updates completed, checking if reboot is needed"
+  notify: "system : request reboot"

@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: Vladyslav Baidak <vld.x@hotmail.com>
+  description: System configuration role for basic server setup and configuration
+  company: Scalified
+  license: MIT
+  min_ansible_version: "2.15"

@@ -1,0 +1,39 @@
+- name: Detect container environment
+  ansible.builtin.set_fact:
+    system_containerized: "{{ ansible_virtualization_type in ['docker', 'podman', 'lxc', 'systemd-nspawn'] }}"
+
+- name: System Role - Baseline Configuration
+  ansible.builtin.debug:
+    msg:
+      - "==================================="
+      - "  System: Baseline Configuration"
+      - "==================================="
+      - "      Distribution:    {{ ansible_distribution }}"
+      - "      OS Family:       {{ ansible_os_family }}"
+      - "      Version:         {{ ansible_distribution_version }}"
+      - "      Architecture:    {{ ansible_architecture }}"
+      - "      Hostname:        {{ ansible_hostname }}"
+      - "      FQDN:            {{ ansible_fqdn }}"
+      - "      Containerized:   {{ system_containerized }}"
+      - "==================================="
+
+- name: Update system
+  ansible.builtin.include_tasks: update.yml
+
+- name: Configure system hostname
+  ansible.builtin.include_tasks: hostname.yml
+  when: not system_containerized
+
+- name: Configure system time and timezone
+  ansible.builtin.include_tasks: time.yml
+  when: not system_containerized
+
+- name: Configure virtual machine specific settings
+  ansible.builtin.include_tasks: vm.yml
+  when: not system_containerized
+
+- name: Configure MOTD banner
+  ansible.builtin.include_tasks: motd.yml
+
+- name: Configure bash
+  ansible.builtin.include_tasks: bash.yml

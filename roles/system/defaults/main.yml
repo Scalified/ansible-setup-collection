@@ -1,0 +1,25 @@
+---
+# General system settings
+system_reboot_timeout: 300
+
+# System update settings
+system_update_type: "safe"
+system_update_cache_valid_time: 3600
+system_update_autoremove: true
+system_update_autoclean: true
+
+# Hostname configuration
+system_hostname: "{{ ansible_host }}"
+
+# Timezone configuration
+system_timezone: "UTC"
+
+# System kernel parameters
+system_vm_max_map_count: 262144
+
+# MOTD settings
+system_motd_banner_file: "motd"
+system_motd_contacts: []
+
+# Bash configuration
+system_bash_aliases: []

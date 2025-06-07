@@ -1,0 +1,9 @@
+---
+- name: Run update verifications
+  ansible.builtin.include_tasks: update.yml
+
+- name: Run motd verifications
+  ansible.builtin.include_tasks: motd.yml
+
+- name: Run bash verifications
+  ansible.builtin.include_tasks: bash.yml

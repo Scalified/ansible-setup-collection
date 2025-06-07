@@ -1,0 +1,36 @@
+namespace: scalified
+name: setup
+version: 1.0.0
+readme: README.md
+authors:
+  - Vladyslav Baidak <vld.x@hotmail.com>
+
+description: Ansible collection for server setup with system configuration and essential tools
+
+license_file: LICENSE
+
+tags:
+  - infrastructure
+  - baseline
+  - init
+  - server
+  - setup
+  - configuration
+  - system
+  - hostname
+  - time
+  - mail
+
+repository: https://github.com/scalified/ansible-setup-collection
+documentation: https://github.com/scalified/ansible-setup-collection
+homepage: https://github.com/scalified/ansible-setup-collection
+issues: https://github.com/scalified/ansible-setup-collection/issues
+
+build_ignore:
+  - "*.gz"
+  - .gitignore
+  - .github
+  - .ansible-lint.yml
+  - .ansible
+  - molecule
+  - tests

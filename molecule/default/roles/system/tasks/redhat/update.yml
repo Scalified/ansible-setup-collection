@@ -1,0 +1,34 @@
+---
+- name: Verify package manager history
+  block:
+    - name: Check DNF history
+      ansible.builtin.command: "dnf history list"
+      register: package_history
+      changed_when: false
+      failed_when: false
+
+    - name: Verify recent DNF activity
+      ansible.builtin.assert:
+        that:
+          - package_history is defined
+          - package_history.stdout is defined
+          - package_history.rc == 0
+          - package_history.stdout | length > 0
+        fail_msg: >
+          Package manager history check failed or returned no data.
+          RC: {{ package_history.rc | default('undefined') }}, Error: {{ package_history.stderr | default('none') }}"
+        success_msg: "Package manager shows recent activity"
+
+- name: Verify system update status
+  block:
+    - name: Check for available updates
+      ansible.builtin.command: "{{ ansible_pkg_mgr }} check-update"
+      register: package_updates_check
+      changed_when: false
+      failed_when: false
+
+    - name: Verify system update status
+      ansible.builtin.assert:
+        that: package_updates_check.rc in [0, 100]
+        fail_msg: "Error checking for updates: {{ package_updates_check.stderr }}"
+        success_msg: "{{ 'System is up to date' if package_updates_check.rc == 0 else 'Updates available but system update completed successfully' }}"

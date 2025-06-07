@@ -1,0 +1,33 @@
+---
+- name: Install timesyncd package
+  ansible.builtin.package:
+    name: systemd-timesyncd
+    state: present
+  become: true
+
+- name: "Set timezone to {{ system_timezone }}"
+  community.general.timezone:
+    name: "{{ system_timezone }}"
+  become: true
+
+- name: Enable and start timesyncd service
+  ansible.builtin.systemd_service:
+    name: systemd-timesyncd
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true
+
+- name: Wait for time synchronization
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+  until: ntp_sync_status.stdout | lower in ['yes', 'true']
+  retries: 10
+  delay: 5
+
+- name: Display time synchronization status
+  ansible.builtin.debug:
+    msg: |
+      Time synchronization status: {{ ntp_sync_status.stdout | default('unknown') }}
+      {%- if ntp_sync_status.stdout | lower not in ['yes', 'true'] %}
+      Warning: NTP synchronization may still be in progress{% endif %}

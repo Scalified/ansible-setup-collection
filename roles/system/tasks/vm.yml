@@ -1,0 +1,6 @@
+---
+- name: Increase virtual memory
+  ansible.posix.sysctl:
+    name: vm.max_map_count
+    value: "{{ system_vm_max_map_count }}"
+  become: true

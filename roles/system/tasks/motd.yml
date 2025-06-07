@@ -1,0 +1,9 @@
+---
+- name: Update motd banner
+  ansible.builtin.template:
+    src: "{{ system_motd_banner_file }}"
+    dest: /etc/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true

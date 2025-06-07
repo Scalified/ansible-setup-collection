@@ -1,0 +1,4 @@
+---
+- ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
+
+- ansible.builtin.meta: flush_handlers

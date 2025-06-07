@@ -1,0 +1,19 @@
+system_motd_contacts:
+  - name: "John Doe"
+    position: "System Administrator"
+    email: "john.doe@example.com"
+    mobile: "+1-555-123-4567"
+  - name: "Jane Smith"
+    position: "Security Officer"
+    email: "jane.smith@example.com"
+    mobile: "+1-555-999-0000"
+
+system_bash_aliases:
+  - alias: "testls"
+    command: "ls -la"
+    comment: "Test alias for detailed listing"
+  - alias: "testgrep"
+    command: "grep -n"
+    comment: "Test alias for grep with line numbers"
+  - alias: "testalias"
+    command: "echo 'Hello from test alias'"

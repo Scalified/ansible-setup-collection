@@ -1,0 +1,21 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Molecule Tests Information
+      ansible.builtin.debug:
+        msg: "Running verification tests on {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Run system verification tests
+      ansible.builtin.include_role:
+        name: system
+
+    - name: Molecule Tests Summary
+      ansible.builtin.debug:
+        msg:
+          - "========================"
+          - "  VERIFICATION RESULTS  "
+          - "========================"
+          - "  ✓ System:  PASSED     "
+          - "========================"

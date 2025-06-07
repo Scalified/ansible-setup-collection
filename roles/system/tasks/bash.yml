@@ -1,0 +1,46 @@
+---
+- name: Install bash packages
+  ansible.builtin.package:
+    name:
+      - bash-completion
+    state: present
+  become: true
+
+- name: Create bash autocompletion directory
+  ansible.builtin.file:
+    dest: /etc/bash_completion.d
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Ensure bashrc file exists
+  block:
+    - name: Check if .bashrc file exists
+      ansible.builtin.stat:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+      register: bashrc_exists
+
+    - name: Copy .bashrc from skeleton when missing
+      ansible.builtin.copy:
+        src: /etc/skel/.bashrc
+        dest: "{{ ansible_env.HOME }}/.bashrc"
+        mode: '0644'
+        remote_src: true
+      when: not bashrc_exists.stat.exists
+
+- name: Configure bash aliases
+  ansible.builtin.template:
+    src: .bash_aliases
+    dest: "{{ ansible_env.HOME }}/.bash_aliases"
+    mode: "0644"
+
+- name: Add Bash aliases sourcing
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    append_newline: true
+    prepend_newline: true
+    marker: "# BASH ALIASES {mark}"
+    block: |
+      if [ -f ~/.bash_aliases ]; then
+          . ~/.bash_aliases
+      fi

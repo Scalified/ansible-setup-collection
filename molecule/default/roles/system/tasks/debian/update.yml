@@ -1,0 +1,28 @@
+---
+- name: Verify APT cache status
+  block:
+    - name: Check APT cache timestamp
+      ansible.builtin.stat:
+        path: /var/lib/apt/lists
+      register: apt_cache_stat
+
+    - name: Verify APT cache is recent
+      ansible.builtin.assert:
+        that:
+          - apt_cache_stat.stat.exists
+          - (ansible_date_time.epoch | int) - (apt_cache_stat.stat.mtime) < 3900
+        fail_msg: "APT cache appears to be outdated or not updated"
+        success_msg: "APT cache is up to date"
+
+- name: Verify system update status
+  block:
+    - name: Check for available updates
+      ansible.builtin.command: apt list --upgradable
+      register: apt_upgradable
+      changed_when: false
+
+    - name: Verify minimal pending updates
+      ansible.builtin.assert:
+        that: apt_upgradable.stdout_lines | length <= 5
+        fail_msg: "Too many pending updates found: {{ apt_upgradable.stdout_lines | length }}"
+        success_msg: "System appears to be up to date ({{ apt_upgradable.stdout_lines | length - 1 }} pending updates)"

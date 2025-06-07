@@ -1,0 +1,36 @@
+============================================================
+
+░██╗░░░░░░░██╗░█████╗░██████╗░███╗░░██╗██╗███╗░░██╗░██████╗░
+░██║░░██╗░░██║██╔══██╗██╔══██╗████╗░██║██║████╗░██║██╔════╝░
+░╚██╗████╗██╔╝███████║██████╔╝██╔██╗██║██║██╔██╗██║██║░░██╗░
+░░████╔═████║░██╔══██║██╔══██╗██║╚████║██║██║╚████║██║░░╚██╗
+░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░╚███║██║██║░╚███║╚██████╔╝
+░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
+
+============================================================
+
+               You entered a PRIVATE Host!!!
+
+Do not make any changes unless you know what you are doing
+
+{% if system_motd_contacts is defined and system_motd_contacts %}
+If opened accidentally, immediately disconnect and contact:
+
+{% for contact in system_motd_contacts %}
+    {{ contact.name | upper }}
+{%- if contact.position is defined %}
+, {{ contact.position | upper }}
+{%- endif %}
+
+    ----------------------------------------------------    
+{% if contact.email is defined %}
+    email:  {{ contact.email }}
+{% endif %}
+{% if contact.mobile is defined %}
+    mobile:  {{ contact.mobile }}
+{% endif %}
+
+{% endfor %}
+{% endif %}
+============================================================
+

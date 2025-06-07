@@ -1,0 +1,38 @@
+---
+- name: Reboot
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: "{{ system_reboot_timeout }}"
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+  when: not system_containerized
+  listen: reboot
+
+- name: Check reboot required (debian)
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+  when: not system_containerized and system_os_family == 'debian'
+  listen: request reboot
+
+- name: Check reboot required (redhat)
+  ansible.builtin.command: needs-restarting -r
+  register: reboot_required_redhat
+  failed_when: false
+  changed_when: false
+  when: not system_containerized and system_os_family == 'redhat'
+  listen: request reboot
+
+- name: Reboot on request
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: "{{ system_reboot_timeout }}"
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+  when: >
+    not system_containerized and
+    (system_os_family == 'debian' and reboot_required_file.stat.exists | default(false)) or
+    (system_os_family == 'redhat' and reboot_required_redhat.rc == 1)
+  listen: request reboot
