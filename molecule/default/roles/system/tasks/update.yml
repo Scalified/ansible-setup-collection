@@ -7,8 +7,8 @@
       changed_when: false
       failed_when: package_manager_version.rc != 0
 
-    - name: Include OS-specific update verifications
-      ansible.builtin.include_tasks: "{{ ansible_os_family | lower }}/update.yml"
+    - name: Include distribution-specific update tasks
+      ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
 
     - name: Verify autoremove configuration
       ansible.builtin.debug:

@@ -1,0 +1,9 @@
+---
+- name: Install distribution mandatory packages
+  ansible.builtin.package:
+    name:
+      - curl
+      - htop
+      - apache2-utils
+    state: present
+  become: true

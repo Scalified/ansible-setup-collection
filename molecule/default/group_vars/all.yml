@@ -1,3 +1,5 @@
+system_os_family: "{{ ansible_os_family | lower }}"
+
 system_motd_contacts:
   - name: "John Doe"
     position: "System Administrator"
@@ -17,3 +19,6 @@ system_bash_aliases:
     comment: "Test alias for grep with line numbers"
   - alias: "testalias"
     command: "echo 'Hello from test alias'"
+
+packages_list:
+  - net-tools

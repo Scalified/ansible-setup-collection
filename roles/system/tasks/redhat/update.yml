@@ -13,6 +13,7 @@
   retries: 2
   delay: 30
   become: true
+  changed_when: false
 
 - name: Remove unnecessary packages
   ansible.builtin.dnf:

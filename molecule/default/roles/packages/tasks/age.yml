@@ -1,0 +1,50 @@
+---
+- name: Verify age installation
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert age package is installed
+      ansible.builtin.assert:
+        that: "'age' in ansible_facts.packages"
+        fail_msg: "age package is not installed"
+        success_msg: "age package is installed"
+
+- name: Verify age configuration
+  block:
+    - name: Check if AGE config directory exists
+      ansible.builtin.stat:
+        path: "{{ packages_age_config_dir }}"
+      register: age_config_dir_stat
+
+    - name: Assert AGE config directory exists
+      ansible.builtin.assert:
+        that: age_config_dir_stat.stat.exists
+        fail_msg: "AGE config directory {{ packages_age_config_dir }} does not exist"
+        success_msg: "AGE config directory {{ packages_age_config_dir }} exists"
+
+    - name: Assert AGE config directory permissions
+      ansible.builtin.assert:
+        that: age_config_dir_stat.stat.mode == '0700'
+        fail_msg: "AGE config directory {{ packages_age_config_dir }} has incorrect permissions: {{ age_config_dir_stat.stat.mode }}"
+        success_msg: "AGE config directory {{ packages_age_config_dir }} has correct permissions (0700)"
+
+- name: Verify age private key
+  block:
+    - name: Check if AGE private key file exists
+      ansible.builtin.stat:
+        path: "{{ packages_age_config_dir }}/age.key"
+      register: age_key_file_stat
+
+    - name: Assert AGE private key file exists
+      ansible.builtin.assert:
+        that: age_key_file_stat.stat.exists
+        fail_msg: "AGE private key file does not exist in {{ packages_age_config_dir }}"
+        success_msg: "AGE private key file exists in {{ packages_age_config_dir }}"
+
+    - name: Assert AGE private key file permissions
+      ansible.builtin.assert:
+        that: age_key_file_stat.stat.mode == '0600'
+        fail_msg: "AGE private key file has incorrect permissions: {{ age_key_file_stat.stat.mode }}"
+        success_msg: "AGE private key file has correct permissions (0600)"

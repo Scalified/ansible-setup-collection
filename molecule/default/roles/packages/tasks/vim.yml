@@ -1,0 +1,22 @@
+---
+- name: Include distribution-specific vim tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/vim.yml"
+
+- name: Verify vim configuration
+  block:
+    - name: Check if .vimrc file exists
+      ansible.builtin.stat:
+        path: "{{ ansible_env.HOME }}/.vimrc"
+      register: vimrc_file_stat
+
+    - name: Assert .vimrc file exists
+      ansible.builtin.assert:
+        that: vimrc_file_stat.stat.exists
+        fail_msg: ".vimrc file does not exist in {{ ansible_env.HOME }}"
+        success_msg: ".vimrc file exists in {{ ansible_env.HOME }}"
+
+    - name: Assert .vimrc permissions are 0644
+      ansible.builtin.assert:
+        that: vimrc_file_stat.stat.mode == '0644'
+        fail_msg: ".vimrc permissions are not 0644"
+        success_msg: ".vimrc permissions are correct (0644)"

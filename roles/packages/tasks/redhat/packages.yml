@@ -1,0 +1,22 @@
+---
+- name: Remove unnecessary distribution packages
+  ansible.builtin.package:
+    name:
+      - curl-minimal
+    state: absent
+  become: true
+
+- name: Enable EPEL repository
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+  become: true
+
+- name: Install mandatory distribution packages
+  ansible.builtin.package:
+    name:
+      - curl
+      - htop
+      - httpd-tools
+    state: present
+  become: true

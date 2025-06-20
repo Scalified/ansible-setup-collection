@@ -3,4 +3,4 @@
   hosts: all
   gather_facts: true
   roles:
-    - scalified.setup.system
+    - scalified.setup.packages

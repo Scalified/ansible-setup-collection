@@ -1,0 +1,20 @@
+---
+- name: Install mandatory packages
+  ansible.builtin.package:
+    name:
+      - python3-pexpect
+      - ca-certificates
+      - wget
+      - mc
+      - git
+      - jq
+    state: present
+  become: true
+
+- ansible.builtin.include_tasks: "{{ system_os_family }}/packages.yml"
+
+- name: Install listed packages
+  ansible.builtin.package:
+    name: "{{ packages_list }}"
+    state: present
+  become: true

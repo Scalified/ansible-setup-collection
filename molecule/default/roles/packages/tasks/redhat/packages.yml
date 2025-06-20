@@ -1,0 +1,29 @@
+- name: Verify mandatory distribution packages are installed
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert epel-release is installed
+      ansible.builtin.assert:
+        that: "'epel-release' in ansible_facts.packages"
+        fail_msg: "epel-release package is not installed"
+        success_msg: "epel-release package is installed"
+
+    - name: Assert curl is installed
+      ansible.builtin.assert:
+        that: "'curl' in ansible_facts.packages"
+        fail_msg: "curl package is not installed"
+        success_msg: "curl package is installed"
+
+    - name: Assert htop is installed
+      ansible.builtin.assert:
+        that: "'htop' in ansible_facts.packages"
+        fail_msg: "htop package is not installed"
+        success_msg: "htop package is installed"
+
+    - name: Assert httpd-tools is installed
+      ansible.builtin.assert:
+        that: "'httpd-tools' in ansible_facts.packages"
+        fail_msg: "httpd-tools package is not installed"
+        success_msg: "httpd-tools package is installed"
