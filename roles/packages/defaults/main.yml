@@ -1,0 +1,6 @@
+---
+# Packages to install
+packages_list: []
+
+# AGE settings
+packages_age_config_dir: "{{ ansible_env.HOME }}/.config/age"

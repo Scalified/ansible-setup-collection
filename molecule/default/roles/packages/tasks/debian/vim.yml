@@ -1,0 +1,11 @@
+- name: Verify vim installation
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert vim package is installed
+      ansible.builtin.assert:
+        that: "'vim' in ansible_facts.packages"
+        fail_msg: "vim package is not installed"
+        success_msg: "vim package is installed"

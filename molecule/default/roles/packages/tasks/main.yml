@@ -1,0 +1,10 @@
+---
+- name: Run packages verifications
+  ansible.builtin.include_tasks: packages.yml
+
+- name: Run vim verifications
+  ansible.builtin.include_tasks: vim.yml
+
+- name: Run age verifications
+  ansible.builtin.include_tasks: age.yml
+  when: packages_age_private_key_file is defined

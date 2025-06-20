@@ -1,0 +1,18 @@
+---
+- name: Install AGE package
+  ansible.builtin.package:
+    name: age
+    state: present
+  become: true
+
+- name: Create AGE config directory
+  ansible.builtin.file:
+    path: "{{ packages_age_config_dir }}"
+    state: directory
+    mode: "0700"
+
+- name: Copy AGE private key file
+  ansible.builtin.copy:
+    src: "{{ packages_age_private_key_file }}"
+    dest: "{{ packages_age_config_dir }}/age.key"
+    mode: "0600"

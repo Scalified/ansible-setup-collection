@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Vladyslav Baidak <vld.x@hotmail.com>
-  description: System configuration role for basic server setup and configuration
+  description: Installs and configures packages
   company: Scalified
   license: MIT
   min_ansible_version: "2.15"
@@ -21,9 +21,11 @@ galaxy_info:
         - "9"
 
   galaxy_tags:
-    - system
-    - configuration
-    - hostname
-    - motd
-    - bash
-    - time
+    - packages
+    - setup
+    - vim
+    - age
+    - encryption
+
+dependencies:
+  - role: scalified.setup.system

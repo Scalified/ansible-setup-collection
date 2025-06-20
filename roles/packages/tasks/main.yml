@@ -1,0 +1,17 @@
+---
+- name: Packages Role - Packages installation and configuration
+  ansible.builtin.debug:
+    msg:
+      - "============================================"
+      - "  Packages: Installation and Configuration"
+      - "============================================"
+
+- name: Install packages
+  ansible.builtin.include_tasks: packages.yml
+
+- name: Install and configure VIM
+  ansible.builtin.include_tasks: vim.yml
+
+- name: Install and configure AGE
+  ansible.builtin.include_tasks: age.yml
+  when: packages_age_private_key_file is defined
