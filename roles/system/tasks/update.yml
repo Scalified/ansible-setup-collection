@@ -1,4 +1,6 @@
 ---
-- ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
 
-- ansible.builtin.meta: flush_handlers
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

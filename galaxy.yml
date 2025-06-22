@@ -1,6 +1,6 @@
 namespace: scalified
 name: setup
-version: 1.1.0
+version: 2.0.0
 readme: README.md
 authors:
   - Vladyslav Baidak <vld.x@hotmail.com>
@@ -10,17 +10,24 @@ description: Ansible collection for server setup with system configuration and e
 license_file: LICENSE
 
 tags:
-  - infrastructure
-  - baseline
-  - init
-  - server
-  - setup
-  - configuration
   - system
+  - configuration
   - hostname
+  - motd
+  - bash
   - time
   - packages
-  - mail
+  - setup
+  - vim
+  - age
+  - encryption
+  - firewall
+  - security
+  - networking
+  - ufw
+  - firewalld
+  - ports
+  - rules
 
 repository: https://github.com/scalified/ansible-setup-collection
 documentation: https://github.com/scalified/ansible-setup-collection

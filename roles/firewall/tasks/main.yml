@@ -1,0 +1,4 @@
+---
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/main.yml"
+  when: not system_containerized
