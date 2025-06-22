@@ -1,0 +1,6 @@
+---
+firewall_in_deny_all: true
+firewall_in_allow_ssh: true
+firewall_out_allow_all: true
+
+firewall_rules: []

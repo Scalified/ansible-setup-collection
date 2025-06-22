@@ -1,9 +1,13 @@
-# 1.1.0
+# 2.0.0
 
 * [#2 Packages Role](https://github.com/Scalified/ansible-setup-collection/issues/2)
+* [#4 Firewall Role](https://github.com/Scalified/ansible-setup-collection/issues/4)
 
 ## Features
 
+- **Firewall Role**: Added new role for host firewall management
+    - Supports Debian (UFW) and RedHat (firewalld) firewalls
+    - Allows custom rule definitions and SSH/ports configuration
 - **Packages Role**: Introduced a new role for package management and configuration
     - Installs essential system packages and supports user-defined package lists
     - Handles OS-specific package installation logic

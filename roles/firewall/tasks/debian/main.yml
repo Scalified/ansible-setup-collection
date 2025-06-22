@@ -1,0 +1,58 @@
+---
+- name: Install UFW package
+  ansible.builtin.package:
+    name:
+      - ufw
+    state: present
+  become: true
+
+- name: UFW deny all incoming traffic
+  community.general.ufw:
+    comment: UFW deny all incoming traffic
+    default: deny
+    direction: incoming
+  become: true
+  when: firewall_in_deny_all
+
+- name: UFW allow SSH service
+  community.general.ufw:
+    comment: SSH
+    rule: allow
+    port: 22
+    protocol: tcp
+    direction: in
+  become: true
+  when: firewall_in_allow_ssh
+
+- name: UFW allow all outgoing traffic
+  community.general.ufw:
+    comment: UFW allow all outgoing traffic
+    default: allow
+    direction: outgoing
+  become: true
+  when: firewall_out_allow_all
+
+- name: UFW apply rule
+  community.general.ufw:
+    comment: "{{ rule.comment | default(omit) }}"
+    rule: "{{ rule.rule | default('allow') }}"
+    name: "{{ rule.name | default(omit) }}"
+    direction: "{{ rule.direction | default('in') }}"
+    interface: "{{ rule.interface | default(omit) }}"
+    interface_in: "{{ rule.interface_in | default(omit) }}"
+    interface_out: "{{ rule.interface_out | default(omit) }}"
+    protocol: "{{ rule.protocol | default(omit) }}"
+    route: "{{ rule.route | default(omit) }}"
+    from: "{{ rule.from | default('any') }}"
+    from_port: "{{ rule.from_port | default(omit) }}"
+    to: "{{ rule.to | default(omit) }}"
+    to_port: "{{ rule.to_port | default(omit) }}"
+  become: true
+  loop: "{{ firewall_rules }}"
+  loop_control:
+    loop_var: rule
+
+- name: Enable UFW service
+  community.general.ufw:
+    state: enabled
+  become: true

@@ -1,0 +1,70 @@
+---
+- name: Install firewalld package
+  ansible.builtin.package:
+    name: firewalld
+    state: present
+  become: true
+
+- name: Ensure firewalld is running
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+  become: true
+
+- name: Block all incoming traffic
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="{{ family }}" direction="in" drop'
+    permanent: true
+    state: enabled
+  become: true
+  loop:
+    - ipv4
+    - ipv6
+  loop_control:
+    loop_var: family
+  when: firewall_in_deny_all
+
+- name: Allow SSH service
+  ansible.posix.firewalld:
+    service: ssh
+    state: enabled
+    permanent: true
+    immediate: true
+  become: true
+  when: firewall_in_allow_ssh
+
+- name: Allow all outgoing traffic
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="{{ family }}" direction="out" accept'
+    permanent: true
+    state: enabled
+  become: true
+  loop:
+    - ipv4
+    - ipv6
+  loop_control:
+    loop_var: family
+  when: firewall_out_allow_all
+
+- name: Apply firewall rule
+  ansible.posix.firewalld:
+    forward: "{{ rule.forward | default(omit) }}"
+    immediate: "{{ rule.immediate | default(omit) }}"
+    interface: "{{ rule.interface | default(omit) }}"
+    masquerade: "{{ rule.masquerade | default(omit) }}"
+    offline: "{{ rule.offline | default(omit) }}"
+    permanent: "{{ rule.permanent | default(true) }}"
+    port: "{{ rule.port | default(omit) }}"
+    port_forward: "{{ rule.port_forward | default(omit) }}"
+    protocol: "{{ rule.protocol | default(omit) }}"
+    rich_rule: "{{ rule.rich_rule | default(omit) }}"
+    service: "{{ rule.service | default(omit) }}"
+    source: "{{ rule.source | default(omit) }}"
+    state: "{{ rule.state | default('enabled') }}"
+    target: "{{ rule.target | default(omit) }}"
+    zone: "{{ rule.zone | default(omit) }}"
+  become: true
+  loop: "{{ firewall_rules }}"
+  loop_control:
+    loop_var: rule

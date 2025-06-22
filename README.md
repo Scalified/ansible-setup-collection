@@ -45,6 +45,7 @@ ansible-galaxy collection install -r requirements.yml
 
 * [Roles: System](roles/system/README.md)
 * [Roles: Packages](roles/packages/README.md)
+* [Roles: Firewall](roles/firewall/README.md)
 
 ## License
 
