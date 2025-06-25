@@ -1,0 +1,6 @@
+---
+- name: Include files tasks
+  include_tasks: "files.yml"
+
+- name: Include mount tasks
+  include_tasks: "mount.yml"

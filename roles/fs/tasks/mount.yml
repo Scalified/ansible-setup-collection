@@ -1,0 +1,17 @@
+---
+- name: Copy CIFS auto remount script
+  ansible.builtin.template:
+    src: auto-remount
+    dest: /usr/local/bin/auto-remount
+    mode: "0755"
+  become: true
+
+- name: Create auto remount scripts directory
+  ansible.builtin.file:
+    path: "{{ fs_mount_auto_remount_scripts_dir }}"
+    state: directory
+  become: true
+
+- name: Include mount CIFS tasks
+  include_tasks: "mount/cifs.yml"
+  when: fs_mount_cifs | length > 0

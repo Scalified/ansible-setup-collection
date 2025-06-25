@@ -1,0 +1,7 @@
+---
+# Files settings
+fs_files: []
+
+# Mount settings
+fs_mount_auto_remount_scripts_dir: /usr/local/lib/auto-remount
+fs_mount_cifs: []
