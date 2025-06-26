@@ -10,8 +10,9 @@
   ansible.builtin.file:
     path: "{{ fs_mount_auto_remount_scripts_dir }}"
     state: directory
+    mode: "0755"
   become: true
 
 - name: Include mount CIFS tasks
-  include_tasks: "mount/cifs.yml"
+  ansible.builtin.include_tasks: "mount/cifs.yml"
   when: fs_mount_cifs | length > 0

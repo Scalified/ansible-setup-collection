@@ -1,0 +1,29 @@
+---
+galaxy_info:
+  author: Vladyslav Baidak <vld.x@hotmail.com>
+  description: Manages files, directories and automates the mounting process
+  company: Scalified
+  license: MIT
+  min_ansible_version: "2.15"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+
+  galaxy_tags:
+    - filesystem
+    - files
+    - directories
+    - storage
+    - mount
+    - cifs

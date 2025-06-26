@@ -23,7 +23,7 @@
   ansible.builtin.cron:
     name: "AUTO REMOUNT {{ mount.name | upper }}"
     job: "/usr/local/bin/auto-remount {{ mount.path }}"
-    cron_file: "auto-remount-{{ mount.name | lower}}"
+    cron_file: "auto-remount-{{ mount.name | lower }}"
     minute: "{{ mount.cron.split()[0] | default('17') }}"
     hour: "{{ mount.cron.split()[1] | default('*') }}"
     day: "{{ mount.cron.split()[2] | default('*') }}"

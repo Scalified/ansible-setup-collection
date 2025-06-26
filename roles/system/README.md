@@ -1,13 +1,6 @@
 # Roles: System
 
-Configures essential system settings and performs server setup including:
-
-* **System Updates** - Package management with configurable update policies
-* **Hostname Configuration** - Sets system hostname (skipped in containers)
-* **Time Synchronization** - Configures system timezone (skipped in containers) 
-* **Virtual Memory Tuning** - Optimizes memory mapping limits (skipped in containers)
-* **MOTD Banner** - Sets up warning banner for production systems
-* **Bash** - Enhances shell experience with completion, aliases, and customization
+Configures essential system settings and performs server setup
 
 ## Usage
 
