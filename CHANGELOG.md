@@ -1,10 +1,14 @@
 # 2.0.0
 
-* [#2 Packages Role](https://github.com/Scalified/ansible-setup-collection/issues/2)
-* [#4 Firewall Role](https://github.com/Scalified/ansible-setup-collection/issues/4)
+* [#2 Roles: Packages](https://github.com/Scalified/ansible-setup-collection/issues/2)
+* [#4 Roles: Firewall](https://github.com/Scalified/ansible-setup-collection/issues/4)
+* [#6 Roles: FS](https://github.com/Scalified/ansible-setup-collection/issues/6)
 
 ## Features
 
+- **FS Role**: Added new role for filesystem management
+    - Manages filesystems and mount points
+    - Supports shares mount
 - **Firewall Role**: Added new role for host firewall management
     - Supports Debian (UFW) and RedHat (firewalld) firewalls
     - Allows custom rule definitions and SSH/ports configuration

@@ -3,7 +3,7 @@
 set -e
 
 SOURCE="$1"
-AUTO_REMOUNT_SCRIPTS_DIR="{{ auto_remount_scripts_dir }}"
+AUTO_REMOUNT_SCRIPTS_DIR="{{ fs_mount_auto_remount_scripts_dir }}"
 {% raw %}
 log() {
     level=$(if [[ ${#1} -lt 5 ]]; then echo "$1 "; else echo "$1"; fi)

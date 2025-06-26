@@ -1,0 +1,6 @@
+---
+- name: Run files verifications
+  ansible.builtin.include_tasks: files.yml
+
+- name: Run mount verifications
+  ansible.builtin.include_tasks: mount.yml

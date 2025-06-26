@@ -22,3 +22,18 @@ system_bash_aliases:
 
 packages_list:
   - net-tools
+
+fs_files:
+  - path: "/home/test"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  - path: "/home/test/file.txt"
+    state: "touch"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    modification_time: preserve
+    access_time: preserve
+fs_mount_auto_remount_scripts_dir: /usr/local/lib/auto-remount

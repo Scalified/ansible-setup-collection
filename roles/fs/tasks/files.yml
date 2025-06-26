@@ -11,6 +11,8 @@
     attributes: "{{ file.attributes | default(omit) }}"
     follow: "{{ file.follow | default(omit) }}"
     force: "{{ file.force | default(omit) }}"
+    access_time: "{{ file.access_time | default(omit) }}"
+    modification_time: "{{ file.modification_time | default(omit) }}"
   become: true
   loop: "{{ fs_files }}"
   loop_control:
