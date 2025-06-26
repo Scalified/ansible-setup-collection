@@ -1,0 +1,19 @@
+---
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ file.path }}"
+    src: "{{ file.src | default(omit) }}"
+    state: "{{ file.state }}"
+    owner: "{{ file.owner | default(ansible_user) }}"
+    group: "{{ file.group | default('root') }}"
+    mode: "{{ file.mode | default('0755') }}"
+    recurse: "{{ file.recurse | default(omit) }}"
+    attributes: "{{ file.attributes | default(omit) }}"
+    follow: "{{ file.follow | default(omit) }}"
+    force: "{{ file.force | default(omit) }}"
+    access_time: "{{ file.access_time | default(omit) }}"
+    modification_time: "{{ file.modification_time | default(omit) }}"
+  become: true
+  loop: "{{ fs_files }}"
+  loop_control:
+    loop_var: file

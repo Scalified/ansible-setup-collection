@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -e
+
+SOURCE="$1"
+AUTO_REMOUNT_SCRIPTS_DIR="{{ fs_mount_auto_remount_scripts_dir }}"
+{% raw %}
+log() {
+    level=$(if [[ ${#1} -lt 5 ]]; then echo "$1 "; else echo "$1"; fi)
+    echo "[$(date '+%F %T')][$level]: $2"
+}
+
+if [[ -z "$SOURCE" ]]; then
+    log "ERROR" "Please provide the mount source"
+    exit 1
+fi
+
+check_source() {
+    ls -la $SOURCE >/dev/null
+}
+
+unmount_source() {
+    log "INFO" "Unmounting '$SOURCE' directory"
+    umount -l $SOURCE
+    log "INFO" "'$SOURCE' directory unmounted"
+}
+
+mount_source() {
+    log "INFO" "Mounting '$SOURCE' directory"
+    mount $SOURCE
+    log "INFO" "'$SOURCE' directory mounted"
+}
+
+if ! check_source; then
+    log "ERROR" "Found problem with '$SOURCE' mount. Remounting..."
+    unmount_source
+    mount_source
+
+    for script in $AUTO_REMOUNT_SCRIPTS_DIR/*; do
+        if [[ -f $script && -x $script ]]; then
+            log "INFO" "Running '$script' in '$AUTO_REMOUNT_SCRIPTS_DIR' directory"
+            source $script $SOURCE
+        fi
+    done
+fi
+{% endraw %}

@@ -14,6 +14,7 @@
         - system
         - packages
         - firewall
+        - fs
       loop_control:
         loop_var: role
 
@@ -26,4 +27,5 @@
           - "  ✓ System:    PASSED   "
           - "  ✓ Packages:  PASSED   "
           - "  ✓ Firewall:  PASSED   "
+          - "  ✓ FS:        PASSED   "
           - "========================"

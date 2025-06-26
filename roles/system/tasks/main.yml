@@ -17,23 +17,23 @@
       - "      Containerized:   {{ system_containerized }}"
       - "==================================="
 
-- name: Update system
+- name: Include system update tasks
   ansible.builtin.include_tasks: update.yml
 
-- name: Configure system hostname
+- name: Include system hostname configuration tasks
   ansible.builtin.include_tasks: hostname.yml
   when: not system_containerized
 
-- name: Configure system time and timezone
+- name: Include system time and timezone configuration tasks
   ansible.builtin.include_tasks: time.yml
   when: not system_containerized
 
-- name: Configure virtual machine specific settings
+- name: Include virtual machine specific settings tasks
   ansible.builtin.include_tasks: vm.yml
   when: not system_containerized
 
-- name: Configure MOTD banner
+- name: Include MOTD banner configuration tasks
   ansible.builtin.include_tasks: motd.yml
 
-- name: Configure bash
+- name: Include Bash configuration
   ansible.builtin.include_tasks: bash.yml

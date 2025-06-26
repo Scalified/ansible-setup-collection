@@ -1,0 +1,37 @@
+---
+- name: Install CIFS package
+  ansible.builtin.package:
+    name:
+      - cifs-utils
+    state: present
+  become: true
+
+- name: Mount CIFS source
+  ansible.posix.mount:
+    src: "{{ mount.url }}"
+    path: "{{ mount.path }}"
+    opts: "iocharset=utf8,rw,seal,mfsymlinks,uid=0,suid,username={{ mount.username }},password={{ mount.password }},file_mode=0660,dir_mode=0770"
+    fstype: cifs
+    state: mounted
+  no_log: true
+  become: true
+  loop: "{{ fs_mount_cifs }}"
+  loop_control:
+    loop_var: mount
+
+- name: Schedule device remount
+  ansible.builtin.cron:
+    name: "AUTO REMOUNT {{ mount.name | upper }}"
+    job: "/usr/local/bin/auto-remount {{ mount.path }}"
+    cron_file: "auto-remount-{{ mount.name | lower }}"
+    minute: "{{ mount.cron.split()[0] | default('17') }}"
+    hour: "{{ mount.cron.split()[1] | default('*') }}"
+    day: "{{ mount.cron.split()[2] | default('*') }}"
+    month: "{{ mount.cron.split()[3] | default('*') }}"
+    weekday: "{{ mount.cron.split()[4] | default('*') }}"
+    user: "{{ ansible_user }}"
+    state: present
+  become: true
+  loop: "{{ fs_mount_cifs }}"
+  loop_control:
+    loop_var: mount

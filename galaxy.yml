@@ -10,24 +10,15 @@ description: Ansible collection for server setup with system configuration and e
 license_file: LICENSE
 
 tags:
-  - system
-  - configuration
-  - hostname
-  - motd
-  - bash
-  - time
-  - packages
-  - setup
-  - vim
-  - age
-  - encryption
-  - firewall
+  - infrastructure
+  - linux
   - security
-  - networking
-  - ufw
-  - firewalld
-  - ports
-  - rules
+  - storage
+  - tools
+  - system
+  - packages
+  - firewall
+  - filesystem
 
 repository: https://github.com/scalified/ansible-setup-collection
 documentation: https://github.com/scalified/ansible-setup-collection
