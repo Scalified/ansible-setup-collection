@@ -1,0 +1,6 @@
+---
+- name: Include mail tasks
+  ansible.builtin.include_tasks: "mail.yml"
+
+- name: Include stats tasks
+  ansible.builtin.include_tasks: "stats.yml"

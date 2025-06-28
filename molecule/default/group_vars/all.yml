@@ -1,3 +1,4 @@
+# System
 system_os_family: "{{ ansible_os_family | lower }}"
 
 system_motd_contacts:
@@ -20,9 +21,11 @@ system_bash_aliases:
   - alias: "testalias"
     command: "echo 'Hello from test alias'"
 
+# Packages
 packages_list:
   - net-tools
 
+# FS
 fs_files:
   - path: "/home/test"
     state: "directory"
@@ -37,3 +40,10 @@ fs_files:
     modification_time: preserve
     access_time: preserve
 fs_mount_auto_remount_scripts_dir: /usr/local/lib/auto-remount
+
+# Mail
+mail_smtp_server: "smtp.example.com"
+mail_smtp_port: 587
+mail_smtp_username: "testuser"
+mail_smtp_password: "testpassword"
+mail_recipient: "test@example.com"

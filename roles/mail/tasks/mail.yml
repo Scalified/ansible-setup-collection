@@ -1,0 +1,15 @@
+---
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/mail.yml"
+
+- name: Configure system mails forwarding
+  ansible.builtin.lineinfile:
+    regexp: "^root:.*root@localhost"
+    line: "root: root@localhost,{{ mail_recipient }}"
+    dest: /etc/aliases
+  register: aliases_result
+  become: true
+  notify: update mail aliases
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

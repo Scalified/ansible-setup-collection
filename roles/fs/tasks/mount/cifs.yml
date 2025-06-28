@@ -29,7 +29,7 @@
     day: "{{ mount.cron.split()[2] | default('*') }}"
     month: "{{ mount.cron.split()[3] | default('*') }}"
     weekday: "{{ mount.cron.split()[4] | default('*') }}"
-    user: "{{ ansible_user }}"
+    user: root
     state: present
   become: true
   loop: "{{ fs_mount_cifs }}"

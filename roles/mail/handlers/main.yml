@@ -1,0 +1,25 @@
+---
+- name: Update exim4 configuration
+  ansible.builtin.command: update-exim4.conf
+  changed_when: true
+  listen: update exim4 configuration
+
+- name: Postmap sasl_passwd
+  ansible.builtin.command: postmap /etc/postfix/sasl_passwd
+  changed_when: true
+  listen: postmap sasl_password
+
+- name: Restart postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+    enabled: true
+  become: true
+  when: ansible_service_mgr == "systemd"
+  listen: restart postfix
+
+- name: Update mail aliases
+  ansible.builtin.command: newaliases
+  changed_when: true
+  become: true
+  listen: update mail aliases

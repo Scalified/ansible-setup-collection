@@ -1,0 +1,31 @@
+---
+galaxy_info:
+  author: Vladyslav Baidak <vld.x@hotmail.com>
+  description: Configures mail and stats
+  company: Scalified
+  license: MIT
+  min_ansible_version: "2.15"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+
+  galaxy_tags:
+    - mail
+    - postfix
+    - exim4
+    - stats
+    - monitoring
+
+dependencies:
+  - role: scalified.setup.system
