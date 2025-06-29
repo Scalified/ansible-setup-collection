@@ -2,8 +2,8 @@
 - name: Install mail packages
   ansible.builtin.package:
     name:
-      - mailutils
       - exim4
+      - mailutils
     state: present
   become: true
 

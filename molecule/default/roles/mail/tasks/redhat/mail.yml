@@ -1,0 +1,57 @@
+---
+- name: Verify mail packages installed
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: "Assert package is installed: {{ package }}"
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - postfix
+        - cyrus-sasl
+        - cyrus-sasl-plain
+        - s-nail
+      loop_control:
+        loop_var: package
+
+- name: Verify sasl_passwd file
+  block:
+    - name: Stat sasl_passwd file
+      ansible.builtin.stat:
+        path: /etc/postfix/sasl_passwd
+      register: sasl_passwd_file_stat
+
+    - name: Verify sasl_passwd file exists
+      ansible.builtin.assert:
+        that: sasl_passwd_file_stat.stat.exists
+        fail_msg: "sasl_passwd file does not exist in /etc/postfix"
+        success_msg: "sasl_passwd file exists in /etc/postfix"
+
+    - name: Verify sasl_passwd file permissions
+      ansible.builtin.assert:
+        that: sasl_passwd_file_stat.stat.mode == '0600'
+        fail_msg: "sasl_passwd file has incorrect permissions: {{ sasl_passwd_file_stat.stat.mode }}"
+        success_msg: "sasl_passwd file has correct permissions (0600)"
+
+- name: Verify main.cf file
+  block:
+    - name: Stat main.cf file
+      ansible.builtin.stat:
+        path: /etc/postfix/main.cf
+      register: main_cf_file_stat
+
+    - name: Verify main.cf file exists
+      ansible.builtin.assert:
+        that: main_cf_file_stat.stat.exists
+        fail_msg: "main.cf file does not exist in /etc/postfix"
+        success_msg: "main.cf file exists in /etc/postfix"
+
+    - name: Verify main.cf file permissions
+      ansible.builtin.assert:
+        that: main_cf_file_stat.stat.mode == '0644'
+        fail_msg: "main.cf file has incorrect permissions: {{ main_cf_file_stat.stat.mode }}"
+        success_msg: "main.cf file has correct permissions (0644)"

@@ -7,14 +7,14 @@
       ansible.builtin.debug:
         msg: "Running verification tests on {{ ansible_distribution }} {{ ansible_distribution_version }}"
 
-    - name: "Run verification tests for {{ role }}"
+    - name: "Include verification tests for {{ role }}"
       ansible.builtin.include_role:
         name: "{{ role }}"
       loop:
         - system
-        # - packages
-        # - firewall
-        # - fs
+        - packages
+        - firewall
+        - fs
         - mail
       loop_control:
         loop_var: role
@@ -29,4 +29,5 @@
           - "  ✓ Packages:  PASSED   "
           - "  ✓ Firewall:  PASSED   "
           - "  ✓ FS:        PASSED   "
+          - "  ✓ Mail:      PASSED   "
           - "========================"

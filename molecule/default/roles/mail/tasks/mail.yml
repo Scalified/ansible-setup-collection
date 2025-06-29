@@ -1,0 +1,16 @@
+---
+- name: Include distribution-specific mail verifications
+  ansible.builtin.include_tasks: "{{ system_os_family }}/mail.yml"
+
+- name: Verify root mail forwarding in /etc/aliases
+  block:
+    - name: Read /etc/aliases
+      ansible.builtin.slurp:
+        src: /etc/aliases
+      register: aliases_file
+
+    - name: Assert root mail forwarding is configured
+      ansible.builtin.assert:
+        that: "'root: root@localhost,' ~ mail_recipient in (aliases_file.content | b64decode)"
+        fail_msg: "/etc/aliases does not contain correct forwarding"
+        success_msg: "/etc/aliases contains correct forwarding"

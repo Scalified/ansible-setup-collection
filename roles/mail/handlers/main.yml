@@ -15,7 +15,7 @@
     state: restarted
     enabled: true
   become: true
-  when: ansible_service_mgr == "systemd"
+  when: system_systemd_managed
   listen: restart postfix
 
 - name: Update mail aliases
