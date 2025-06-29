@@ -9,7 +9,7 @@ system_update_autoremove: true
 system_update_autoclean: true
 
 # Hostname configuration
-system_hostname: "{{ ansible_host }}"
+system_hostname: "{{ ansible_hostname }}"
 
 # Timezone configuration
 system_timezone: "UTC"

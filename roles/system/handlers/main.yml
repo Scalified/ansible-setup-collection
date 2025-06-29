@@ -6,6 +6,7 @@
     reboot_timeout: "{{ system_reboot_timeout }}"
     pre_reboot_delay: 0
     post_reboot_delay: 30
+  become: true
   when: not system_containerized
   listen: reboot
 
@@ -31,6 +32,7 @@
     reboot_timeout: "{{ system_reboot_timeout }}"
     pre_reboot_delay: 0
     post_reboot_delay: 30
+  become: true
   when: >
     not system_containerized and
     (system_os_family == 'debian' and reboot_required_file.stat.exists | default(false)) or

@@ -1,0 +1,30 @@
+---
+- name: Install mail packages
+  ansible.builtin.package:
+    name:
+      - exim4
+      - mailutils
+    state: present
+  become: true
+
+- name: Create exim4 configuration directory
+  ansible.builtin.file:
+    path: /etc/exim4
+    state: directory
+    mode: "0750"
+  become: true
+
+- name: Configure exim4 authentication
+  ansible.builtin.template:
+    src: "{{ system_os_family }}/passwd.client"
+    dest: /etc/exim4/passwd.client
+    mode: "0640"
+  become: true
+
+- name: Add exim4 configuration
+  ansible.builtin.template:
+    src: "{{ system_os_family }}/update-exim4.conf.conf"
+    dest: /etc/exim4/update-exim4.conf.conf
+    mode: "0640"
+  become: true
+  notify: update exim4 configuration

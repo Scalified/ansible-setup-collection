@@ -1,0 +1,22 @@
+---
+- name: Copy host stats script
+  ansible.builtin.copy:
+    src: send-host-stats
+    dest: /usr/local/bin/send-host-stats
+    mode: "0755"
+  become: true
+
+- name: Schedule host stats
+  ansible.builtin.cron:
+    name: HOST STATS
+    job: /usr/local/bin/send-host-stats
+    cron_file: host-stats
+    minute: "{{ mail_host_stats_cron.split()[0] | default('15') }}"
+    hour: "{{ mail_host_stats_cron.split()[1] | default('*') }}"
+    day: "{{ mail_host_stats_cron.split()[2] | default('*') }}"
+    month: "{{ mail_host_stats_cron.split()[3] | default('*') }}"
+    weekday: "{{ mail_host_stats_cron.split()[4] | default('*') }}"
+    state: present
+    user: root
+  become: true
+  when: mail_host_stats_cron is defined

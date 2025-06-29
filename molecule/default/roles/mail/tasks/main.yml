@@ -1,0 +1,6 @@
+---
+- name: Include mail verifications
+  ansible.builtin.include_tasks: "mail.yml"
+
+- name: Include host stats verifications
+  ansible.builtin.include_tasks: "stats.yml"

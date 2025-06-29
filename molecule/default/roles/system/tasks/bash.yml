@@ -32,7 +32,7 @@
 
 - name: Verify bash aliases file
   block:
-    - name: Check if .bash_aliases file exists
+    - name: Stat .bash_aliases file
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.bash_aliases"
       register: bash_aliases_file_stat

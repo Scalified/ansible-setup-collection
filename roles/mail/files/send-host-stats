@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+
+set -e
+
+awk_functions='
+  function min(x, y) {
+    return x < y ? x : y
+  }
+
+  function bg_color(value) {
+    r = int(min(510 * value, 255))
+    g = int(min(510 * (1 - value), 255))
+    return sprintf("#%02X%02X00", r, g)
+  }
+'
+
+cpu_details() {
+  cat /proc/stat | awk '/cpu/{
+    printf("%s %f\n"), $1, ($2+$4)/($2+$4+$5)
+  }'
+}
+
+memory_load() {
+  free | awk -v type="$1" '$0 ~ type {
+    printf("%f\n"), $3 == 0 ? 0 : $3/$2
+  }'
+}
+
+memory_details() {
+  free -h
+}
+
+disk_details() {
+  df -h | grep -v docker
+}
+
+body="
+<!DOCTYPE html>
+<html lang=\"en\">
+  <head>
+    <meta charset=\"utf-8\">
+    <title>[INFO]: SERVER STATS</title>
+  </head>
+  <style type=\"text/css\">
+    body {
+      font-family: Consolas, monospace;;
+      font-size: 12px;
+    }
+    table {
+      border-width: 1px;
+      border-color: #3A3A3A;
+      border-style: dotted;
+      border-collapse: collapse;
+    }
+    table th {
+      border-width: 1px;
+      padding: 8px;
+      border-style: dotted;
+      border-color: #3A3A3A;
+      background-color: #E8E8E8;
+    }
+    table td {
+      border-width: 1px;
+      padding: 8px;
+      border-style: dotted;
+      border-color: #3A3A3A;
+      background-color: #ffffff;
+    }
+  </style>
+  <body>
+    <table>
+      <tr>
+        <th colspan=\"2\">INFO</th>
+      </tr>
+      <tr>
+        <td><b>Host</b></td>
+        <td>$(hostname)</td>
+      </tr>
+      <tr>
+        <td><b>Date</b></td>
+        <td>$(date)</td>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <th colspan=\"2\">CPU</th>
+      </tr>
+      <tr>
+        <td><b>Unit</b></td>
+        <td><b>Load<b></td>
+      </tr>
+$(cpu_details | awk '/cpu[0-9]+/' | awk "$awk_functions"'{
+  color = bg_color($2)
+  printf(""(NR>1?"\n":"")"\
+      <tr>\n\
+        <td>%s</td>\n\
+        <td bgcolor=\"%s\" style=\"background:%s;\">%.2f%%</td>\n\
+      </tr>\
+  ", $1, color, color, $2*100)
+}')
+      <tr>
+        <td><b>Average</b></td>
+$(cpu_details | awk '/cpu /' | head -1 | awk "$awk_functions"'{
+  color = bg_color($2)
+  printf("\
+        <td bgcolor=\"%s\" style=\"background:%s;\"><b>%.2f%%</b></td>\
+  ", color, color, $2*100)
+}')
+      </tr>
+    </table>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <th colspan=\"7\">MEMORY</th>
+      </tr>
+      <tr>
+        <td colspan=\"5\"><b>Mem Load</b></td>
+$(memory_load Mem | awk "$awk_functions"'{
+  color = bg_color($1)
+  printf("\
+        <td bgcolor=\"%s\" style=\"background:%s;\" colspan=\"2\"><b>%2.f%%</b></td>\
+  ", color, color, $1*100)
+}')
+      </tr>
+      <tr>
+        <td colspan=\"5\"><b>Swap Load</b></td>
+$(memory_load Swap | awk "$awk_functions"'{
+  color = bg_color($1)
+  printf("\
+        <td bgcolor=\"%s\" style=\"background:%s;\" colspan=\"2\"><b>%2.f%%</b></td>\
+  ", color, color, $1*100)
+}')
+      </tr>
+$(memory_details | awk '{
+  print "\
+      <tr"(NR==1?" style=\"font-weight:bold\">\n\
+        <td>type</td>":">")"\n\
+        <td>"$1"</td>\n\
+        <td>"$2"</td>\n\
+        <td>"$3"</td>\n\
+        <td>"$4"</td>\n\
+        <td>"$5"</td>\n\
+        <td>"$6"</td>\n"(NR==1?"":"        <td>"$7"</td>\n")"\
+      </tr>"
+}')
+    </table>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <th colspan=\"6\">DISK</th>
+      </tr>
+$(disk_details | awk "$awk_functions"'{
+  print "\
+      <tr"(NR==1?" style=\"font-weight:bold\"":"")">\n\
+        <td>"$1"</td>\n\
+        <td>"$2"</td>\n\
+        <td>"$3"</td>\n\
+        <td>"$4"</td>\n\
+        <td"(NR>1?" bgcolor=\""bg_color($5/100)"\" style=\"background:"bg_color($5/100)";\"":"")">"$5"</td>\n\
+        <td>"$6"</td>\n\
+      </tr>\
+"}')
+    </table>
+  </body>
+</html>
+"
+
+mail -a "Content-Type: text/html;" -s "[INFO]: SERVER STATS" root <<< "$body"

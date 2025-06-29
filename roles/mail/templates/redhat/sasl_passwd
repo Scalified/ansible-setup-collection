@@ -1,0 +1,1 @@
+[{{ mail_smtp_server }}]:{{ mail_smtp_port }} {{ mail_smtp_username }}:{{ mail_smtp_password }}

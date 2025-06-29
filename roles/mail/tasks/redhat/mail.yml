@@ -1,0 +1,28 @@
+---
+- name: Install mail packages
+  ansible.builtin.package:
+    name:
+      - postfix
+      - cyrus-sasl
+      - cyrus-sasl-plain
+      - s-nail
+    state: present
+  become: true
+
+- name: Deploy postfix sasl_passwd configuration
+  ansible.builtin.template:
+    src: "redhat/sasl_passwd"
+    dest: /etc/postfix/sasl_passwd
+    mode: "0600"
+  become: true
+  notify:
+    - postmap sasl_password
+    - restart postfix
+
+- name: Deploy postfix main.cf configuration
+  ansible.builtin.template:
+    src: "redhat/main.cf"
+    dest: /etc/postfix/main.cf
+    mode: "0644"
+  become: true
+  notify: restart postfix

@@ -7,3 +7,4 @@
     - scalified.setup.packages
     - scalified.setup.firewall
     - scalified.setup.fs
+    - scalified.setup.mail

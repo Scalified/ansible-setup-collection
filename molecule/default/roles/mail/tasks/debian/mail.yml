@@ -1,0 +1,55 @@
+---
+- name: Verify mail packages installed
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: "Assert is installed: {{ package }}"
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - exim4
+        - mailutils
+      loop_control:
+        loop_var: package
+
+- name: Verify passwd.client file
+  block:
+    - name: Stat passwd.client file
+      ansible.builtin.stat:
+        path: /etc/exim4/passwd.client
+      register: passwd_client_file_stat
+
+    - name: Verify passwd.client file exists
+      ansible.builtin.assert:
+        that: passwd_client_file_stat.stat.exists
+        fail_msg: "passwd.client file does not exist in /etc/exim4"
+        success_msg: "passwd.client file exists in /etc/exim4"
+
+    - name: Verify passwd.client file permissions
+      ansible.builtin.assert:
+        that: passwd_client_file_stat.stat.mode == '0640'
+        fail_msg: "passwd.client file has incorrect permissions: {{ passwd_client_file_stat.stat.mode }}"
+        success_msg: "passwd.client file has correct permissions (0640)"
+
+- name: Verify update-exim4.conf.conf file
+  block:
+    - name: Stat update-exim4.conf.conf file
+      ansible.builtin.stat:
+        path: /etc/exim4/update-exim4.conf.conf
+      register: update_exim4_conf_conf_stat
+
+    - name: Verify update-exim4.conf.conf file exists
+      ansible.builtin.assert:
+        that: update_exim4_conf_conf_stat.stat.exists
+        fail_msg: "update-exim4.conf.conf file does not exist in /etc/exim4"
+        success_msg: "update-exim4.conf.conf file exists in /etc/exim4"
+
+    - name: Verify update-exim4.conf.conf file permissions
+      ansible.builtin.assert:
+        that: update_exim4_conf_conf_stat.stat.mode == '0640'
+        fail_msg: "update-exim4.conf.conf file has incorrect permissions: {{ update_exim4_conf_conf_stat.stat.mode }}"
+        success_msg: "update-exim4.conf.conf file has correct permissions (0640)"

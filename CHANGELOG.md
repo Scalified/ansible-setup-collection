@@ -3,16 +3,21 @@
 * [#2 Roles: Packages](https://github.com/Scalified/ansible-setup-collection/issues/2)
 * [#4 Roles: Firewall](https://github.com/Scalified/ansible-setup-collection/issues/4)
 * [#6 Roles: FS](https://github.com/Scalified/ansible-setup-collection/issues/6)
+* [#8 Roles: Mail](https://github.com/Scalified/ansible-setup-collection/issues/8)
 
 ## Features
 
-- **FS Role**: Added new role for filesystem management
+- **Roles: Mail**: Added new role for mail configuration
+    - Sets up outgoing mail delivery
+    - Redirects system mail to a specified address
+    - Schedules periodic host statistics email reports
+- **Roles: FS**: Added new role for filesystem management
     - Manages filesystems and mount points
     - Supports shares mount
-- **Firewall Role**: Added new role for host firewall management
+- **Roles: Firewall**: Added new role for host firewall management
     - Supports Debian (UFW) and RedHat (firewalld) firewalls
     - Allows custom rule definitions and SSH/ports configuration
-- **Packages Role**: Introduced a new role for package management and configuration
+- **Roles: Packages**: Introduced a new role for package management and configuration
     - Installs essential system packages and supports user-defined package lists
     - Handles OS-specific package installation logic
     - Installs and configures VIM with a custom .vimrc
