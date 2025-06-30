@@ -20,6 +20,7 @@ tags:
   - firewall
   - filesystem
   - mail
+  - baseline
 
 repository: https://github.com/scalified/ansible-setup-collection
 documentation: https://github.com/scalified/ansible-setup-collection
