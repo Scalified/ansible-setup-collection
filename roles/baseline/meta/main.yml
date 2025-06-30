@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Vladyslav Baidak <vld.x@hotmail.com>
-  description: Manages files, directories and automates the mounting process
+  description: Baseline role that coordinates the execution of multiple essential roles for system setup and configuration
   company: Scalified
   license: MIT
   min_ansible_version: "2.15"
@@ -21,12 +21,13 @@ galaxy_info:
         - "9"
 
   galaxy_tags:
-    - filesystem
-    - files
-    - directories
-    - storage
-    - mount
-    - cifs
+    - baseline
 
 dependencies:
   - role: scalified.setup.system
+  - role: scalified.setup.packages
+  - role: scalified.setup.firewall
+    when: baseline_firewall_enabled
+  - role: scalified.setup.fs
+  - role: scalified.setup.mail
+    when: baseline_mail_enabled
