@@ -49,30 +49,7 @@ ansible-galaxy collection install -r requirements.yml
 * [Roles: FS](roles/fs/README.md)
 * [Roles: Mail](roles/mail/README.md)
 * [Roles: Baseline](roles/baseline/README.md)
-
-## License
-
-```
-MIT License
-
-Copyright (c) 2025 Scalified
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
-## Support
-
-* [Scalified](http://www.scalified.com)
-* [Scalified Official Facebook Page](https://www.facebook.com/scalified)
-* <a href="mailto:info@scalified.com?subject=[Ansible Setup Collection]: Proposals And Suggestions">Scalified Support</a>
+* [Roles: SSL](roles/ssl/README.md)
 
 ---
 

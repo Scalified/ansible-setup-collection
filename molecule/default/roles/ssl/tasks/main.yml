@@ -1,0 +1,16 @@
+---
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ system_os_family }}/main.yml"
+
+- name: Include SSL setup verifications
+  ansible.builtin.include_tasks: setup.yml
+
+- name: Include SSL CA verifications
+  ansible.builtin.include_tasks: ca.yml
+
+- name: Include SSL server verifications
+  ansible.builtin.include_tasks: server.yml
+
+- name: Include SSL bundle verifications
+  ansible.builtin.include_tasks: bundle.yml
+  when: ssl_bundle_generate | default(false)

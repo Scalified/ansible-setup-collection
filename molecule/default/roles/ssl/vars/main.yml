@@ -1,0 +1,7 @@
+---
+ssl_keys_ca_path: "{{ ssl_keys_ca_dir }}/{{ ssl_keys_ca_name }}"
+ssl_keys_server_path: "{{ ssl_keys_ca_dir }}/{{ ssl_keys_server_name }}"
+
+ssl_certs_ca_path: "{{ ssl_certs_ca_dir }}/{{ ssl_certs_ca_name }}"
+ssl_certs_server_path: "{{ ssl_certs_server_dir }}/{{ ssl_certs_server_name }}"
+ssl_bundle_path: "{{ ssl_certs_server_dir }}/{{ ssl_bundle_name }}"

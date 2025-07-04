@@ -21,6 +21,7 @@ tags:
   - filesystem
   - mail
   - baseline
+  - ssl
 
 repository: https://github.com/scalified/ansible-setup-collection
 documentation: https://github.com/scalified/ansible-setup-collection
@@ -35,3 +36,6 @@ build_ignore:
   - .ansible
   - molecule
   - tests
+
+dependencies:
+  community.crypto: "*"

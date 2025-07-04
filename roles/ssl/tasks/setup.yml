@@ -1,0 +1,36 @@
+---
+- name: Install SSL packages
+  ansible.builtin.package:
+    name:
+      - ca-certificates
+      - python3-cryptography
+    state: present
+  become: true
+
+- name: Create SSL keys directories
+  ansible.builtin.file:
+    path: "{{ dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+  loop:
+    - "{{ ssl_keys_ca_dir }}"
+    - "{{ ssl_keys_server_dir }}"
+  become: true
+  loop_control:
+    loop_var: dir
+
+- name: Create SSL certificates directories
+  ansible.builtin.file:
+    path: "{{ dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - "{{ ssl_certs_ca_dir }}"
+    - "{{ ssl_certs_server_dir }}"
+  become: true
+  loop_control:
+    loop_var: dir

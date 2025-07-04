@@ -5,7 +5,7 @@
       ansible.builtin.package_facts:
         manager: auto
 
-    - name: "Assert package is installed: {{ package }}"
+    - name: "Assert package installed"
       ansible.builtin.assert:
         that: "'{{ package }}' in ansible_facts.packages"
         fail_msg: "{{ package }} package is not installed"

@@ -4,9 +4,19 @@
 * [#4 Roles: Firewall](https://github.com/Scalified/ansible-setup-collection/issues/4)
 * [#6 Roles: FS](https://github.com/Scalified/ansible-setup-collection/issues/6)
 * [#8 Roles: Mail](https://github.com/Scalified/ansible-setup-collection/issues/8)
+* [#10 Roles: Baseline](https://github.com/Scalified/ansible-setup-collection/issues/10)
+* [#12 Roles: SSL](https://github.com/Scalified/ansible-setup-collection/issues/12)
 
 ## Features
 
+- **Roles: SSL**: Manages SSL certificates, including creation, deployment, and trust configuration
+    - Supports both generation and deployment of SSL certificates and keys
+    - Handles CA and server certificate management
+    - Updates system trust stores for supported platforms
+- **Roles: Baseline**: Provides initial system configuration and essential settings
+    - Sets up recommended system defaults and security hardening
+    - Configures basic environment and system parameters
+    - Prepares the system for further automation and role application
 - **Roles: Mail**: Added new role for mail configuration
     - Sets up outgoing mail delivery
     - Redirects system mail to a specified address

@@ -1,0 +1,77 @@
+---
+- name: Verify SSL bundle file
+  block:
+    - name: Check SSL bundle file
+      ansible.builtin.stat:
+        path: "{{ ssl_bundle_path }}"
+      register: ssl_bundle_stat
+
+    - name: Verify SSL bundle exists
+      ansible.builtin.assert:
+        that: ssl_bundle_stat.stat.exists
+        fail_msg: "SSL bundle does not exist at {{ ssl_bundle_path }}"
+        success_msg: "SSL bundle exists at {{ ssl_bundle_path }}"
+
+    - name: Verify SSL bundle is a file
+      ansible.builtin.assert:
+        that: ssl_bundle_stat.stat.isreg
+        fail_msg: "{{ ssl_bundle_path }} is not a regular file"
+        success_msg: "{{ ssl_bundle_path }} is a regular file"
+
+    - name: Verify SSL bundle permissions
+      ansible.builtin.assert:
+        that: ssl_bundle_stat.stat.mode == '0600'
+        fail_msg: "SSL bundle has incorrect permissions: {{ ssl_bundle_stat.stat.mode }}"
+        success_msg: "SSL bundle has correct permissions (0600)"
+
+    - name: Verify SSL bundle owner
+      ansible.builtin.assert:
+        that: ssl_bundle_stat.stat.pw_name == 'root'
+        fail_msg: "SSL bundle owner is not root: {{ ssl_bundle_stat.stat.pw_name }}"
+        success_msg: "SSL bundle owner is root"
+
+    - name: Verify SSL bundle group
+      ansible.builtin.assert:
+        that: ssl_bundle_stat.stat.gr_name == 'root'
+        fail_msg: "SSL bundle group is not root: {{ ssl_bundle_stat.stat.gr_name }}"
+        success_msg: "SSL bundle group is root"
+
+- name: Verify SSL bundle contains certificates
+  block:
+    - name: Count certificates in bundle
+      ansible.builtin.command: grep -c "BEGIN CERTIFICATE" "{{ ssl_bundle_path }}"
+      register: ssl_bundle_cert_count
+      changed_when: false
+
+    - name: Assert bundle contains exactly two certificates
+      ansible.builtin.assert:
+        that: ssl_bundle_cert_count.stdout|int == 2
+        fail_msg: "SSL bundle does not contain exactly two certificates"
+        success_msg: "SSL bundle contains exactly two certificates"
+
+    - name: Slurp bundle file
+      ansible.builtin.slurp:
+        src: "{{ ssl_bundle_path }}"
+      register: bundle_slurp
+
+    - name: Slurp server certificate
+      ansible.builtin.slurp:
+        src: "{{ ssl_certs_server_path }}"
+      register: server_cert_slurp
+
+    - name: Assert bundle contains server certificate
+      ansible.builtin.assert:
+        that: (server_cert_slurp.content | b64decode) in (bundle_slurp.content | b64decode)
+        fail_msg: "SSL bundle does not contain the server certificate"
+        success_msg: "SSL bundle contains the server certificate"
+
+    - name: Slurp CA certificate
+      ansible.builtin.slurp:
+        src: "{{ ssl_certs_ca_path }}"
+      register: ca_cert_slurp
+
+    - name: Assert bundle contains CA certificate
+      ansible.builtin.assert:
+        that: (ca_cert_slurp.content | b64decode) in (bundle_slurp.content | b64decode)
+        fail_msg: "SSL bundle does not contain the CA certificate"
+        success_msg: "SSL bundle contains the CA certificate"
