@@ -13,4 +13,3 @@
 
 - name: Include SSL bundle verifications
   ansible.builtin.include_tasks: bundle.yml
-  when: ssl_bundle_generate | default(false)
