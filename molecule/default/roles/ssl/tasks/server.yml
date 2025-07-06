@@ -1,0 +1,172 @@
+---
+- name: Verify SSL server private key
+  block:
+    - name: Check SSL server private key file
+      ansible.builtin.stat:
+        path: "{{ ssl_keys_server_path }}"
+      register: ssl_server_key_stat
+
+    - name: Verify SSL server private key exists
+      ansible.builtin.assert:
+        that: ssl_server_key_stat.stat.exists
+        fail_msg: "SSL server private key does not exist at {{ ssl_keys_server_path }}"
+        success_msg: "SSL server private key exists at {{ ssl_keys_server_path }}"
+
+    - name: Verify SSL server private key is a file
+      ansible.builtin.assert:
+        that: ssl_server_key_stat.stat.isreg
+        fail_msg: "{{ ssl_keys_server_path }} is not a regular file"
+        success_msg: "{{ ssl_keys_server_path }} is a regular file"
+
+    - name: Verify SSL server private key permissions
+      ansible.builtin.assert:
+        that: ssl_server_key_stat.stat.mode == '0600'
+        fail_msg: "SSL server private key has incorrect permissions: {{ ssl_server_key_stat.stat.mode }}"
+        success_msg: "SSL server private key has correct permissions (0600)"
+
+    - name: Verify SSL server private key owner
+      ansible.builtin.assert:
+        that: ssl_server_key_stat.stat.pw_name == 'root'
+        fail_msg: "SSL server private key owner is not root: {{ ssl_server_key_stat.stat.pw_name }}"
+        success_msg: "SSL server private key owner is root"
+
+    - name: Verify SSL server private key group
+      ansible.builtin.assert:
+        that: ssl_server_key_stat.stat.gr_name == 'root'
+        fail_msg: "SSL server private key group is not root: {{ ssl_server_key_stat.stat.gr_name }}"
+        success_msg: "SSL server private key group is root"
+
+- name: Verify SSL server certificate
+  block:
+    - name: Check SSL server certificate file
+      ansible.builtin.stat:
+        path: "{{ ssl_certs_server_path }}"
+      register: ssl_server_cert_stat
+
+    - name: Verify SSL server certificate exists
+      ansible.builtin.assert:
+        that: ssl_server_cert_stat.stat.exists
+        fail_msg: "SSL server certificate does not exist at {{ ssl_certs_server_path }}"
+        success_msg: "SSL server certificate exists at {{ ssl_certs_server_path }}"
+
+    - name: Verify SSL server certificate is a file
+      ansible.builtin.assert:
+        that: ssl_server_cert_stat.stat.isreg
+        fail_msg: "{{ ssl_certs_server_path }} is not a regular file"
+        success_msg: "{{ ssl_certs_server_path }} is a regular file"
+
+    - name: Verify SSL server certificate permissions
+      ansible.builtin.assert:
+        that: ssl_server_cert_stat.stat.mode == '0644'
+        fail_msg: "SSL server certificate has incorrect permissions: {{ ssl_server_cert_stat.stat.mode }}"
+        success_msg: "SSL server certificate has correct permissions (0644)"
+
+    - name: Verify SSL server certificate owner
+      ansible.builtin.assert:
+        that: ssl_server_cert_stat.stat.pw_name == 'root'
+        fail_msg: "SSL server certificate owner is not root: {{ ssl_server_cert_stat.stat.pw_name }}"
+        success_msg: "SSL server certificate owner is root"
+
+    - name: Verify SSL server certificate group
+      ansible.builtin.assert:
+        that: ssl_server_cert_stat.stat.gr_name == 'root'
+        fail_msg: "SSL server certificate group is not root: {{ ssl_server_cert_stat.stat.gr_name }}"
+        success_msg: "SSL server certificate group is root"
+
+- name: Verify SSL server certificate properties
+  block:
+    - name: Get SSL server certificate information
+      ansible.builtin.command: openssl x509 -in "{{ ssl_certs_server_path }}" -text -noout
+      register: ssl_server_cert_info
+      changed_when: false
+
+    - name: Verify SSL server certificate subject contains wildcard domain
+      ansible.builtin.assert:
+        that: "ssl_server_cert_info.stdout is search('CN *= *\\*\\.{{ ssl_domain | regex_escape }}')"
+        fail_msg: "SSL server certificate subject does not contain expected wildcard domain"
+        success_msg: "SSL server certificate subject contains expected wildcard domain"
+
+    - name: Verify SSL server certificate is not a CA certificate
+      ansible.builtin.assert:
+        that: "'CA:FALSE' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate should not have CA:TRUE constraint"
+        success_msg: "SSL server certificate has CA:FALSE constraint"
+
+    - name: Verify SSL server certificate has basic constraints
+      ansible.builtin.assert:
+        that: "'Basic Constraints' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate does not have Basic Constraints extension"
+        success_msg: "SSL server certificate has Basic Constraints extension"
+
+    - name: Verify SSL server certificate has extended key usage
+      ansible.builtin.assert:
+        that: "'TLS Web Server Authentication' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate does not have TLS Web Server Authentication usage"
+        success_msg: "SSL server certificate has TLS Web Server Authentication usage"
+
+    - name: Verify SSL server certificate has subject alternative names
+      ansible.builtin.assert:
+        that: "'Subject Alternative Name' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate does not have Subject Alternative Name extension"
+        success_msg: "SSL server certificate has Subject Alternative Name extension"
+
+    - name: Verify SSL server certificate contains domain in SAN
+      ansible.builtin.assert:
+        that: "'DNS:{{ ssl_domain }}' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate SAN does not contain expected domain"
+        success_msg: "SSL server certificate SAN contains expected domain"
+
+    - name: Verify SSL server certificate contains wildcard domain in SAN
+      ansible.builtin.assert:
+        that: "'DNS:*.{{ ssl_domain }}' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate SAN does not contain expected wildcard domain"
+        success_msg: "SSL server certificate SAN contains expected wildcard domain"
+
+    - name: Verify SSL server certificate contains localhost IP in SAN
+      ansible.builtin.assert:
+        that: "'IP Address:127.0.0.1' in ssl_server_cert_info.stdout"
+        fail_msg: "SSL server certificate SAN does not contain localhost IP"
+        success_msg: "SSL server certificate SAN contains localhost IP"
+
+    - name: Check SSL server certificate validity
+      ansible.builtin.command: openssl x509 -in "{{ ssl_certs_server_path }}" -checkend 86400
+      register: ssl_server_cert_validity
+      changed_when: false
+      failed_when: ssl_server_cert_validity.rc != 0
+
+    - name: Verify SSL server certificate is valid
+      ansible.builtin.assert:
+        that: ssl_server_cert_validity.rc == 0
+        fail_msg: "SSL server certificate is not valid or will expire within 24 hours"
+        success_msg: "SSL server certificate is valid"
+
+- name: Verify SSL certificate chain validation
+  block:
+    - name: Verify SSL server certificate is signed by CA
+      ansible.builtin.command: openssl verify -CAfile "{{ ssl_certs_ca_path }}" "{{ ssl_certs_server_path }}"
+      register: ssl_cert_chain_verification
+      changed_when: false
+
+    - name: Verify SSL certificate chain is valid
+      ansible.builtin.assert:
+        that: "'OK' in ssl_cert_chain_verification.stdout"
+        fail_msg: "SSL server certificate chain verification failed"
+        success_msg: "SSL server certificate chain is valid"
+
+- name: Verify SSL server certificate and private key match
+  block:
+    - name: Get SSL server certificate public key
+      ansible.builtin.command: openssl x509 -in "{{ ssl_certs_server_path }}" -pubkey -noout
+      register: ssl_server_cert_pubkey
+      changed_when: false
+
+    - name: Get SSL server private key public key
+      ansible.builtin.command: openssl rsa -in "{{ ssl_keys_server_path }}" -pubout
+      register: ssl_server_key_pubkey
+      changed_when: false
+
+    - name: Verify SSL server certificate and private key match
+      ansible.builtin.assert:
+        that: ssl_server_cert_pubkey.stdout == ssl_server_key_pubkey.stdout
+        fail_msg: "SSL server certificate and private key do not match"
+        success_msg: "SSL server certificate and private key match"

@@ -1,0 +1,22 @@
+---
+- name: Copy SSL CA key
+  ansible.builtin.copy:
+    src: "{{ ssl_keys_ca_src }}"
+    dest: "{{ ssl_keys_ca_path }}"
+    owner: root
+    group: root
+    mode: "644"
+  become: true
+
+- name: Copy SSL CA certificate
+  ansible.builtin.copy:
+    src: "{{ ssl_certs_ca_src }}"
+    dest: "{{ ssl_certs_ca_path }}"
+    owner: root
+    group: root
+    mode: "600"
+  become: true
+  notify: update ca certificates
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

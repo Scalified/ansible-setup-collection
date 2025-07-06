@@ -1,0 +1,22 @@
+---
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ system_os_family }}/main.yml"
+
+- name: Include SSL setup tasks
+  ansible.builtin.include_tasks: "setup.yml"
+
+- name: Include SSL CA copy tasks
+  ansible.builtin.include_tasks: "ca_copy.yml"
+  when: ssl_certs_ca_src is defined and ssl_keys_ca_src is defined
+
+- name: Include SSL CA tasks
+  ansible.builtin.include_tasks: "ca.yml"
+  when: ssl_certs_ca_src is not defined or ssl_keys_ca_src is not defined
+
+- name: Include SSL server tasks
+  ansible.builtin.include_tasks: "server.yml"
+  when: ssl_certs_server_generate or ssl_bundle_generate
+
+- name: Include SSL bundle tasks
+  ansible.builtin.include_tasks: "bundle.yml"
+  when: ssl_bundle_generate

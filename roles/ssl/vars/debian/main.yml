@@ -1,0 +1,6 @@
+---
+ssl_keys_ca_dir: /etc/ssl/private
+ssl_keys_server_dir: /etc/ssl/private
+
+ssl_certs_ca_dir: /usr/local/share/ca-certificates
+ssl_certs_server_dir: /etc/ssl/certs

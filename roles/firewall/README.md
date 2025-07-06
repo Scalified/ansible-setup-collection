@@ -15,7 +15,7 @@ Installs and configures firewall
 ## Variables
 
 | Variable                 | Description                                | Default Value |
-| ------------------------ |------------------------------------------- |---------------|
+|--------------------------|--------------------------------------------|---------------|
 | `firewall_in_deny_all`   | Deny all incoming connections by default   | `true`        |
 | `firewall_in_allow_ssh`  | Allow incoming SSH connections             | `true`        |
 | `firewall_out_allow_all` | Allow all outgoing connections             | `true`        |

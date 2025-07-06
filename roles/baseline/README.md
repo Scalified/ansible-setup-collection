@@ -15,7 +15,7 @@ Baseline role that coordinates the execution of multiple essential roles for sys
 ## Variables
 
 | Variable                    | Description                         | Default Value |
-| --------------------------- | ----------------------------------- | ------------- |
+|-----------------------------|-------------------------------------|---------------|
 | `baseline_firewall_enabled` | Enables firewall configuration role | `true`        |
 | `baseline_mail_enabled`     | Enables mail configuration role     | `true`        |
 

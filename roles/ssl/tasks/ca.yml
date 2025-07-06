@@ -1,0 +1,45 @@
+---
+- name: Generate SSL CA private key
+  community.crypto.openssl_privatekey:
+    path: "{{ ssl_keys_ca_path }}"
+    mode: "0600"
+  become: true
+  no_log: true
+  register: ssl_keys_ca
+
+- name: Configure SSL CA CSR
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ ssl_keys_ca_path }}"
+    common_name: "{{ ssl_csr_ca_common_name }}"
+    country_name: "{{ ssl_csr_ca_country_name }}"
+    state_or_province_name: "{{ ssl_csr_ca_state_or_province_name }}"
+    locality_name: "{{ ssl_csr_ca_locality_name }}"
+    organization_name: "{{ ssl_csr_ca_organization_name }}"
+    organizational_unit_name: "{{ ssl_csr_ca_organizational_unit_name }}"
+    email_address: "{{ ssl_csr_ca_email_address }}"
+    basic_constraints:
+      - CA:TRUE
+    basic_constraints_critical: true
+    use_common_name_for_san: false
+    create_subject_key_identifier: true
+  become: true
+  changed_when: ssl_keys_ca.changed
+  no_log: true
+  register: ca_csr
+
+- name: Generate SSL CA certificate
+  community.crypto.x509_certificate:
+    path: "{{ ssl_certs_ca_path }}"
+    privatekey_path: "{{ ssl_keys_ca_path }}"
+    csr_content: "{{ ca_csr.csr }}"
+    provider: selfsigned
+    selfsigned_not_after: "{{ ssl_certs_not_after }}"
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  no_log: true
+  notify: update ca certificates
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

@@ -47,3 +47,13 @@ mail_smtp_port: 587
 mail_smtp_username: "testuser"
 mail_smtp_password: "testpassword"
 mail_recipient: "test@example.com"
+
+# SSL
+ssl_domain: "test.example.com"
+ssl_keys_ca_name: "ca.key"
+ssl_keys_server_name: "server.key"
+ssl_certs_server_generate: true
+ssl_certs_ca_name: "ca.crt"
+ssl_certs_server_name: "server.crt"
+ssl_bundle_generate: true
+ssl_bundle_name: "bundle.crt"

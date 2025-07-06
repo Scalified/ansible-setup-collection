@@ -1,0 +1,14 @@
+---
+- name: Update CA certificates
+  ansible.builtin.command: update-ca-certificates --fresh
+  become: true
+  when: system_os_family == 'debian'
+  changed_when: true
+  listen: update ca certificates
+
+- name: Update CA trust
+  ansible.builtin.command: update-ca-trust
+  become: true
+  when: system_os_family == 'redhat'
+  changed_when: true
+  listen: update ca certificates

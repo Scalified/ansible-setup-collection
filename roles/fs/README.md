@@ -15,7 +15,7 @@ Manages files, directories and automates the mounting process
 ## Variables
 
 | Variable                            | Description                            | Default Value                 |
-| ------------------------------------| -------------------------------------- | ----------------------------- |
+|-------------------------------------|----------------------------------------|-------------------------------|
 | `fs_files`                          | List of files or directories to manage | `[]`                          |
 | `fs_mount_auto_remount_scripts_dir` | Directory for auto-remount scripts     | `/usr/local/lib/auto-remount` |
 | `fs_mount_cifs`                     | List of CIFS mount definitions         | `[]`                          |

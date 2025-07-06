@@ -15,7 +15,7 @@ Configures mail and stats
 ## Variables
 
 | Variable               | Description                                          | Default Value            |
-| ---------------------- | ---------------------------------------------------- | ------------------------ |
+|------------------------|------------------------------------------------------|--------------------------|
 | `mail_hostname`        | Hostname for mail configuration                      | `{{ ansible_hostname }}` |
 | `mail_smtp_server`     | SMTP server hostname or IP address                   |                          |
 | `mail_smtp_port`       | SMTP server port                                     |                          |

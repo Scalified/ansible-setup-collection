@@ -1,7 +1,7 @@
 ---
 - name: Update motd banner
   ansible.builtin.template:
-    src: "{{ system_motd_banner_file }}"
+    src: "{{ system_motd_src }}"
     dest: /etc/
     owner: root
     group: root

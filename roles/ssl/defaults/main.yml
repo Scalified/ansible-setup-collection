@@ -1,0 +1,53 @@
+---
+ssl_domain: "{{ domain }}"
+
+ssl_keys_ca_name: ca.key
+
+ssl_keys_server_name: "{{ ssl_domain }}.key"
+ssl_keys_server_mode: "0600"
+ssl_keys_server_owner: root
+ssl_keys_server_group: root
+
+ssl_certs_ca_name: ca.crt
+
+ssl_certs_server_generate: true
+ssl_certs_server_name: "{{ ssl_domain }}.crt"
+ssl_certs_server_mode: "0644"
+ssl_certs_server_owner: root
+ssl_certs_server_group: root
+
+ssl_bundle_generate: false
+ssl_bundle_name: "{{ ssl_domain }}-bundle.pem"
+ssl_bundle_mode: "0600"
+ssl_bundle_owner: root
+ssl_bundle_group: root
+
+ssl_certs_not_after: "+52000w"
+
+ssl_csr_country_name: UA
+ssl_csr_state_or_province_name: Kyiv
+ssl_csr_locality_name: Kyiv
+ssl_csr_organization_name: ""
+ssl_csr_organizational_unit_name: ""
+ssl_csr_email_address: "team@{{ ssl_domain }}"
+
+ssl_csr_ca_common_name: "{{ ssl_domain }}"
+ssl_csr_ca_country_name: "{{ ssl_csr_country_name }}"
+ssl_csr_ca_state_or_province_name: "{{ ssl_csr_state_or_province_name }}"
+ssl_csr_ca_locality_name: "{{ ssl_csr_locality_name }}"
+ssl_csr_ca_organization_name: "{{ ssl_csr_organization_name }}"
+ssl_csr_ca_organizational_unit_name: "{{ ssl_csr_organizational_unit_name }}"
+ssl_csr_ca_email_address: "{{ ssl_csr_email_address }}"
+
+ssl_csr_server_common_name: "*.{{ ssl_domain }}"
+ssl_csr_server_country_name: "{{ ssl_csr_country_name }}"
+ssl_csr_server_state_or_province_name: "{{ ssl_csr_state_or_province_name }}"
+ssl_csr_server_locality_name: "{{ ssl_csr_locality_name }}"
+ssl_csr_server_organization_name: "{{ ssl_csr_organization_name }}"
+ssl_csr_server_organizational_unit_name: "{{ ssl_csr_organizational_unit_name }}"
+ssl_csr_server_email_address: "{{ ssl_csr_email_address }}"
+
+ssl_csr_server_subject_alt_name:
+  - "DNS:*.{{ ssl_csr_server_common_name | regex_replace('^\\*\\.', '') }}"
+  - "DNS:{{ ssl_csr_server_common_name | regex_replace('^\\*\\.', '') }}"
+  - IP:127.0.0.1
