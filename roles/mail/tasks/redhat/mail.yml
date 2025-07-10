@@ -7,6 +7,8 @@
       - cyrus-sasl-plain
       - s-nail
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Deploy postfix sasl_passwd configuration

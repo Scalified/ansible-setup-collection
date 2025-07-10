@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+prune() {
+    echo "[INFO]: Pruning Docker System"
+    docker system prune --all --volumes --force
+    echo "[INFO]: Docker System Prunned"
+}
+
+prune

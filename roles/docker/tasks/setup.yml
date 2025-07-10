@@ -1,0 +1,33 @@
+---
+- name: Include distribution-specific setup
+  ansible.builtin.include_tasks: "{{ system_os_family }}/setup.yml"
+
+- name: Install Docker packages
+  ansible.builtin.package:
+    name:
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+      - python3-docker
+      - python3-jsondiff
+      - python3-yaml
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
+- name: Add Docker user to the Docker group
+  ansible.builtin.user:
+    name: "{{ docker_user }}"
+    groups: docker
+    append: true
+  become: true
+
+- name: Enable Docker service
+  ansible.builtin.systemd_service:
+    name: docker
+    enabled: true
+    daemon-reload: true
+    state: started
+  become: true
+  when: system_systemd_managed

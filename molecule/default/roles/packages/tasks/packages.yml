@@ -5,41 +5,22 @@
       ansible.builtin.package_facts:
         manager: auto
 
-    - name: Assert python3-pexpect is installed
+    - name: Assert packages installed
       ansible.builtin.assert:
-        that: "'python3-pexpect' in ansible_facts.packages"
-        fail_msg: "python3-pexpect package is not installed"
-        success_msg: "python3-pexpect package is installed"
-
-    - name: Assert ca-certificates is installed
-      ansible.builtin.assert:
-        that: "'ca-certificates' in ansible_facts.packages"
-        fail_msg: "ca-certificates package is not installed"
-        success_msg: "ca-certificates package is installed"
-
-    - name: Assert wget is installed
-      ansible.builtin.assert:
-        that: "'wget' in ansible_facts.packages"
-        fail_msg: "wget package is not installed"
-        success_msg: "wget package is installed"
-
-    - name: Assert mc is installed
-      ansible.builtin.assert:
-        that: "'mc' in ansible_facts.packages"
-        fail_msg: "mc package is not installed"
-        success_msg: "mc package is installed"
-
-    - name: Assert git is installed
-      ansible.builtin.assert:
-        that: "'git' in ansible_facts.packages"
-        fail_msg: "git package is not installed"
-        success_msg: "git package is installed"
-
-    - name: Assert jq is installed
-      ansible.builtin.assert:
-        that: "'jq' in ansible_facts.packages"
-        fail_msg: "jq package is not installed"
-        success_msg: "jq package is installed"
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - python3-pexpect
+        - ca-certificates
+        - curl
+        - htop
+        - wget
+        - mc
+        - git
+        - jq
+      loop_control:
+        loop_var: package
 
     - name: Include distribution-specific package tasks
       ansible.builtin.include_tasks: "{{ system_os_family }}/packages.yml"

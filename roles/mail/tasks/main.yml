@@ -1,4 +1,11 @@
 ---
+- name: Mail Role - mail and stats configuration
+  ansible.builtin.debug:
+    msg:
+      - "========================================"
+      - "  Mail: mail and stats configuration"
+      - "========================================"
+
 - name: Include mail tasks
   ansible.builtin.include_tasks: "mail.yml"
 

@@ -1,0 +1,4 @@
+---
+docker_user: "{{ ansible_user_id }}"
+docker_system_prune_cron: "17 1 * * *"
+docker_swarm_enabled: false

@@ -17,6 +17,7 @@
         - fs
         - mail
         - ssl
+        - docker
       loop_control:
         loop_var: role
 
@@ -32,4 +33,5 @@
           - "  ✓ FS:        PASSED   "
           - "  ✓ Mail:      PASSED   "
           - "  ✓ SSL:       PASSED   "
+          - "  ✓ Docker:    PASSED   "
           - "========================"

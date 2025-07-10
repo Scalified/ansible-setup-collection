@@ -1,4 +1,11 @@
 ---
+- name: FS Role - files and directories management
+  ansible.builtin.debug:
+    msg:
+      - "========================================="
+      - "  FS: files and directories management"
+      - "========================================="
+
 - name: Include files tasks
   ansible.builtin.include_tasks: "files.yml"
 

@@ -1,0 +1,6 @@
+---
+- name: Include setup verifications
+  ansible.builtin.include_tasks: setup.yml
+
+- name: Include prune verifications
+  ansible.builtin.include_tasks: prune.yml

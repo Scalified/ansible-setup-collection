@@ -1,9 +1,9 @@
 ---
-- name: Packages Role - Packages installation and configuration
+- name: Packages Role - installation and configuration
   ansible.builtin.debug:
     msg:
       - "============================================"
-      - "  Packages: Installation and Configuration"
+      - "  Packages: installation and configuration"
       - "============================================"
 
 - name: Include packages tasks

@@ -3,6 +3,8 @@
   ansible.builtin.package:
     name: systemd-timesyncd
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: "Set timezone to {{ system_timezone }}"
@@ -22,8 +24,8 @@
   ansible.builtin.systemd:
     name: systemd-timesyncd
   until: ntp_sync_status.stdout | lower in ['yes', 'true']
-  retries: 10
-  delay: 5
+  retries: 5
+  delay: 10
 
 - name: Display time synchronization status
   ansible.builtin.debug:
