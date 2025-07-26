@@ -1,0 +1,27 @@
+---
+- name: Add Docker GPG key
+  ansible.builtin.rpm_key:
+    key: https://download.docker.com/linux/rhel/gpg
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
+- name: Add Docker CE repository
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/rhel/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    mode: "0644"
+  become: true
+  retries: 3
+  delay: 10
+
+- name: Install Docker packages
+  ansible.builtin.package:
+    name:
+      - "{{ 'docker-ce' ~ (('=' ~ docker_version) if docker_version is defined else '') }}"
+      - "{{ 'docker-ce-cli' ~ (('=' ~ docker_version) if docker_version is defined else '') }}"
+    state: present
+  retries: 3
+  delay: 10
+  become: true

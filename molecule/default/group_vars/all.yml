@@ -57,3 +57,6 @@ ssl_certs_ca_name: "ca.crt"
 ssl_certs_server_name: "server.crt"
 ssl_bundle_generate: true
 ssl_bundle_name: "bundle.crt"
+
+# Docker
+docker_system_prune_cron: ""

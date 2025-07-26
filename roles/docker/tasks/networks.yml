@@ -1,0 +1,17 @@
+---
+- name: Create Docker networks
+  community.docker.docker_network:
+    name: "{{ network.value.name }}"
+    attachable: "{{ network.value.attachable | default(true) }}"
+    driver: "{{ network.value.driver | default('overlay' if docker_swarm_enabled else 'bridge') }}"
+    internal: "{{ network.value.internal | default(false) }}"
+    scope: "{{ network.value.scope | default('swarm' if docker_swarm_enabled else omit) }}"
+    ipam_config: "{{ network.value.subnet is defined | ternary([{'subnet': network.value.subnet}], omit) }}"
+    driver_options:
+      com.docker.network.bridge.name: "{{ network.value.interface_name | default(omit) }}"
+  with_dict: "{{ docker_networks }}"
+  loop_control:
+    loop_var: network
+  when:
+    - docker_networks is defined
+    - docker_networks | length > 0

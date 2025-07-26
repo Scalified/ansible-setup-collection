@@ -1,0 +1,25 @@
+---
+- name: Copy Docker system prune script
+  ansible.builtin.copy:
+    src: docker-system-prune
+    dest: /usr/local/bin/
+    mode: "0755"
+  become: true
+
+- name: Schedule Docker system prune
+  ansible.builtin.cron:
+    name: DOCKER SYSTEM PRUNE
+    job: /usr/local/bin/docker-system-prune > /dev/null 2>&1
+    cron_file: docker-system-prune
+    minute: "{{ docker_system_prune_cron.split()[0] | default('17') }}"
+    hour: "{{ docker_system_prune_cron.split()[1] | default('1') }}"
+    day: "{{ docker_system_prune_cron.split()[2] | default('*') }}"
+    month: "{{ docker_system_prune_cron.split()[3] | default('*') }}"
+    weekday: "{{ docker_system_prune_cron.split()[4] | default('*') }}"
+    user: root
+    state: present
+  become: true
+  when:
+    - docker_system_prune_cron is defined
+    - docker_system_prune_cron is not none
+    - docker_system_prune_cron | trim | length > 0

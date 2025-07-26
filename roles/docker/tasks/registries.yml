@@ -1,0 +1,13 @@
+---
+- name: Authorize Docker registries
+  community.docker.docker_login:
+    registry_url: "{{ registry.value.host }}"
+    username: "{{ registry.value.username }}"
+    password: "{{ registry.value.password }}"
+  with_dict: "{{ docker_registries }}"
+  loop_control:
+    loop_var: registry
+  no_log: true
+  when:
+    - docker_registries is defined
+    - docker_registries | length > 0

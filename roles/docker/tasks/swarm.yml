@@ -1,0 +1,5 @@
+---
+- name: Enable Docker Swarm mode
+  community.docker.docker_swarm:
+    state: present
+  when: docker_swarm_enabled

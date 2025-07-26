@@ -6,4 +6,6 @@
       - htop
       - apache2-utils
     state: present
+  retries: 3
+  delay: 10
   become: true

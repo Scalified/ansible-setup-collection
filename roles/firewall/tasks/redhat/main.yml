@@ -3,6 +3,8 @@
   ansible.builtin.package:
     name: firewalld
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Ensure firewalld is running

@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         ansible:
-          - stable-2.15
+          - stable-2.16
     steps:
       - name: Sanity
         uses: ansible-community/ansible-test-gh-action@release/v1

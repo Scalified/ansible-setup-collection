@@ -1,10 +1,10 @@
 ---
 galaxy_info:
   author: Vladyslav Baidak <vld.x@hotmail.com>
-  description: Configures mail and stats
+  description: Mail and stats configuration
   company: Scalified
   license: MIT
-  min_ansible_version: "2.15"
+  min_ansible_version: "2.16"
 
   platforms:
     - name: Ubuntu

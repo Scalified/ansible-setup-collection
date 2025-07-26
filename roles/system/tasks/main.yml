@@ -13,6 +13,20 @@
       {{ (not system_containerized and ansible_service_mgr == 'systemd') or
          (system_containerized and (proc1_comm_slurp.content | b64decode | trim) == 'systemd') }}
 
+- name: Set system architecture fact
+  ansible.builtin.set_fact:
+    system_architecture: >-
+      {{
+        {
+          'x86_64':  'amd64',
+          'x86_x64': 'amd64',
+          'aarch64': 'arm64',
+          'armv7l':  'armhf',
+          's390x':   's390x',
+          'ppc64le': 'ppc64el'
+        }[ansible_architecture] | default(ansible_architecture)
+      }}
+
 - name: System Role - Baseline Configuration
   ansible.builtin.debug:
     msg:
@@ -22,7 +36,7 @@
       - "      Distribution:    {{ ansible_distribution }}"
       - "      OS Family:       {{ ansible_os_family }}"
       - "      Version:         {{ ansible_distribution_version }}"
-      - "      Architecture:    {{ ansible_architecture }}"
+      - "      Architecture:    {{ system_architecture }} ({{ ansible_architecture }})"
       - "      Hostname:        {{ ansible_hostname }}"
       - "      FQDN:            {{ ansible_fqdn }}"
       - "      Systemd Managed: {{ system_systemd_managed }}"

@@ -19,4 +19,7 @@
     state: present
     user: root
   become: true
-  when: mail_host_stats_cron is defined
+  when:
+    - mail_host_stats_cron is defined
+    - mail_host_stats_cron is not none
+    - mail_host_stats_cron | trim | length > 0

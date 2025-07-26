@@ -77,3 +77,12 @@ system_bash_aliases:
 - `lt` - List sorted by size (`ll -s -1 -FS`)
 - `grep` - Colored grep output (`grep --color=auto`)
 - `hg` - Search command history (`history|grep`)
+
+## Facts
+
+| Fact                     | Description                                           | Example Values             |
+|--------------------------|-------------------------------------------------------|----------------------------|
+| `system_os_family`       | Lowercase version of the operating system family      | `debian`, `redhat`, `suse` |
+| `system_architecture`    | Normalized architecture string for package management | `amd64`, `arm64`, `armhf`  |
+| `system_containerized`   | Indicates if the system is running in a container     | `true`, `false`            |
+| `system_systemd_managed` | Indicates if the system is managed by systemd         | `true`, `false`            |

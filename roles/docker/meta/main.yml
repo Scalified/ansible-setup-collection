@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Vladyslav Baidak <vld.x@hotmail.com>
-  description: Files and directories management
+  description: Docker setup and configuration
   company: Scalified
   license: MIT
   min_ansible_version: "2.16"
@@ -21,12 +21,9 @@ galaxy_info:
         - "9"
 
   galaxy_tags:
-    - filesystem
-    - files
-    - directories
-    - storage
-    - mount
-    - cifs
+    - docker
+    - container
 
 dependencies:
   - role: scalified.setup.system
+  - role: scalified.setup.packages

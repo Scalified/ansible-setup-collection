@@ -1,4 +1,11 @@
 ---
+- name: SSL Role - certificates and keys management
+  ansible.builtin.debug:
+    msg:
+      - "=========================================="
+      - "  SSL: certificates and keys management"
+      - "==========================================="
+
 - name: Include distribution-specific variables
   ansible.builtin.include_vars: "{{ system_os_family }}/main.yml"
 
