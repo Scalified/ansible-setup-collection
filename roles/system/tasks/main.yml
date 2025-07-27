@@ -5,13 +5,13 @@
 - name: Detect PID 1 command
   ansible.builtin.slurp:
     src: /proc/1/comm
-  register: proc1_comm_slurp
+  register: system_proc1_comm_slurp
 
 - name: Set system systemd managed fact
   ansible.builtin.set_fact:
     system_systemd_managed: >-
       {{ (not system_containerized and ansible_service_mgr == 'systemd') or
-         (system_containerized and (proc1_comm_slurp.content | b64decode | trim) == 'systemd') }}
+         (system_containerized and (system_proc1_comm_slurp.content | b64decode | trim) == 'systemd') }}
 
 - name: Set system architecture fact
   ansible.builtin.set_fact:

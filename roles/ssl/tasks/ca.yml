@@ -25,13 +25,13 @@
   become: true
   changed_when: ssl_keys_ca.changed
   no_log: true
-  register: ca_csr
+  register: ssl_ca_csr
 
 - name: Generate SSL CA certificate
   community.crypto.x509_certificate:
     path: "{{ ssl_certs_ca_path }}"
     privatekey_path: "{{ ssl_keys_ca_path }}"
-    csr_content: "{{ ca_csr.csr }}"
+    csr_content: "{{ ssl_ca_csr.csr }}"
     provider: selfsigned
     selfsigned_not_after: "{{ ssl_certs_not_after }}"
     owner: root

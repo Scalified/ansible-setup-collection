@@ -2,21 +2,21 @@
 - name: Slurp server certificate
   ansible.builtin.slurp:
     src: "{{ ssl_certs_server_path }}"
-  register: server_cert_slurp
+  register: ssl_server_cert_slurp
   no_log: true
   become: true
 
 - name: Slurp CA certificate
   ansible.builtin.slurp:
     src: "{{ ssl_certs_ca_path }}"
-  register: ca_cert_slurp
+  register: ssl_ca_cert_slurp
   no_log: true
   become: true
 
 - name: Save SSL certificate bundle
   ansible.builtin.copy:
-    content: "{{ server_cert_slurp.content | b64decode }}\
-      {{ ca_cert_slurp.content | b64decode }}"
+    content: "{{ ssl_server_cert_slurp.content | b64decode }}\
+      {{ ssl_ca_cert_slurp.content | b64decode }}"
     dest: "{{ ssl_bundle_path }}"
     owner: "{{ ssl_bundle_owner }}"
     group: "{{ ssl_bundle_group }}"

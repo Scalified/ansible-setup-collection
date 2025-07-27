@@ -7,10 +7,10 @@
     - name: Read /etc/aliases
       ansible.builtin.slurp:
         src: /etc/aliases
-      register: aliases_file
+      register: mail_aliases_file
 
     - name: Assert root mail forwarding is configured
       ansible.builtin.assert:
-        that: "'root: root@localhost,' ~ mail_recipient in (aliases_file.content | b64decode)"
+        that: "'root: root@localhost,' ~ mail_recipient in (mail_aliases_file.content | b64decode)"
         fail_msg: "/etc/aliases does not contain correct forwarding"
         success_msg: "/etc/aliases contains correct forwarding"

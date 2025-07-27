@@ -3,9 +3,9 @@
   block:
     - name: Verify package manager is available
       ansible.builtin.command: "{{ ansible_pkg_mgr }} --version"
-      register: package_manager_version
+      register: system_package_manager_version
       changed_when: false
-      failed_when: package_manager_version.rc != 0
+      failed_when: system_package_manager_version.rc != 0
 
     - name: Include distribution-specific update tasks
       ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
