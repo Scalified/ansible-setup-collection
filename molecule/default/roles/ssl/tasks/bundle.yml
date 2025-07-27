@@ -52,26 +52,26 @@
     - name: Slurp bundle file
       ansible.builtin.slurp:
         src: "{{ ssl_bundle_path }}"
-      register: bundle_slurp
+      register: ssl_bundle_slurp
 
     - name: Slurp server certificate
       ansible.builtin.slurp:
         src: "{{ ssl_certs_server_path }}"
-      register: server_cert_slurp
+      register: ssl_server_cert_slurp
 
     - name: Assert bundle contains server certificate
       ansible.builtin.assert:
-        that: (server_cert_slurp.content | b64decode) in (bundle_slurp.content | b64decode)
+        that: (ssl_server_cert_slurp.content | b64decode) in (ssl_bundle_slurp.content | b64decode)
         fail_msg: "SSL bundle does not contain the server certificate"
         success_msg: "SSL bundle contains the server certificate"
 
     - name: Slurp CA certificate
       ansible.builtin.slurp:
         src: "{{ ssl_certs_ca_path }}"
-      register: ca_cert_slurp
+      register: ssl_ca_cert_slurp
 
     - name: Assert bundle contains CA certificate
       ansible.builtin.assert:
-        that: (ca_cert_slurp.content | b64decode) in (bundle_slurp.content | b64decode)
+        that: (ssl_ca_cert_slurp.content | b64decode) in (ssl_bundle_slurp.content | b64decode)
         fail_msg: "SSL bundle does not contain the CA certificate"
         success_msg: "SSL bundle contains the CA certificate"

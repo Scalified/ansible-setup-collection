@@ -40,3 +40,5 @@ build_ignore:
 
 dependencies:
   community.crypto: "*"
+  community.docker: "*"
+  community.general: "*"

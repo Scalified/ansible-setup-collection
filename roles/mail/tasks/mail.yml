@@ -7,7 +7,6 @@
     regexp: "^root:.*root@localhost"
     line: "root: root@localhost,{{ mail_recipient }}"
     dest: /etc/aliases
-  register: aliases_result
   become: true
   notify: update mail aliases
 

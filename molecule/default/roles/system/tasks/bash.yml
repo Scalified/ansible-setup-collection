@@ -16,17 +16,17 @@
     - name: Check if bash completion directory exists
       ansible.builtin.stat:
         path: /etc/bash_completion.d
-      register: bash_completion_dir_stat
+      register: system_bash_completion_dir_stat
 
     - name: Verify bash completion directory exists
       ansible.builtin.assert:
-        that: bash_completion_dir_stat.stat.exists
+        that: system_bash_completion_dir_stat.stat.exists
         fail_msg: "Bash completion directory /etc/bash_completion.d does not exist"
         success_msg: "Bash completion directory /etc/bash_completion.d exists"
 
     - name: Verify bash completion directory is a directory
       ansible.builtin.assert:
-        that: bash_completion_dir_stat.stat.isdir
+        that: system_bash_completion_dir_stat.stat.isdir
         fail_msg: "/etc/bash_completion.d is not a directory"
         success_msg: "/etc/bash_completion.d is a directory"
 
@@ -35,18 +35,18 @@
     - name: Stat .bash_aliases file
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.bash_aliases"
-      register: bash_aliases_file_stat
+      register: system_bash_aliases_file_stat
 
     - name: Verify .bash_aliases file exists
       ansible.builtin.assert:
-        that: bash_aliases_file_stat.stat.exists
+        that: system_bash_aliases_file_stat.stat.exists
         fail_msg: ".bash_aliases file does not exist in {{ ansible_env.HOME }}"
         success_msg: ".bash_aliases file exists in {{ ansible_env.HOME }}"
 
     - name: Verify .bash_aliases file permissions
       ansible.builtin.assert:
-        that: bash_aliases_file_stat.stat.mode == '0644'
-        fail_msg: ".bash_aliases file has incorrect permissions: {{ bash_aliases_file_stat.stat.mode }}"
+        that: system_bash_aliases_file_stat.stat.mode == '0644'
+        fail_msg: ".bash_aliases file has incorrect permissions: {{ system_bash_aliases_file_stat.stat.mode }}"
         success_msg: ".bash_aliases file has correct permissions (0644)"
 
 - name: Verify default aliases
@@ -54,58 +54,60 @@
     - name: Read .bash_aliases file content
       ansible.builtin.slurp:
         src: "{{ ansible_env.HOME }}/.bash_aliases"
-      register: bash_aliases_content
+      register: system_bash_aliases_content
 
     - name: Decode .bash_aliases content
       ansible.builtin.set_fact:
-        bash_aliases_text: "{{ bash_aliases_content.content | b64decode }}"
+        system_bash_aliases_text: "{{ system_bash_aliases_content.content | b64decode }}"
 
     - name: Verify default ll alias is present
       ansible.builtin.assert:
-        that: "'alias ll=' in bash_aliases_text"
+        that: "'alias ll=' in system_bash_aliases_text"
         fail_msg: "Default ll alias not found in .bash_aliases"
         success_msg: "Default ll alias found in .bash_aliases"
 
     - name: Verify default lt alias is present
       ansible.builtin.assert:
-        that: "'alias lt=' in bash_aliases_text"
+        that: "'alias lt=' in system_bash_aliases_text"
         fail_msg: "Default lt alias not found in .bash_aliases"
         success_msg: "Default lt alias found in .bash_aliases"
 
     - name: Verify default grep alias is present
       ansible.builtin.assert:
-        that: "'alias grep=' in bash_aliases_text"
+        that: "'alias grep=' in system_bash_aliases_text"
         fail_msg: "Default grep alias not found in .bash_aliases"
         success_msg: "Default grep alias found in .bash_aliases"
 
     - name: Verify default hg alias is present
       ansible.builtin.assert:
-        that: "'alias hg=' in bash_aliases_text"
+        that: "'alias hg=' in system_bash_aliases_text"
         fail_msg: "Default hg alias not found in .bash_aliases"
         success_msg: "Default hg alias found in .bash_aliases"
 
 - name: Verify user-defined aliases
-  when: system_bash_aliases is defined and system_bash_aliases | length > 0
+  when:
+    - system_bash_aliases is defined
+    - system_bash_aliases | length > 0
   block:
     - name: Read .bash_aliases file content
       ansible.builtin.slurp:
         src: "{{ ansible_env.HOME }}/.bash_aliases"
-      register: bash_aliases_content
+      register: system_bash_aliases_content
 
     - name: Decode .bash_aliases content
       ansible.builtin.set_fact:
-        bash_aliases_text: "{{ bash_aliases_content.content | b64decode }}"
+        system_bash_aliases_text: "{{ system_bash_aliases_content.content | b64decode }}"
 
     - name: Verify custom aliases are present when defined
       ansible.builtin.assert:
-        that: "'alias {{ item.alias }}=' in bash_aliases_text"
+        that: "'alias {{ item.alias }}=' in system_bash_aliases_text"
         fail_msg: "Custom alias '{{ item.alias }}' not found in .bash_aliases"
         success_msg: "Custom alias '{{ item.alias }}' found in .bash_aliases"
       loop: "{{ system_bash_aliases }}"
 
     - name: Verify custom alias comments are present when defined
       ansible.builtin.assert:
-        that: "'# {{ item.comment }}' in bash_aliases_text"
+        that: "'# {{ item.comment }}' in system_bash_aliases_text"
         fail_msg: "Custom alias comment '{{ item.comment }}' not found in .bash_aliases"
         success_msg: "Custom alias comment '{{ item.comment }}' found in .bash_aliases"
       loop: "{{ system_bash_aliases }}"
@@ -116,39 +118,39 @@
     - name: Check if .bashrc file exists
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.bashrc"
-      register: bashrc_file_stat
+      register: system_bashrc_file_stat
 
     - name: Verify .bashrc file exists
       ansible.builtin.assert:
-        that: bashrc_file_stat.stat.exists
+        that: system_bashrc_file_stat.stat.exists
         fail_msg: ".bashrc file does not exist in {{ ansible_env.HOME }}"
         success_msg: ".bashrc file exists in {{ ansible_env.HOME }}"
 
     - name: Read .bashrc file content
       ansible.builtin.slurp:
         src: "{{ ansible_env.HOME }}/.bashrc"
-      register: bashrc_content
+      register: system_bashrc_content
 
     - name: Decode .bashrc content
       ansible.builtin.set_fact:
-        bashrc_text: "{{ bashrc_content.content | b64decode }}"
+        system_bashrc_text: "{{ system_bashrc_content.content | b64decode }}"
 
     - name: Verify bash aliases sourcing block is present
       ansible.builtin.assert:
-        that: "'if [ -f ~/.bash_aliases ]; then' in bashrc_text"
+        that: "'if [ -f ~/.bash_aliases ]; then' in system_bashrc_text"
         fail_msg: "Bash aliases sourcing block not found in .bashrc"
         success_msg: "Bash aliases sourcing block found in .bashrc"
 
     - name: Verify bash aliases sourcing command is present
       ansible.builtin.assert:
-        that: "'. ~/.bash_aliases' in bashrc_text"
+        that: "'. ~/.bash_aliases' in system_bashrc_text"
         fail_msg: "Bash aliases sourcing command not found in .bashrc"
         success_msg: "Bash aliases sourcing command found in .bashrc"
 
     - name: Verify bash aliases markers are present
       ansible.builtin.assert:
         that:
-          - "'# BASH ALIASES BEGIN' in bashrc_text"
-          - "'# BASH ALIASES END' in bashrc_text"
+          - "'# BASH ALIASES BEGIN' in system_bashrc_text"
+          - "'# BASH ALIASES END' in system_bashrc_text"
         fail_msg: "Bash aliases block markers not found in .bashrc"
         success_msg: "Bash aliases block markers found in .bashrc"
