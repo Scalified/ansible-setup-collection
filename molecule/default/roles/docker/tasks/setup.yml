@@ -1,0 +1,31 @@
+---
+- name: Verify Docker packages installed
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: "Assert Docker package installed"
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      loop_control:
+        loop_var: package
+
+- name: Verify user in docker group
+  block:
+    - name: Check if user is in docker group
+      ansible.builtin.command: groups {{ ansible_user_id }}
+      register: docker_user_groups
+      changed_when: false
+
+    - name: Assert user is in docker group
+      ansible.builtin.assert:
+        that: "'docker' in docker_user_groups.stdout"
+        fail_msg: "User {{ ansible_user_id }} is not in docker group"
+        success_msg: "User {{ ansible_user_id }} is in docker group"

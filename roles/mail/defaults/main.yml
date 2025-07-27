@@ -1,2 +1,2 @@
 ---
-mail_hostname: "{{ ansible_hostname }}"
+mail_hostname: "{{ ansible_hostname }}{% if domain is defined %}.{{ domain }}{% endif %}"

@@ -14,12 +14,12 @@ Configures mail and stats
 
 ## Variables
 
-| Variable               | Description                                          | Default Value            |
-|------------------------|------------------------------------------------------|--------------------------|
-| `mail_hostname`        | Hostname for mail configuration                      | `{{ ansible_hostname }}` |
-| `mail_smtp_server`     | SMTP server hostname or IP address                   |                          |
-| `mail_smtp_port`       | SMTP server port                                     |                          |
-| `mail_smtp_username`   | SMTP authentication username                         |                          |
-| `mail_smtp_password`   | SMTP authentication password                         |                          |
-| `mail_recipient`       | Email address to forward root/system mail (required) |                          |
-| `mail_host_stats_cron` | Host stats cron schedule (disabled if not provided)  |                          |
+| Variable               | Description                                          | Default Value                                                                            |
+|------------------------|------------------------------------------------------|------------------------------------------------------------------------------------------|
+| `mail_hostname`        | Hostname for mail configuration                      | `{{ ansible_hostname }}` or `{{ ansible_hostname }}.{{ domain }}` if `domain` is defined |
+| `mail_smtp_server`     | SMTP server hostname or IP address                   |                                                                                          |
+| `mail_smtp_port`       | SMTP server port                                     |                                                                                          |
+| `mail_smtp_username`   | SMTP authentication username                         |                                                                                          |
+| `mail_smtp_password`   | SMTP authentication password                         |                                                                                          |
+| `mail_recipient`       | Email address to forward root/system mail (required) |                                                                                          |
+| `mail_host_stats_cron` | Host stats cron schedule (disabled if not provided)  |                                                                                          |

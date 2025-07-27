@@ -6,9 +6,14 @@
 * [#8 Roles: Mail](https://github.com/Scalified/ansible-setup-collection/issues/8)
 * [#10 Roles: Baseline](https://github.com/Scalified/ansible-setup-collection/issues/10)
 * [#12 Roles: SSL](https://github.com/Scalified/ansible-setup-collection/issues/12)
+* [#15 Roles: Docker](https://github.com/Scalified/ansible-setup-collection/issues/15)
 
 ## Features
 
+- **Roles: Docker**: Added new role for Docker installation and configuration
+    - Installs Docker Engine and Docker Compose
+    - Configures Docker daemon settings and user permissions
+    - Supports container runtime management and Docker service control
 - **Roles: SSL**: Manages SSL certificates, including creation, deployment, and trust configuration
     - Supports both generation and deployment of SSL certificates and keys
     - Handles CA and server certificate management

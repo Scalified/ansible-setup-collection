@@ -31,18 +31,18 @@ firewall_rules:
     port: 80
     protocol: tcp
     direction: in
-    comment: "Allow HTTP"
+    comment: "HTTP"
   - rule: allow
     port: 443
     protocol: tcp
     direction: in
-    comment: "Allow HTTPS"
+    comment: "HTTPS"
   - rule: allow
     port: 53
     protocol: udp
     direction: in
     from: 192.168.1.0/24
-    comment: "Allow DNS from local network"
+    comment: "DNS from local network"
 ```
 
 #### RedHat

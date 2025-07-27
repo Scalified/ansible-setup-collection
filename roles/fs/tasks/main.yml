@@ -1,6 +1,17 @@
 ---
-- name: Include files tasks
-  ansible.builtin.include_tasks: "files.yml"
+- name: FS Role - files and directories management
+  ansible.builtin.debug:
+    msg:
+      - "========================================="
+      - "  FS: files and directories management"
+      - "========================================="
+
+- name: Include mount tasks
+  ansible.builtin.include_tasks: "drives.yml"
+  when: fs_drives | length > 0
 
 - name: Include mount tasks
   ansible.builtin.include_tasks: "mount.yml"
+
+- name: Include files tasks
+  ansible.builtin.include_tasks: "files.yml"

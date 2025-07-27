@@ -1,0 +1,13 @@
+---
+- name: Include format tasks
+  ansible.builtin.include_tasks: format.yml
+  when: fs_drive.format.enabled | default(false)
+  loop: "{{ fs_drives }}"
+  loop_control:
+    loop_var: fs_drive
+
+- name: Include mount drive tasks
+  ansible.builtin.include_tasks: mount/drive.yml
+  loop: "{{ fs_drives }}"
+  loop_control:
+    loop_var: fs_drive

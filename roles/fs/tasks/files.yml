@@ -1,10 +1,10 @@
 ---
-- name: Create directories
+- name: Create files and directories
   ansible.builtin.file:
     path: "{{ file.path }}"
     src: "{{ file.src | default(omit) }}"
-    state: "{{ file.state }}"
-    owner: "{{ file.owner | default(ansible_user) }}"
+    state: "{{ file.state | default('directory') }}"
+    owner: "{{ file.owner | default(ansible_user_id) }}"
     group: "{{ file.group | default('root') }}"
     mode: "{{ file.mode | default('0755') }}"
     recurse: "{{ file.recurse | default(omit) }}"

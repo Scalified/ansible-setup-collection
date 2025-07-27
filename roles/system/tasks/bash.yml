@@ -4,6 +4,8 @@
     name:
       - bash-completion
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Create bash autocompletion directory
@@ -18,7 +20,7 @@
     - name: Check if .bashrc file exists
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.bashrc"
-      register: bashrc_exists
+      register: system_bashrc_exists
 
     - name: Copy .bashrc from skeleton when missing
       ansible.builtin.copy:
@@ -26,7 +28,7 @@
         dest: "{{ ansible_env.HOME }}/.bashrc"
         mode: '0644'
         remote_src: true
-      when: not bashrc_exists.stat.exists
+      when: not system_bashrc_exists.stat.exists
 
 - name: Configure bash aliases
   ansible.builtin.template:

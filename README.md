@@ -9,7 +9,7 @@ Ansible collection for server setup with system configuration and essential tool
 
 ## Requirements
 
-- **Ansible:** >= 2.15.0
+- **Ansible:** >= 2.16.0
 - **Python:** >= 3.6
 - **Target OS:** Ubuntu, Rocky
 - **Privileges:** Most roles require `become: true` (sudo access)
@@ -50,6 +50,7 @@ ansible-galaxy collection install -r requirements.yml
 * [Roles: Mail](roles/mail/README.md)
 * [Roles: Baseline](roles/baseline/README.md)
 * [Roles: SSL](roles/ssl/README.md)
+* [Roles: Docker](roles/docker/README.md)
 
 ---
 

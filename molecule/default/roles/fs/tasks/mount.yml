@@ -4,14 +4,14 @@
     - name: Stat auto-remount script
       ansible.builtin.stat:
         path: /usr/local/bin/auto-remount
-      register: auto_remount_stat
+      register: fs_auto_remount_stat
 
     - name: Assert auto-remount script exists and is executable
       ansible.builtin.assert:
         that:
-          - auto_remount_stat.stat.exists
-          - auto_remount_stat.stat.mode | string == '0755'
-          - auto_remount_stat.stat.pw_name == (ansible_user | default('root'))
+          - fs_auto_remount_stat.stat.exists
+          - fs_auto_remount_stat.stat.mode | string == '0755'
+          - fs_auto_remount_stat.stat.pw_name == (ansible_user_id | default('root'))
         fail_msg: "/usr/local/bin/auto-remount does not exist or is not executable"
 
 - name: Verify remount scripts directory
@@ -19,12 +19,12 @@
     - name: Stat remount scripts directory
       ansible.builtin.stat:
         path: "{{ fs_mount_auto_remount_scripts_dir }}"
-      register: remount_dir_stat
+      register: fs_remount_dir_stat
 
     - name: Assert remount scripts directory exists and is a directory
       ansible.builtin.assert:
         that:
-          - remount_dir_stat.stat.exists
-          - remount_dir_stat.stat.isdir
-          - remount_dir_stat.stat.mode | string == '0755'
+          - fs_remount_dir_stat.stat.exists
+          - fs_remount_dir_stat.stat.isdir
+          - fs_remount_dir_stat.stat.mode | string == '0755'
         fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} does not exist or is not a directory"

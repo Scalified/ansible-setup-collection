@@ -5,3 +5,4 @@
   roles:
     - scalified.setup.baseline
     - scalified.setup.ssl
+    - scalified.setup.docker

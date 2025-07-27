@@ -1,0 +1,25 @@
+- name: Create mount point directory
+  ansible.builtin.file:
+    path: "{{ fs_drive.mount_point }}"
+    state: directory
+    owner: "{{ fs_drive.mount_owner | default(ansible_user_id) }}"
+    group: "{{ fs_drive.mount_group | default('root') }}"
+    mode: "{{ fs_drive.mount_mode | default('0770') }}"
+  become: true
+
+- name: Mount drive
+  ansible.posix.mount:
+    src: "{{ fs_drive.path }}"
+    path: "{{ fs_drive.mount_point }}"
+    fstype: "{{ fs_drive.fstype }}"
+    opts: "{{ drivfs_drive.mount_opts | default(omit) }}"
+    state: mounted
+  become: true
+
+- name: Set mount point permissions
+  ansible.builtin.file:
+    path: "{{ fs_drive.mount_point }}"
+    owner: "{{ fs_drive.mount_owner | default(ansible_user_id) }}"
+    group: "{{ fs_drive.mount_group | default('root') }}"
+    mode: "{{ fs_drive.mount_mode | default('0770') }}"
+  become: true

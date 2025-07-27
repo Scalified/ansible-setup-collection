@@ -4,16 +4,16 @@
     - name: Stat send-host-stats file
       ansible.builtin.stat:
         path: /usr/local/bin/send-host-stats
-      register: send_host_stats_stat
+      register: mail_send_host_stats_stat
 
     - name: Verify send-host-stats file exists
       ansible.builtin.assert:
-        that: send_host_stats_stat.stat.exists
+        that: mail_send_host_stats_stat.stat.exists
         fail_msg: "send-host-stats file does not exist in /usr/local/bin"
         success_msg: "send-host-stats file exists in /usr/local/bin"
 
     - name: Verify send-host-stats file permissions
       ansible.builtin.assert:
-        that: send_host_stats_stat.stat.mode == '0755'
-        fail_msg: "send-host-stats file has incorrect permissions: {{ send_host_stats_stat.stat.mode }}"
+        that: mail_send_host_stats_stat.stat.mode == '0755'
+        fail_msg: "send-host-stats file has incorrect permissions: {{ mail_send_host_stats_stat.stat.mode }}"
         success_msg: "send-host-stats file has correct permissions (0755)"

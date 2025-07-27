@@ -113,11 +113,11 @@
   block:
     - name: Verfy CA certificate is in trust store bundle
       ansible.builtin.command: "openssl verify -CAfile {{ ssl_certs_ca_truststore_bundle }} {{ ssl_certs_ca_path }}"
-      register: ca_bundle_check
+      register: ssl_ca_bundle_check
       changed_when: false
 
     - name: Verify CA certificate is available in trust store
       ansible.builtin.assert:
-        that: "'OK' in ca_bundle_check.stdout"
+        that: "'OK' in ssl_ca_bundle_check.stdout"
         fail_msg: "CA certificate is not available in system trust store"
         success_msg: "CA certificate is available in system trust store"

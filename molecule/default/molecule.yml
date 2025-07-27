@@ -4,8 +4,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: ubuntu
-    image: ubuntu
+  - name: debian
+    image: debian:bookworm
   - name: rocky
     image: rockylinux/rockylinux:9
 provisioner:

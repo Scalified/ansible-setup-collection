@@ -30,12 +30,17 @@ issues: https://github.com/scalified/ansible-setup-collection/issues
 
 build_ignore:
   - "*.gz"
+  - .claude
   - .gitignore
   - .github
   - .ansible-lint.yml
   - .ansible
+  - CLAUDE.md
   - molecule
   - tests
 
 dependencies:
+  ansible.posix: "*"
+  community.general: "*"
   community.crypto: "*"
+  community.docker: "*"

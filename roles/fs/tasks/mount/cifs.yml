@@ -4,9 +4,23 @@
     name:
       - cifs-utils
     state: present
+  retries: 3
+  delay: 10
   become: true
 
-- name: Mount CIFS source
+- name: Create CIFS mount point directories
+  ansible.builtin.file:
+    path: "{{ mount.path }}"
+    state: directory
+    owner: "{{ mount.owner | default(ansible_user_id) }}"
+    group: "{{ mount.group | default('root') }}"
+    mode: "{{ mount.mode | default('0770') }}"
+  become: true
+  loop: "{{ fs_mount_cifs }}"
+  loop_control:
+    loop_var: mount
+
+- name: Mount CIFS sources
   ansible.posix.mount:
     src: "{{ mount.url }}"
     path: "{{ mount.path }}"

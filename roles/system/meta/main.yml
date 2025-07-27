@@ -4,7 +4,7 @@ galaxy_info:
   description: System configuration role for basic server setup and configuration
   company: Scalified
   license: MIT
-  min_ansible_version: "2.15"
+  min_ansible_version: "2.16"
 
   platforms:
     - name: Ubuntu

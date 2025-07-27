@@ -1,0 +1,25 @@
+---
+- name: Docker Role - setup and configuration
+  ansible.builtin.debug:
+    msg:
+      - "===================================="
+      - "  Docker: setup and configuration"
+      - "===================================="
+
+- name: Include setup tasks
+  ansible.builtin.include_tasks: setup.yml
+
+- name: Include prune tasks
+  ansible.builtin.include_tasks: prune.yml
+
+- name: Include swarm tasks
+  ansible.builtin.include_tasks: swarm.yml
+
+- name: Include registries tasks
+  ansible.builtin.include_tasks: registries.yml
+
+- name: Include networks tasks
+  ansible.builtin.include_tasks: networks.yml
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

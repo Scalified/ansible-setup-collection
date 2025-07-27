@@ -1,0 +1,14 @@
+---
+- name: Unmount drive
+  ansible.posix.mount:
+    path: "{{ fs_drive.path }}"
+    state: unmounted
+  become: true
+
+- name: Format drive
+  community.general.filesystem:
+    fstype: "{{ fs_drive.fstype }}"
+    device: "{{ fs_drive.path }}"
+    state: present
+    force: "{{ fs_drive.format.force | default(false) }}"
+  become: true

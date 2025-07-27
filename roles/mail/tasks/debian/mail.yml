@@ -5,13 +5,8 @@
       - exim4
       - mailutils
     state: present
-  become: true
-
-- name: Create exim4 configuration directory
-  ansible.builtin.file:
-    path: /etc/exim4
-    state: directory
-    mode: "0750"
+  retries: 3
+  delay: 10
   become: true
 
 - name: Configure exim4 authentication
@@ -21,10 +16,17 @@
     mode: "0640"
   become: true
 
+- name: Configure exim4 rewrite rules
+  ansible.builtin.template:
+    src: "{{ system_os_family }}/99_exim4-config_rewrite_rules"
+    dest: /etc/exim4/conf.d/rewrite/99_exim4-config_rewrite_rules
+    mode: "0644"
+  become: true
+
 - name: Add exim4 configuration
   ansible.builtin.template:
     src: "{{ system_os_family }}/update-exim4.conf.conf"
     dest: /etc/exim4/update-exim4.conf.conf
-    mode: "0640"
+    mode: "0644"
   become: true
   notify: update exim4 configuration

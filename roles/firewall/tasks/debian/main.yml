@@ -4,6 +4,8 @@
     name:
       - ufw
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: UFW deny all incoming traffic

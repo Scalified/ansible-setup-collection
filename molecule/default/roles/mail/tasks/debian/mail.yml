@@ -35,6 +35,25 @@
         fail_msg: "passwd.client file has incorrect permissions: {{ passwd_client_file_stat.stat.mode }}"
         success_msg: "passwd.client file has correct permissions (0640)"
 
+- name: Verify 99_exim4-config_rewrite_rules file
+  block:
+    - name: Stat 99_exim4-config_rewrite_rules file
+      ansible.builtin.stat:
+        path: /etc/exim4/conf.d/rewrite/99_exim4-config_rewrite_rules
+      register: exim4_config_rewrite_rules_stat
+
+    - name: Verify 99_exim4-config_rewrite_rules file exists
+      ansible.builtin.assert:
+        that: exim4_config_rewrite_rules_stat.stat.exists
+        fail_msg: "99_exim4-config_rewrite_rules file does not exist in /etc/exim4/conf.d/rewrite"
+        success_msg: "99_exim4-config_rewrite_rules file exists in /etc/exim4/conf.d/rewrite"
+
+    - name: Verify 99_exim4-config_rewrite_rules file permissions
+      ansible.builtin.assert:
+        that: exim4_config_rewrite_rules_stat.stat.mode == '0644'
+        fail_msg: "99_exim4-config_rewrite_rules file has incorrect permissions: {{ exim4_config_rewrite_rules_stat.stat.mode }}"
+        success_msg: "99_exim4-config_rewrite_rules file has correct permissions (0644)"
+
 - name: Verify update-exim4.conf.conf file
   block:
     - name: Stat update-exim4.conf.conf file
@@ -50,6 +69,6 @@
 
     - name: Verify update-exim4.conf.conf file permissions
       ansible.builtin.assert:
-        that: update_exim4_conf_conf_stat.stat.mode == '0640'
+        that: update_exim4_conf_conf_stat.stat.mode == '0644'
         fail_msg: "update-exim4.conf.conf file has incorrect permissions: {{ update_exim4_conf_conf_stat.stat.mode }}"
-        success_msg: "update-exim4.conf.conf file has correct permissions (0640)"
+        success_msg: "update-exim4.conf.conf file has correct permissions (0644)"

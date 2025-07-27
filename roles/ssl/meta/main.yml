@@ -1,10 +1,10 @@
 ---
 galaxy_info:
   author: Vladyslav Baidak <vld.x@hotmail.com>
-  description: Manages SSL certificates and keys
+  description: SSL certificates and keys management
   company: Scalified
   license: MIT
-  min_ansible_version: "2.15"
+  min_ansible_version: "2.16"
 
   platforms:
     - name: Ubuntu

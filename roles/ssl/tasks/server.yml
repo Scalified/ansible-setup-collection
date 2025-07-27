@@ -27,13 +27,13 @@
   become: true
   changed_when: ssl_keys_server.changed
   no_log: true
-  register: server_csr
+  register: ssl_server_csr
 
 - name: Generate SSL server certificate
   community.crypto.x509_certificate:
     path: "{{ ssl_certs_server_path }}"
     privatekey_path: "{{ ssl_keys_server_path }}"
-    csr_content: "{{ server_csr.csr }}"
+    csr_content: "{{ ssl_server_csr.csr }}"
     provider: ownca
     ownca_path: "{{ ssl_certs_ca_path }}"
     ownca_privatekey_path: "{{ ssl_keys_ca_path }}"

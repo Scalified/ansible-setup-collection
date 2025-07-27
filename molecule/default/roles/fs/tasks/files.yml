@@ -4,7 +4,7 @@
     - name: Stat created files and directories
       ansible.builtin.stat:
         path: "{{ file.path }}"
-      register: file_stat
+      register: fs_file_stat
       loop: "{{ fs_files }}"
       loop_control:
         loop_var: file
@@ -12,10 +12,10 @@
     - name: Assert files and directories exist with correct attributes
       ansible.builtin.assert:
         that:
-          - file_stat.results[item].stat.exists
-          - file_stat.results[item].stat.pw_name == (fs_files[item].owner | default(ansible_user))
-          - file_stat.results[item].stat.gr_name == (fs_files[item].group | default('root'))
-          - file_stat.results[item].stat.mode | string == fs_files[item].mode
+          - fs_file_stat.results[item].stat.exists
+          - fs_file_stat.results[item].stat.pw_name == (fs_files[item].owner | default(ansible_user_id))
+          - fs_file_stat.results[item].stat.gr_name == (fs_files[item].group | default('root'))
+          - fs_file_stat.results[item].stat.mode | string == fs_files[item].mode
         fail_msg: "File or directory {{ fs_files[item].path }} does not have the expected attributes"
       loop: "{{ range(0, fs_files | length) | list }}"
       loop_control:

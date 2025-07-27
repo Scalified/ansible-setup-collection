@@ -1,10 +1,10 @@
 ---
 galaxy_info:
   author: Vladyslav Baidak <vld.x@hotmail.com>
-  description: Baseline role that coordinates the execution of multiple essential roles for system setup and configuration
+  description: Multiple essential roles for system setup and configuration
   company: Scalified
   license: MIT
-  min_ansible_version: "2.15"
+  min_ansible_version: "2.16"
 
   platforms:
     - name: Ubuntu
