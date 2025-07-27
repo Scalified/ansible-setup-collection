@@ -39,6 +39,7 @@ build_ignore:
   - tests
 
 dependencies:
+  ansible.posix: "*"
+  community.general: "*"
   community.crypto: "*"
   community.docker: "*"
-  community.general: "*"
