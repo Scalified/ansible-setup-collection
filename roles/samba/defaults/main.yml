@@ -1,0 +1,22 @@
+---
+samba_user: "{{ ansible_user_id }}"
+samba_password: ""
+
+samba_interfaces: []
+samba_server_string: Samba Server
+samba_workgroup: WORKGROUP
+samba_netbios_name: "{{ ansible_hostname }}"
+samba_security: user
+samba_encrypt_passwords: "yes"
+samba_log_file: /var/log/samba/log.%m
+samba_max_log_size: 50
+samba_dns_proxy: "no"
+
+samba_share_browseable: "yes"
+samba_share_writeable: "yes"
+samba_share_mode: "0770"
+samba_share_owner: "{{ ansible_user_id }}"
+samba_share_group: root
+samba_share_comment: Shared Folder
+
+samba_shares: []

@@ -1,0 +1,54 @@
+---
+- name: Install Samba packages
+  ansible.builtin.package:
+    name:
+      - samba
+      - python3-pexpect
+    state: present
+  become: true
+
+- name: Create Samba shares directories
+  ansible.builtin.file:
+    path: "{{ share.path }}"
+    state: directory
+    owner: "{{ share.owner | default(samba_share_owner) }}"
+    group: "{{ share.group | default(samba_share_group) }}"
+    mode: "{{ share.mode | default(samba_share_mode) }}"
+  become: true
+  loop: "{{ samba_shares }}"
+  loop_control:
+    loop_var: share
+
+- name: Copy Samba configuration file
+  ansible.builtin.template:
+    src: smb.conf
+    dest: /etc/samba/smb.conf
+    mode: '0644'
+  become: true
+
+- name: Configure Samba user
+  become: true
+  block:
+    - name: Check if Samba user exists
+      ansible.builtin.command: pdbedit -L -u {{ samba_user }}
+      register: samba_user_check
+      failed_when: false
+      changed_when: false
+      no_log: true
+
+    - name: Add Samba user
+      ansible.builtin.expect:
+        command: "smbpasswd -a {{ samba_user }}"
+        responses:
+          "(?i)password": "{{ samba_password }}"
+      no_log: true
+      when: samba_user_check.rc != 0
+
+- name: Enable Samba service
+  ansible.builtin.systemd_service:
+    name: smb
+    enabled: true
+    daemon_reload: true
+    state: started
+  become: true
+  when: system_systemd_managed

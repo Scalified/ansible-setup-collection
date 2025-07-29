@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `ansible-lint` - Lint validation  
 - `molecule test` - Full test cycle
 
-> On **Windows** machines, before running any of the above commands, launch **WSL** by executing the `wsl` command
+> On **Windows** systems, run the above commands using the **WSL** prefix, for example: `wsl ansible-lint`
 
 ## Structure
 
@@ -19,6 +19,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `molecule/default/` - Test configuration in molecule.yml
 - `galaxy.yml` - Collection metadata
 - `.ansible-lint.yml` - Lint rules
+
+## Code Style
+
+- All files must end with a newline
+- All Ansible Lint rules must be followed, including the use of fully qualified collection names (FQCN), proper task naming, and other best practices
+- Follow consistent indentation, naming, and structure across roles and tasks
 
 ## Development
 
@@ -32,12 +38,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     - `system_containerized` - indicates if running inside a container
     - `system_systemd_managed` - indicates if `systemd` is available
     - `system_architecture` - system architecture (`amd64`, `arm64`)
+
+## Molecule Tests
+
 - Use `molecule test` for integration testing
+- Each file containing logic that requires testing must have a corresponding **Molecule** verification file with the same name in `molecule/default/roles/{role}/tasks/`
 - Role-specific verifications are defined in `molecule/default/verify.yml`
-- Each file containing logic that requires testing must have a corresponding **Molecule** verification file with the same name
 - For test scenarios with multiple steps, use `block` to group **Molecule** tasks logically
-
-## Code Style
-
-- All files must end with a newline
-- Follow consistent indentation, naming, and structure across roles and tasks
+- Every new **Molecule** test must follow the same structure and syntax as the existing tests

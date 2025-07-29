@@ -1,0 +1,10 @@
+---
+- name: Samba Role - installation and configuration
+  ansible.builtin.debug:
+    msg:
+      - "============================================"
+      - "  Samba: installation and configuration"
+      - "============================================"
+
+- name: Include samba tasks
+  ansible.builtin.include_tasks: samba.yml

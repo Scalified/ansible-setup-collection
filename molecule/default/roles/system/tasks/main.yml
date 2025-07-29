@@ -7,3 +7,6 @@
 
 - name: Include bash verifications
   ansible.builtin.include_tasks: bash.yml
+
+- name: Include scripts verifications
+  ansible.builtin.include_tasks: scripts.yml

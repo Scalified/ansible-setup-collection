@@ -2,7 +2,7 @@
 - name: Update motd banner
   ansible.builtin.template:
     src: "{{ system_motd_src }}"
-    dest: /etc/
+    dest: /etc/motd
     owner: root
     group: root
     mode: '0644'

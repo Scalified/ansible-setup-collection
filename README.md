@@ -41,7 +41,7 @@ collections:
 ansible-galaxy collection install -r requirements.yml
 ```
 
-## Usage
+## Roles
 
 * [Roles: System](roles/system/README.md)
 * [Roles: Packages](roles/packages/README.md)
@@ -51,6 +51,7 @@ ansible-galaxy collection install -r requirements.yml
 * [Roles: Baseline](roles/baseline/README.md)
 * [Roles: SSL](roles/ssl/README.md)
 * [Roles: Docker](roles/docker/README.md)
+* [Roles: Samba](roles/samba/README.md)
 
 ---
 
