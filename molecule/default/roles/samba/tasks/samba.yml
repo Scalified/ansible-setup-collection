@@ -1,0 +1,88 @@
+---
+- name: Verify Samba packages installed
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert Samba package installed
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - samba
+        - python3-pexpect
+      loop_control:
+        loop_var: package
+
+- name: Verify Samba configuration
+  block:
+    - name: Check if smb.conf exists
+      ansible.builtin.stat:
+        path: /etc/samba/smb.conf
+      register: samba_smb_conf_stat
+
+    - name: Assert smb.conf exists
+      ansible.builtin.assert:
+        that:
+          - samba_smb_conf_stat.stat.exists
+          - samba_smb_conf_stat.stat.isreg
+        fail_msg: "/etc/samba/smb.conf file does not exist"
+        success_msg: "/etc/samba/smb.conf file exists"
+
+    - name: Assert smb.conf permissions
+      ansible.builtin.assert:
+        that:
+          - samba_smb_conf_stat.stat.mode == '0644'
+          - samba_smb_conf_stat.stat.pw_name == 'root'
+          - samba_smb_conf_stat.stat.gr_name == 'root'
+        fail_msg: "/etc/samba/smb.conf has incorrect permissions or ownership"
+        success_msg: "/etc/samba/smb.conf has correct permissions and ownership"
+
+- name: Verify Samba user
+  block:
+    - name: Check if Samba user exists
+      ansible.builtin.command: pdbedit -L -u {{ ansible_user_id }}
+      register: samba_user_check
+      changed_when: false
+      failed_when: false
+
+    - name: Assert Samba user exists
+      ansible.builtin.assert:
+        that: samba_user_check.rc == 0
+        fail_msg: "Samba user {{ ansible_user_id }} does not exist"
+        success_msg: "Samba user {{ ansible_user_id }} exists"
+
+- name: Verify Samba shares
+  block:
+    - name: Check test share directories
+      ansible.builtin.stat:
+        path: "{{ item.path }}"
+      register: samba_share_stats
+      loop: "{{ samba_shares }}"
+
+    - name: Assert share directories exist
+      ansible.builtin.assert:
+        that: item.stat.exists
+        fail_msg: "Share directory {{ item.item.path }} does not exist"
+        success_msg: "Share directory {{ item.item.path }} exists"
+      loop: "{{ samba_share_stats.results }}"
+
+    - name: Assert share directories have correct permissions
+      ansible.builtin.assert:
+        that:
+          - item.stat.mode == '0770'
+          - item.stat.pw_name == ansible_user_id
+          - item.stat.gr_name == 'root'
+        fail_msg: "Share directory {{ item.item.path }} has incorrect permissions or ownership"
+        success_msg: "Share directory {{ item.item.path }} has correct permissions and ownership"
+      loop: "{{ samba_share_stats.results }}"
+
+    - name: Verify smb.conf for shares configuration
+      ansible.builtin.command: "grep {{ item.path }} /etc/samba/smb.conf"
+      register: samba_shares_conf_check
+      changed_when: false
+      failed_when: samba_shares_conf_check.rc != 0
+      loop: "{{ samba_shares }}"
+      no_log: true

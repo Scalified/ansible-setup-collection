@@ -1,6 +1,6 @@
 namespace: scalified
 name: setup
-version: 2.0.0
+version: 2.1.0
 readme: README.md
 authors:
   - Vladyslav Baidak <vld.x@hotmail.com>

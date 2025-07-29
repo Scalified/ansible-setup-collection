@@ -61,5 +61,8 @@
 - name: Include MOTD banner configuration tasks
   ansible.builtin.include_tasks: motd.yml
 
-- name: Include Bash configuration
+- name: Include Bash configuration tasks
   ansible.builtin.include_tasks: bash.yml
+
+- name: Include copy scripts tasks
+  ansible.builtin.include_tasks: scripts.yml

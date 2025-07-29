@@ -1,0 +1,23 @@
+#!/bin/sh
+
+get_temp() {
+    zone=$1
+    temp_file="/sys/class/thermal/thermal_zone${zone}/temp"
+    
+    if [ -f "$temp_file" ]; then
+        temp=$(cat "$temp_file")
+        temp_c=$((temp / 1000))
+        echo "Zone ${zone}: ${temp_c}°C"
+    else
+        echo "Zone ${zone}: --"
+    fi
+}
+
+if [ $# -eq 0 ]; then
+    zones=$(ls /sys/class/thermal/thermal_zone*/temp 2>/dev/null | grep -o 'thermal_zone[0-9]*' | grep -o '[0-9]*')
+    for zone in $zones; do
+        get_temp "$zone"
+    done
+else
+    get_temp "$1"
+fi

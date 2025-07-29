@@ -17,6 +17,7 @@
         - fs
         - mail
         - ssl
+        - samba
         - docker
       loop_control:
         loop_var: role
@@ -33,5 +34,6 @@
           - "  ✓ FS:        PASSED   "
           - "  ✓ Mail:      PASSED   "
           - "  ✓ SSL:       PASSED   "
+          - "  ✓ Samba:     PASSED   "
           - "  ✓ Docker:    PASSED   "
           - "========================"

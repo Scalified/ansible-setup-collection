@@ -1,0 +1,17 @@
+---
+- name: Verify thermal script installation
+  block:
+    - name: Check thermal script file properties
+      ansible.builtin.stat:
+        path: /usr/local/bin/thermal
+      register: system_thermal_script
+
+    - name: Verify thermal script file attributes
+      ansible.builtin.assert:
+        that:
+          - system_thermal_script.stat.exists
+          - system_thermal_script.stat.mode == '0755'
+          - system_thermal_script.stat.pw_name == 'root'
+          - system_thermal_script.stat.gr_name == 'root'
+        fail_msg: "Thermal script has incorrect attributes"
+        success_msg: "Thermal script has correct attributes"

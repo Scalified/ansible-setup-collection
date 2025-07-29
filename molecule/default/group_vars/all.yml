@@ -60,3 +60,14 @@ ssl_bundle_name: "bundle.crt"
 
 # Docker
 docker_system_prune_cron: ""
+
+# Samba
+samba_password: "testpassword"
+samba_shares:
+  - name: documents
+    path: /srv/samba/documents
+    comment: "Shared documents"
+  - name: media
+    path: /srv/samba/media
+    comment: "Shared media files"
+    writeable: "no"

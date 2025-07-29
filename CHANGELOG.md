@@ -1,3 +1,17 @@
+# 2.1.0
+
+* [#18 Roles: Samba](https://github.com/Scalified/ansible-setup-collection/issues/18)
+
+## Features
+
+- **Roles: Samba**: Added new role for Samba server configuration and file sharing
+    - Installs Samba server packages and dependencies
+    - Configures SMB shares with customizable permissions and ownership
+    - Supports user authentication and password management
+    - Provides flexible share configuration with browseable/writeable settings
+    - Includes comprehensive molecule tests and documentation
+
+
 # 2.0.0
 
 * [#2 Roles: Packages](https://github.com/Scalified/ansible-setup-collection/issues/2)
