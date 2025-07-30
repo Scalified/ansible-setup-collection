@@ -1,0 +1,5 @@
+[NTP]
+title=Network Time Protocol
+description=NTP time synchronization
+ports=123/udp
+

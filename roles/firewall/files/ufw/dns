@@ -1,0 +1,5 @@
+[DNS]
+title=Domain Name System
+description=DNS server
+ports=53
+

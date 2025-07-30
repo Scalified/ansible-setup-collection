@@ -34,6 +34,18 @@
   become: true
   when: firewall_out_allow_all
 
+- name: Install UFW profiles
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/ufw/applications.d/{{ item | basename }}"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  loop: "{{ query('ansible.builtin.fileglob', 'ufw/*') }}"
+  loop_control:
+    loop_var: profile
+
 - name: UFW apply rule
   community.general.ufw:
     comment: "{{ rule.comment | default(omit) }}"

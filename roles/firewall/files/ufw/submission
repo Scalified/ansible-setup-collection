@@ -1,0 +1,5 @@
+[Submission]
+title=Mail Submission Agent
+description=Mail submission agent
+ports=587/tcp
+

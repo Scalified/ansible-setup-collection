@@ -1,0 +1,5 @@
+[HTTPS]
+title=Web Server (HTTPS)
+description=Web server for HTTPS traffic
+ports=443/tcp
+
