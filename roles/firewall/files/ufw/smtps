@@ -1,4 +1,0 @@
-[SMTPS]
-title=Secure SMTP
-description=Secure SMTP mail server
-ports=465,587/tcp

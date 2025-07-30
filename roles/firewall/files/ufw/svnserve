@@ -1,4 +1,0 @@
-[SVNServe]
-title=Subversion Server
-description=Subversion version control server
-ports=3690/tcp

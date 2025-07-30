@@ -1,0 +1,4 @@
+[identd]
+title=identd
+description=identd
+ports=113/tcp

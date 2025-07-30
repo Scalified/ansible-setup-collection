@@ -1,4 +1,0 @@
-[SMTP]
-title=Simple Mail Transfer Protocol
-description=SMTP mail server
-ports=25/tcp

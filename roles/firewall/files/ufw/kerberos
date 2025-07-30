@@ -1,4 +1,0 @@
-[Kerberos]
-title=Kerberos Authentication
-description=Kerberos network authentication protocol
-ports=88,464,749,750,754/tcp

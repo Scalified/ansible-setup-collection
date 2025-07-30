@@ -1,0 +1,4 @@
+[syslog]
+title=syslog
+description=Message logging daemon
+ports=514|601,6514/tcp

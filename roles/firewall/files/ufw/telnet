@@ -1,4 +1,0 @@
-[Telnet]
-title=Telnet Remote Login
-description=Telnet remote access protocol
-ports=23/tcp

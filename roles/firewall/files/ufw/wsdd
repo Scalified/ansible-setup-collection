@@ -1,0 +1,4 @@
+[wsdd]
+title=wsdd
+description=wsdd implements a Web Service Discovery host daemon enabling Samba hosts to be found by Windows clients; it also offers discovery mode to locate Windows machines and other WSD devices
+ports=3702/udp|5357/tcp

@@ -1,0 +1,4 @@
+[Alertmanager]
+title=Alertmanager
+description=Alertmanager: Handles and delivers alerts created by Prometheus
+ports=9093/tcp|9094

@@ -1,4 +1,0 @@
-[VNC]
-title=Virtual Network Computing
-description=VNC remote desktop protocol
-ports=5800,5900:5902/tcp

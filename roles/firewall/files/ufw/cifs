@@ -1,4 +1,0 @@
-[CIFS]
-title=Common Internet File System
-description=CIFS/SMB file sharing protocol
-ports=445/tcp

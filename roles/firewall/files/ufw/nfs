@@ -1,4 +1,0 @@
-[NFS]
-title=Network File System
-description=NFS file sharing protocol
-ports=111,2049,4000:4005
