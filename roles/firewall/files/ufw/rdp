@@ -1,4 +1,0 @@
-[RDP]
-title=Remote Desktop Protocol
-description=Windows Remote Desktop Protocol
-ports=3389/tcp

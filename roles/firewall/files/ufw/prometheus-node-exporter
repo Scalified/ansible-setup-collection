@@ -1,4 +1,0 @@
-[prometheus-node-exporter]
-title=prometheus-node-exporter
-description=Prometheus exporter for machine metrics
-ports=9100/tcp

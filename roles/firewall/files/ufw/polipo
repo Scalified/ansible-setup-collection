@@ -1,4 +1,0 @@
-[Polipo]
-title=Polipo
-description=Caching web proxy
-ports=8123:8125/tcp

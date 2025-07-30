@@ -1,4 +1,0 @@
-[Elasticsearch]
-title=Elasticsearch Search Engine
-description=Elasticsearch distributed search and analytics engine
-ports=9200,9300/tcp

@@ -1,19 +1,46 @@
 ---
-- name: Verify send-host-stats file
+- name: Verify send-host-stats script attributes
   block:
-    - name: Stat send-host-stats file
+    - name: Stat send-host-stats script
       ansible.builtin.stat:
         path: /usr/local/bin/send-host-stats
-      register: mail_send_host_stats_stat
+      register: mail_send_host_stats_script
 
-    - name: Verify send-host-stats file exists
+    - name: Verify send-host-stats script exists
       ansible.builtin.assert:
-        that: mail_send_host_stats_stat.stat.exists
-        fail_msg: "send-host-stats file does not exist in /usr/local/bin"
-        success_msg: "send-host-stats file exists in /usr/local/bin"
+        that: mail_send_host_stats_script.stat.exists
+        fail_msg: "Send host stats script does not exist"
+        success_msg: "Send host stats script exists"
+    
+    - name: Verify send-host-stats script is a regular file
+      ansible.builtin.assert:
+        that: mail_send_host_stats_script.stat.isreg
+        fail_msg: "Send host stats script is not a regular file"
+        success_msg: "Send host stats script is a regular file"
+    
+    - name: Verify send-host-stats script mode
+      ansible.builtin.assert:
+        that: mail_send_host_stats_script.stat.mode == '0755'
+        fail_msg: "Send host stats script is not executable: {{ mail_send_host_stats_script.stat.mode }}"
+        success_msg: "Send host stats script is executable"
+    
+    - name: Verify send-host-stats script ownership
+      ansible.builtin.assert:
+        that:
+          - mail_send_host_stats_script.stat.pw_name == 'root'
+          - mail_send_host_stats_script.stat.gr_name == 'root'
+        fail_msg: "Send host stats script ownership is incorrect: {{ mail_send_host_stats_script.stat.pw_name }}:{{ mail_send_host_stats_script.stat.gr_name }}"
+        success_msg: "Send host stats script ownership is correct"
 
-    - name: Verify send-host-stats file permissions
+- name: Verify send-host-stats script content
+  block:
+    - name: Slurp send-host-stats script content
+      ansible.builtin.slurp:
+        src: /usr/local/bin/send-host-stats
+      register: mail_send_host_stats_script_content
+    
+    - name: Assert send-host-stats script has Unix line endings
       ansible.builtin.assert:
-        that: mail_send_host_stats_stat.stat.mode == '0755'
-        fail_msg: "send-host-stats file has incorrect permissions: {{ mail_send_host_stats_stat.stat.mode }}"
-        success_msg: "send-host-stats file has correct permissions (0755)"
+        that: "'\\r\\n' not in (mail_send_host_stats_script_content.content | b64decode)"
+        fail_msg: "Send host stats script contains Windows line endings (CRLF)"
+        success_msg: "Send host stats script has Unix line endings (LF)"

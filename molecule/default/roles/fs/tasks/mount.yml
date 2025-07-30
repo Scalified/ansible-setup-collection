@@ -1,30 +1,79 @@
 ---
-- name: Verify auto-remount script
+- name: Verify auto-remount script attributes
   block:
     - name: Stat auto-remount script
       ansible.builtin.stat:
         path: /usr/local/bin/auto-remount
-      register: fs_auto_remount_stat
+      register: fs_auto_remount_script
 
-    - name: Assert auto-remount script exists and is executable
+    - name: Verify auto-remount script exists
+      ansible.builtin.assert:
+        that: fs_auto_remount_script.stat.exists
+        fail_msg: "Auto remount script does not exist"
+        success_msg: "Auto remount script exists"
+
+    - name: Verify auto-remount script is a regular file
+      ansible.builtin.assert:
+        that: fs_auto_remount_script.stat.isreg
+        fail_msg: "Auto remount script is not a regular file"
+        success_msg: "Auto remount script is a regular file"
+
+    - name: Verify auto-remount script mode
+      ansible.builtin.assert:
+        that: fs_auto_remount_script.stat.mode == '0755'
+        fail_msg: "Auto remount script is not executable: {{ fs_auto_remount_script.stat.mode }}"
+        success_msg: "Auto remount script is executable"
+
+    - name: Verify auto-remount script ownership
       ansible.builtin.assert:
         that:
-          - fs_auto_remount_stat.stat.exists
-          - fs_auto_remount_stat.stat.mode | string == '0755'
-          - fs_auto_remount_stat.stat.pw_name == (ansible_user_id | default('root'))
-        fail_msg: "/usr/local/bin/auto-remount does not exist or is not executable"
+          - fs_auto_remount_script.stat.pw_name == 'root'
+          - fs_auto_remount_script.stat.gr_name == 'root'
+        fail_msg: "Auto remount script ownership is incorrect: {{ fs_auto_remount_script.stat.pw_name }}:{{ fs_auto_remount_script.stat.gr_name }}"
+        success_msg: "Auto remount script ownership is correct"
 
-- name: Verify remount scripts directory
+- name: Verify auto-remount script content
+  block:
+    - name: Slurp auto-remount script content
+      ansible.builtin.slurp:
+        src: /usr/local/bin/auto-remount
+      register: fs_auto_remount_script_content
+
+    - name: Assert auto-remount script has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (fs_auto_remount_script_content.content | b64decode)"
+        fail_msg: "Auto remount script contains Windows line endings (CRLF)"
+        success_msg: "Auto remount script has Unix line endings (LF)"
+
+- name: Verify remount scripts directory attributes
   block:
     - name: Stat remount scripts directory
       ansible.builtin.stat:
         path: "{{ fs_mount_auto_remount_scripts_dir }}"
       register: fs_remount_dir_stat
 
-    - name: Assert remount scripts directory exists and is a directory
+    - name: Verify remount scripts directory exists
+      ansible.builtin.assert:
+        that: fs_remount_dir_stat.stat.exists
+        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} does not exist"
+        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} exists"
+    
+    - name: Verify remount scripts directory is a directory
+      ansible.builtin.assert:
+        that: fs_remount_dir_stat.stat.isdir
+        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} is not a directory"
+        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} is a directory"
+    
+    - name: Verify remount scripts directory mode
+      ansible.builtin.assert:
+        that: fs_remount_dir_stat.stat.mode | string == '0755'
+        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} mode is not 0755: {{ fs_remount_dir_stat.stat.mode }}"
+        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} mode is 0755"
+    
+    - name: Verify remount scripts directory ownership
       ansible.builtin.assert:
         that:
-          - fs_remount_dir_stat.stat.exists
-          - fs_remount_dir_stat.stat.isdir
-          - fs_remount_dir_stat.stat.mode | string == '0755'
-        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} does not exist or is not a directory"
+          - fs_remount_dir_stat.stat.pw_name == 'root'
+          - fs_remount_dir_stat.stat.gr_name == 'root'
+        fail_msg: "Remount scripts directory ownership is incorrect: {{ fs_remount_dir_stat.stat.pw_name }}:{{ fs_remount_dir_stat.stat.gr_name }}"
+        success_msg: "Remount scripts directory ownership is correct"

@@ -1,4 +1,0 @@
-[TFP]
-title=Trivial File Transfer Protocol (RFC 783)
-description=Trivial File Transfer Protocol (RFC 783)
-ports=69/udp

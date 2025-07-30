@@ -2,3 +2,8 @@
 title=dhcp
 description=Dynamic Host Configuration Protocol (DHCP) via IPv4
 ports=67,68/udp
+
+[DHCP6]
+title=dhcp6
+description=Dynamic Host Configuration Protocol (DHCP) via IPv6
+ports=546,547/udp

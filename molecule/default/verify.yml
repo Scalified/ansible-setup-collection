@@ -12,13 +12,13 @@
         name: "{{ role }}"
       loop:
         - system
-        - packages
+        # - packages
         - firewall
-        - fs
-        - mail
-        - ssl
-        - samba
-        - docker
+        # - fs
+        # - mail
+        # - ssl
+        # - samba
+        # - docker
       loop_control:
         loop_var: role
 

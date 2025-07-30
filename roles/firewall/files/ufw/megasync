@@ -1,4 +1,0 @@
-[Megasync]
-title=Megasync
-description=Sync your files to your Mega account
-ports=80,443/tcp|6881:6999

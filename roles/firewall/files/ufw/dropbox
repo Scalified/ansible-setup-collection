@@ -1,4 +1,0 @@
-[Dropbox]
-title=Dropbox
-description=Dropbox is a free service that lets you bring your photos, docs, and videos anywhere and share them easily
-ports=80,443/tcp|17500

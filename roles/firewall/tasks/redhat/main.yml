@@ -13,19 +13,16 @@
     state: started
     enabled: true
   become: true
+  when: system_systemd_managed
 
-- name: Block all incoming traffic
+- name: Allow all outgoing traffic
   ansible.posix.firewalld:
-    rich_rule: 'rule family="{{ family }}" direction="in" drop'
+    zone: public
     permanent: true
     state: enabled
+    target: ACCEPT
   become: true
-  loop:
-    - ipv4
-    - ipv6
-  loop_control:
-    loop_var: family
-  when: firewall_in_deny_all
+  when: firewall_out_allow_all
 
 - name: Allow SSH service
   ansible.posix.firewalld:
@@ -34,20 +31,24 @@
     permanent: true
     immediate: true
   become: true
-  when: firewall_in_allow_ssh
+  when: 
+    - firewall_in_allow_ssh
+    - system_systemd_managed
 
-- name: Allow all outgoing traffic
+- name: Block all incoming traffic
   ansible.posix.firewalld:
-    rich_rule: 'rule family="{{ family }}" direction="out" accept'
+    rich_rule: 'rule family="{{ rule.family }}" source address={{ rule.address }} drop'
     permanent: true
     state: enabled
   become: true
   loop:
-    - ipv4
-    - ipv6
+    - family: ipv4
+      address: "0.0.0.0/0"
+    - family: ipv6
+      address: "::/0"
   loop_control:
-    loop_var: family
-  when: firewall_out_allow_all
+    loop_var: rule
+  when: firewall_in_deny_all
 
 - name: Apply firewall rule
   ansible.posix.firewalld:

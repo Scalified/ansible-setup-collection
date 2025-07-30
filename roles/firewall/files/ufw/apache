@@ -1,4 +1,0 @@
-[Apache]
-title=Apache Web Server
-description=Apache HTTP Server
-ports=80,443/tcp

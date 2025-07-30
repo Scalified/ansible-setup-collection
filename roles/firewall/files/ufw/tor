@@ -1,4 +1,0 @@
-[Tor]
-title=Tor
-description=Anonymizing overlay for TCP
-ports=9001,9030,9050,9051/tcp

@@ -1,17 +1,46 @@
 ---
-- name: Verify thermal script installation
+- name: Verify thermal script attributes
   block:
-    - name: Check thermal script file properties
+    - name: Stat thermal script
       ansible.builtin.stat:
         path: /usr/local/bin/thermal
       register: system_thermal_script
 
-    - name: Verify thermal script file attributes
+    - name: Verify thermal script exists
+      ansible.builtin.assert:
+        that: system_thermal_script.stat.exists
+        fail_msg: "Thermal script does not exist"
+        success_msg: "Thermal script exists"
+    
+    - name: Verify thermal script is a regular file
+      ansible.builtin.assert:
+        that: system_thermal_script.stat.isreg
+        fail_msg: "Thermal script is not a regular file"
+        success_msg: "Thermal script is a regular file"
+
+    - name: Verify thermal script mode
+      ansible.builtin.assert:
+        that: system_thermal_script.stat.mode == '0755'
+        fail_msg: "Thermal script is not executable: {{ system_thermal_script.stat.mode }}"
+        success_msg: "Thermal script is executable"
+    
+    - name: Verify thermal script ownership
       ansible.builtin.assert:
         that:
-          - system_thermal_script.stat.exists
-          - system_thermal_script.stat.mode == '0755'
           - system_thermal_script.stat.pw_name == 'root'
           - system_thermal_script.stat.gr_name == 'root'
-        fail_msg: "Thermal script has incorrect attributes"
-        success_msg: "Thermal script has correct attributes"
+        fail_msg: "Thermal script ownership is incorrect: {{ system_thermal_script.stat.pw_name }}:{{ system_thermal_script.stat.gr_name }}"
+        success_msg: "Thermal script ownership is correct"
+    
+- name: Verify thermal script content
+  block:
+    - name: Slurp thermal script content
+      ansible.builtin.slurp:
+        src: /usr/local/bin/thermal
+      register: system_thermal_script_content
+    
+    - name: Assert thermal script has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (system_thermal_script_content.content | b64decode)"
+        fail_msg: "Thermal script contains Windows line endings (CRLF)"
+        success_msg: "Thermal script has Unix line endings (LF)"
