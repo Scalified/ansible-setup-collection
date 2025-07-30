@@ -1,0 +1,4 @@
+[Prometheus]
+title=Prometheus Monitoring
+description=Prometheus metrics collection server
+ports=9090/tcp

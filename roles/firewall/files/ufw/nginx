@@ -1,0 +1,4 @@
+[Nginx]
+title=Nginx Web Server
+description=Nginx HTTP and reverse proxy server
+ports=80,443/tcp

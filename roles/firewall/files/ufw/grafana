@@ -1,0 +1,4 @@
+[Grafana]
+title=Grafana Monitoring Dashboard
+description=Grafana metrics visualization dashboard
+ports=3000/tcp

@@ -1,0 +1,4 @@
+[Dovecot]
+title=Dovecot IMAP/POP3 Server
+description=Dovecot mail retrieval server
+ports=110,143,993,995/tcp

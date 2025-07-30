@@ -1,0 +1,4 @@
+[XMPP]
+title=Extensible Messaging and Presence Protocol
+description=XMPP/Jabber instant messaging protocol
+ports=5222,5223,5269/tcp

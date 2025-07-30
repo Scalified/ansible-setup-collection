@@ -1,0 +1,4 @@
+[LDAP]
+title=Lightweight Directory Access Protocol
+description=LDAP directory service
+ports=389/tcp

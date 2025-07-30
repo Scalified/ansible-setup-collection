@@ -1,0 +1,4 @@
+[LDAPS]
+title=Secure LDAP
+description=Secure LDAP directory service
+ports=636/tcp

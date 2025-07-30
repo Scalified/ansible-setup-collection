@@ -1,5 +1,4 @@
 [Docker]
 title=Docker Daemon
 description=Docker container runtime daemon
-ports=2375/tcp
-
+ports=2375,2376,2377/tcp|4789/udp|7946
