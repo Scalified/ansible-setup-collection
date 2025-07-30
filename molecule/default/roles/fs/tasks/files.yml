@@ -9,14 +9,42 @@
       loop_control:
         loop_var: file
 
-    - name: Assert files and directories exist with correct attributes
+    - name: Assert files and directories exist
       ansible.builtin.assert:
-        that:
-          - fs_file_stat.results[item].stat.exists
-          - fs_file_stat.results[item].stat.pw_name == (fs_files[item].owner | default(ansible_user_id))
-          - fs_file_stat.results[item].stat.gr_name == (fs_files[item].group | default('root'))
-          - fs_file_stat.results[item].stat.mode | string == fs_files[item].mode
-        fail_msg: "File or directory {{ fs_files[item].path }} does not have the expected attributes"
+        that: fs_file_stat.results[file].stat.exists
+        fail_msg: "File or directory {{ fs_files[file].path }} does not exist"
+        success_msg: "File or directory {{ fs_files[file].path }} exists"
       loop: "{{ range(0, fs_files | length) | list }}"
       loop_control:
-        loop_var: item
+        loop_var: file
+    
+    - name: Assert files and directories are regular files or directories
+      ansible.builtin.assert:
+        that: >-
+          (fs_file_stat.results[file].stat.isreg and fs_files[file].state != 'directory') or 
+          (fs_file_stat.results[file].stat.isdir and fs_files[file].state == 'directory')
+        fail_msg: "File or directory {{ fs_files[file].path }} is not a regular file or directory"
+        success_msg: "File or directory {{ fs_files[file].path }} is a regular file or directory"
+      loop: "{{ range(0, fs_files | length) | list }}"
+      loop_control:
+        loop_var: file
+
+    - name: Assert files and directories mode
+      ansible.builtin.assert:
+        that: fs_file_stat.results[file].stat.mode | string == fs_files[file].mode
+        fail_msg: "File or directory {{ fs_files[file].path }} has incorrect mode: {{ fs_file_stat.results[file].stat.mode }}"
+        success_msg: "File or directory {{ fs_files[file].path }} has correct mode"
+      loop: "{{ range(0, fs_files | length) | list }}"
+      loop_control:
+        loop_var: file
+
+    - name: Assert files and directories ownership
+      ansible.builtin.assert:
+        that:
+          - fs_file_stat.results[file].stat.pw_name == (fs_files[file].owner | default(ansible_user_id))
+          - fs_file_stat.results[file].stat.gr_name == (fs_files[file].group | default('root'))
+        fail_msg: "File or directory {{ fs_files[file].path }} ownership is incorrect"
+        success_msg: "File or directory {{ fs_files[file].path }} ownership is correct"
+      loop: "{{ range(0, fs_files | length) | list }}"
+      loop_control:
+        loop_var: file

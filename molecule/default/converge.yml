@@ -5,8 +5,8 @@
   roles:
     # - scalified.setup.system
     # - scalified.setup.packages
-    - scalified.setup.firewall
-    # - scalified.setup.fs
+    # - scalified.setup.firewall
+    - scalified.setup.fs
 
 
 

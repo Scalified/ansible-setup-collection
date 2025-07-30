@@ -13,8 +13,8 @@
       loop:
         # - system
         # - packages
-        - firewall
-        # - fs
+        # - firewall
+        - fs
         # - mail
         # - ssl
         # - samba
