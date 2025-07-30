@@ -38,6 +38,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     - `system_containerized` - indicates if running inside a container
     - `system_systemd_managed` - indicates if `systemd` is available
     - `system_architecture` - system architecture (`amd64`, `arm64`)
+- Each distribution-specific tasks or variables file must be placed inside a folder named after the distribution in lowercase (e.g., debian for Debian)
+- When including distribution-specific tasks or variables, use the `system_os_family` variable to dynamically reference the appropriate distribution folder
 
 ## Molecule Tests
 

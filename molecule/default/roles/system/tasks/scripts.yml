@@ -4,32 +4,32 @@
     - name: Stat thermal script
       ansible.builtin.stat:
         path: /usr/local/bin/thermal
-      register: system_thermal_script
+      register: system_thermal_script_stat
 
     - name: Verify thermal script exists
       ansible.builtin.assert:
-        that: system_thermal_script.stat.exists
+        that: system_thermal_script_stat.stat.exists
         fail_msg: "Thermal script does not exist"
         success_msg: "Thermal script exists"
     
     - name: Verify thermal script is a regular file
       ansible.builtin.assert:
-        that: system_thermal_script.stat.isreg
+        that: system_thermal_script_stat.stat.isreg
         fail_msg: "Thermal script is not a regular file"
         success_msg: "Thermal script is a regular file"
 
     - name: Verify thermal script mode
       ansible.builtin.assert:
-        that: system_thermal_script.stat.mode == '0755'
-        fail_msg: "Thermal script is not executable: {{ system_thermal_script.stat.mode }}"
-        success_msg: "Thermal script is executable"
+        that: system_thermal_script_stat.stat.mode == '0755'
+        fail_msg: "Thermal script mode is incorrect: {{ system_thermal_script_stat.stat.mode }}"
+        success_msg: "Thermal script mode is correct"
     
     - name: Verify thermal script ownership
       ansible.builtin.assert:
         that:
-          - system_thermal_script.stat.pw_name == 'root'
-          - system_thermal_script.stat.gr_name == 'root'
-        fail_msg: "Thermal script ownership is incorrect: {{ system_thermal_script.stat.pw_name }}:{{ system_thermal_script.stat.gr_name }}"
+          - system_thermal_script_stat.stat.pw_name == 'root'
+          - system_thermal_script_stat.stat.gr_name == 'root'
+        fail_msg: "Thermal script ownership is incorrect: {{ system_thermal_script_stat.stat.pw_name }}:{{ system_thermal_script_stat.stat.gr_name }}"
         success_msg: "Thermal script ownership is correct"
     
 - name: Verify thermal script content

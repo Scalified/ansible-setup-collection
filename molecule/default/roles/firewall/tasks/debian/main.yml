@@ -1,0 +1,73 @@
+---
+- name: Verify UFW packages
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert UFW package installed
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - ufw
+      loop_control:
+        loop_var: package
+
+- name: Verify UFW profile attributes
+  block:
+    - name: Stat UFW profiles
+      ansible.builtin.stat:
+        path: /etc/ufw/applications.d/{{ item }}
+      register: ufw_profiles
+      loop:
+        - dhcp
+        - docker
+        - http
+        - l2tp
+        - mongodb
+        - mysql
+        - nginx
+        - ntp
+        - openvpn
+        - postgresql
+        - pptp
+        - redis
+        - samba
+        - sip
+        - snmp
+        - syslog
+        - whois
+    
+    - name: Assert UFW profiles exist
+      ansible.builtin.assert:
+        that: item.stat.exists
+        fail_msg: "UFW profile {{ item.item }} does not exist"
+        success_msg: "UFW profile {{ item.item }} exists"
+      loop: "{{ ufw_profiles.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+      
+    - name: Verify UFW profile is a regular file
+      ansible.builtin.assert:
+        that: item.stat.isreg
+        fail_msg: "UFW profile {{ item.item }} is not a regular file"
+        success_msg: "UFW profile {{ item.item }} is a regular file"
+      loop: "{{ ufw_profiles.results }}"
+
+    - name: Verify UFW profile mode
+      ansible.builtin.assert:
+        that: item.stat.mode == '0644'
+        fail_msg: "UFW profile {{ item.item }} has incorrect mode: {{ item.stat.mode }}"
+        success_msg: "UFW profile {{ item.item }} has correct mode"
+      loop: "{{ ufw_profiles.results }}"
+
+    - name: Verify UFW profile ownership
+      ansible.builtin.assert:
+        that:
+          - item.stat.pw_name == 'root'
+          - item.stat.gr_name == 'root'
+        fail_msg: "UFW profile {{ item.item }} ownership is incorrect: {{ item.stat }}"
+        success_msg: "UFW profile {{ item.item }} ownership is correct"
+      loop: "{{ ufw_profiles.results }}"

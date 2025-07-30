@@ -12,6 +12,8 @@
   ansible.builtin.file:
     dest: /etc/bash_completion.d
     state: directory
+    owner: root
+    group: root
     mode: '0755'
   become: true
 

@@ -2,21 +2,34 @@
 - name: Include distribution-specific vim tasks
   ansible.builtin.include_tasks: "{{ system_os_family }}/vim.yml"
 
-- name: Verify vim configuration
+- name: Verify vim configuration file
   block:
+    - name: Stat .vimrc file
+      ansible.builtin.stat:
+        path: "{{ ansible_env.HOME }}/.vimrc"
+      register: packages_vimrc_file_stat
+
     - name: Check if .vimrc file exists
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.vimrc"
       register: packages_vimrc_file_stat
 
-    - name: Assert .vimrc file exists
+    - name: Assert .vimrc file is a regular file
       ansible.builtin.assert:
-        that: packages_vimrc_file_stat.stat.exists
-        fail_msg: ".vimrc file does not exist in {{ ansible_env.HOME }}"
-        success_msg: ".vimrc file exists in {{ ansible_env.HOME }}"
+        that: packages_vimrc_file_stat.stat.type == 'file'
+        fail_msg: ".vimrc file is not a regular file"
+        success_msg: ".vimrc file is a regular file"
 
-    - name: Assert .vimrc permissions are 0644
+    - name: Assert .vimrc file mode
       ansible.builtin.assert:
-        that: packages_vimrc_file_stat.stat.mode == '0644'
-        fail_msg: ".vimrc permissions are not 0644"
-        success_msg: ".vimrc permissions are correct (0644)"
+        that: packages_vimrc_file_stat.stat.mode | string == '0644'
+        fail_msg: ".vimrc file mode is incorrect: {{ packages_vimrc_file_stat.stat.mode }}"
+        success_msg: ".vimrc file mode is correct"
+
+    - name: Assert .vimrc file ownership
+      ansible.builtin.assert:
+        that:
+          - packages_vimrc_file_stat.stat.pw_name == 'root'
+          - packages_vimrc_file_stat.stat.gr_name == 'root'
+        fail_msg: ".vimrc file ownership is incorrect: {{ packages_vimrc_file_stat.stat.pw_name }}:{{ packages_vimrc_file_stat.stat.gr_name }}"
+        success_msg: ".vimrc file ownership is correct"

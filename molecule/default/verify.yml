@@ -12,7 +12,7 @@
         name: "{{ role }}"
       loop:
         - system
-        # - packages
+        - packages
         - firewall
         # - fs
         # - mail

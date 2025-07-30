@@ -1,1 +1,3 @@
 ---
+- name: Include distribution-specific verifications
+  ansible.builtin.include_tasks: "{{ system_os_family }}/main.yml"

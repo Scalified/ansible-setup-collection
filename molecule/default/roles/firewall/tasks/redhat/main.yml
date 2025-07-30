@@ -1,0 +1,27 @@
+---
+- name: Verify firewalld packages
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert firewalld package installed
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - firewalld
+      loop_control:
+        loop_var: package
+
+- name: Verify firewalld zone configuration
+  block:
+    - name: Get firewalld public zone configuration
+      ansible.builtin.command: firewall-cmd --zone=public --list-all
+      changed_when: false
+      register: firewall_public_zone
+
+    - name: Display public zone configuration for debugging
+      ansible.builtin.debug:
+        var: firewall_public_zone.stdout

@@ -3,7 +3,12 @@
   hosts: all
   gather_facts: true
   roles:
+    - scalified.setup.system
+    - scalified.setup.packages
     - scalified.setup.firewall
+
+
+
     # - scalified.setup.baseline
     # - scalified.setup.ssl
     # - scalified.setup.samba
