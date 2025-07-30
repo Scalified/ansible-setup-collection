@@ -26,4 +26,3 @@ galaxy_info:
 
 dependencies:
   - role: scalified.setup.system
-  - role: scalified.setup.packages

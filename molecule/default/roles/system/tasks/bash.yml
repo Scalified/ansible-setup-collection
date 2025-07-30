@@ -63,7 +63,7 @@
     
     - name: Verify .bash_aliases file is a regular file
       ansible.builtin.assert:
-        that: system_bash_aliases_file_stat.stat.type == 'file'
+        that: system_bash_aliases_file_stat.stat.isreg
         fail_msg: ".bash_aliases file is not a regular file"
         success_msg: ".bash_aliases file is a regular file"
 
@@ -94,7 +94,7 @@
 
     - name: Verify default aliases present
       ansible.builtin.assert:
-        that: "'{{ alias }}' in system_bash_aliases_text"
+        that: "alias in system_bash_aliases_text"
         fail_msg: "Alias '{{ alias }}' not found in .bash_aliases"
         success_msg: "Alias '{{ alias }}' found in .bash_aliases"
       loop:
@@ -107,8 +107,8 @@
     - name: Verify user-defined aliases present
       ansible.builtin.assert:
         that: 
-          - "{{ alias.comment }} is not defined or '# {{ alias.comment }}' in system_bash_aliases_text }}"
-          - "'{{ alias.alias }}' in system_bash_aliases_text"
+          - "alias.comment is not defined or ('# ' ~ alias.comment) in system_bash_aliases_text"
+          - "alias.alias in system_bash_aliases_text"
         fail_msg: "Alias '{{ alias.alias }}' not found in .bash_aliases"
         success_msg: "Alias '{{ alias.alias }}' found in .bash_aliases"
       loop: "{{ system_bash_aliases | default([]) }}"

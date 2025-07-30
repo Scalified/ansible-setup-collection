@@ -86,3 +86,9 @@ system_bash_aliases:
 | `system_architecture`    | Normalized architecture string for package management | `amd64`, `arm64`, `armhf`  |
 | `system_containerized`   | Indicates if the system is running in a container     | `true`, `false`            |
 | `system_systemd_managed` | Indicates if the system is managed by systemd         | `true`, `false`            |
+
+## Scripts
+
+| Name      | Description                                              | Usage Example |
+|-----------|----------------------------------------------------------|               |           
+| `thermal` | Displays `thermal_zone*` temperature readings in Celsius | `thermal`     |

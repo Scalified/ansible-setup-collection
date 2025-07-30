@@ -67,9 +67,9 @@
     - name: Verify remount scripts directory mode
       ansible.builtin.assert:
         that: fs_auto_remount_dir.stat.mode | string == '0755'
-        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has incorrect mode: {{ fs_auto_remount_dir.stat.mode }}"
-        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has correct mode"
-    
+        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} mode is incorrect: {{ fs_auto_remount_dir.stat.mode }}"
+        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} mode is correct"
+
     - name: Verify remount scripts directory ownership
       ansible.builtin.assert:
         that:

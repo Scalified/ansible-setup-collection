@@ -14,7 +14,7 @@
 
     - name: Verify MOTD file is a regular file
       ansible.builtin.assert:
-        that: system_motd_file_stat.stat.type == 'file'
+        that: system_motd_file_stat.stat.isreg
         fail_msg: "MOTD file is not a regular file"
         success_msg: "MOTD file is a regular file"
       

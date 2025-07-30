@@ -9,14 +9,15 @@
         path: "{{ ansible_env.HOME }}/.vimrc"
       register: packages_vimrc_file_stat
 
-    - name: Check if .vimrc file exists
-      ansible.builtin.stat:
-        path: "{{ ansible_env.HOME }}/.vimrc"
-      register: packages_vimrc_file_stat
+    - name: Assert .vimrc file exists
+      ansible.builtin.assert:
+        that: packages_vimrc_file_stat.stat.exists
+        fail_msg: ".vimrc file does not exist"
+        success_msg: ".vimrc file exists"
 
     - name: Assert .vimrc file is a regular file
       ansible.builtin.assert:
-        that: packages_vimrc_file_stat.stat.type == 'file'
+        that: packages_vimrc_file_stat.stat.isreg
         fail_msg: ".vimrc file is not a regular file"
         success_msg: ".vimrc file is a regular file"
 

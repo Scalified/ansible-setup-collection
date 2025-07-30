@@ -25,6 +25,26 @@ system_bash_aliases:
 packages_list:
   - net-tools
 
+# Firewall
+firewall_ufw_profiles:
+  - dhcp
+  - docker
+  - http
+  - l2tp
+  - mongodb
+  - mysql
+  - nginx
+  - ntp
+  - openvpn
+  - postgresql
+  - pptp
+  - redis
+  - samba
+  - sip
+  - snmp
+  - syslog
+  - whois
+
 # FS
 fs_files:
   - path: "/home/test"

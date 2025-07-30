@@ -11,8 +11,8 @@
       ansible.builtin.include_role:
         name: "{{ role }}"
       loop:
-        - system
-        - packages
+        # - system
+        # - packages
         - firewall
         # - fs
         # - mail

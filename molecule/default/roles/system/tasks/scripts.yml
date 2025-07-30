@@ -42,5 +42,5 @@
     - name: Assert thermal script has Unix line endings
       ansible.builtin.assert:
         that: "'\\r\\n' not in (system_thermal_script_content.content | b64decode)"
-        fail_msg: "Thermal script contains Windows line endings (CRLF)"
+        fail_msg: "Thermal script has Windows line endings (CRLF)"
         success_msg: "Thermal script has Unix line endings (LF)"

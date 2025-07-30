@@ -1,5 +1,5 @@
 ---
-- name: Verify created files and directories
+- name: Verify created files and directories attributes
   block:
     - name: Stat created files and directories
       ansible.builtin.stat:
