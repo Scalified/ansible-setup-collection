@@ -29,12 +29,12 @@
         that: packages_age_config_dir_stat.stat.isdir
         fail_msg: "AGE config directory {{ packages_age_config_dir }} is not a directory"
         success_msg: "AGE config directory {{ packages_age_config_dir }} is a directory"
-    
+
     - name: Assert AGE config directory mode
       ansible.builtin.assert:
         that: packages_age_config_dir_stat.stat.mode | string == '0700'
-        fail_msg: "AGE config directory {{ packages_age_config_dir }} mode is incorrect: {{ packages_age_config_dir_stat.stat.mode }}"
-        success_msg: "AGE config directory {{ packages_age_config_dir }} mode is correct (0700)"
+        fail_msg: "AGE config directory {{ packages_age_config_dir }} has incorrect mode: {{ packages_age_config_dir_stat.stat.mode }}"
+        success_msg: "AGE config directory {{ packages_age_config_dir }} has correct mode (0700)"
 
 - name: Verify AGE private key attributes
   block:
@@ -53,9 +53,9 @@
         that: packages_age_key_file_stat.stat.isfile
         fail_msg: "AGE private key file is not a regular file in {{ packages_age_config_dir }}"
         success_msg: "AGE private key file is a regular file in {{ packages_age_config_dir }}"
-    
+
     - name: Assert AGE private key file mode
       ansible.builtin.assert:
         that: packages_age_key_file_stat.stat.mode | string == '0600'
-        fail_msg: "AGE private key file mode is incorrect: {{ packages_age_key_file_stat.stat.mode }}"
-        success_msg: "AGE private key file mode is correct"
+        fail_msg: "AGE private key file has incorrect mode: {{ packages_age_key_file_stat.stat.mode }}"
+        success_msg: "AGE private key file has correct mode"

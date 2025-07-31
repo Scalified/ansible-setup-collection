@@ -18,40 +18,114 @@
       loop_control:
         loop_var: package
 
-- name: Verify sasl_passwd file
-  block:
-    - name: Stat sasl_passwd file
-      ansible.builtin.stat:
-        path: /etc/postfix/sasl_passwd
-      register: sasl_passwd_file_stat
-
-    - name: Verify sasl_passwd file exists
-      ansible.builtin.assert:
-        that: sasl_passwd_file_stat.stat.exists
-        fail_msg: "sasl_passwd file does not exist in /etc/postfix"
-        success_msg: "sasl_passwd file exists in /etc/postfix"
-
-    - name: Verify sasl_passwd file permissions
-      ansible.builtin.assert:
-        that: sasl_passwd_file_stat.stat.mode == '0600'
-        fail_msg: "sasl_passwd file has incorrect permissions: {{ sasl_passwd_file_stat.stat.mode }}"
-        success_msg: "sasl_passwd file has correct permissions (0600)"
-
-- name: Verify main.cf file
+- name: Verify main.cf file attributes
   block:
     - name: Stat main.cf file
       ansible.builtin.stat:
         path: /etc/postfix/main.cf
-      register: main_cf_file_stat
+      register: mail_main_cf_file_stat
 
-    - name: Verify main.cf file exists
+    - name: Assert main.cf file exists
       ansible.builtin.assert:
-        that: main_cf_file_stat.stat.exists
+        that: mail_main_cf_file_stat.stat.exists
         fail_msg: "main.cf file does not exist in /etc/postfix"
         success_msg: "main.cf file exists in /etc/postfix"
 
-    - name: Verify main.cf file permissions
+    - name: Assert main.cf file is a regular file
       ansible.builtin.assert:
-        that: main_cf_file_stat.stat.mode == '0644'
-        fail_msg: "main.cf file has incorrect permissions: {{ main_cf_file_stat.stat.mode }}"
-        success_msg: "main.cf file has correct permissions (0644)"
+        that: mail_main_cf_file_stat.stat.isreg
+        fail_msg: "main.cf file is not a regular file"
+        success_msg: "main.cf file is a regular file"
+
+    - name: Assert main.cf file mode
+      ansible.builtin.assert:
+        that: mail_main_cf_file_stat.stat.mode == '0644'
+        fail_msg: "main.cf file has incorrect mode: {{ mail_main_cf_file_stat.stat.mode }}"
+        success_msg: "main.cf file has correct mode"
+
+    - name: Assert main.cf file ownership
+      ansible.builtin.assert:
+        that:
+          - mail_main_cf_file_stat.stat.pw_name == 'root'
+          - mail_main_cf_file_stat.stat.gr_name == 'root'
+        fail_msg: "main.cf file has incorrect ownership: {{ mail_main_cf_file_stat.stat.pw_name }}:{{ mail_main_cf_file_stat.stat.gr_name }}"
+        success_msg: "main.cf file has correct ownership"
+
+- name: Verify main.cf file content
+  block:
+    - name: Slurp main.cf file content
+      ansible.builtin.slurp:
+        src: /etc/postfix/main.cf
+      register: mail_main_cf_file_content
+
+    - name: Assert main.cf file has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (mail_main_cf_file_content.content | b64decode)"
+        fail_msg: "main.cf file has Windows line endings (CRLF)"
+        success_msg: "main.cf file has Unix line endings (LF)"
+
+    - name: Assert main.cf file contains relayhost configuration
+      ansible.builtin.assert:
+        that: "'relayhost = [{{ mail_smtp_server }}]:{{ mail_smtp_port }}' in (mail_main_cf_file_content.content | b64decode)"
+        fail_msg: "main.cf file does not contain expected SMTP server"
+        success_msg: "main.cf file contains expected SMTP server"
+
+    - name: Assert main.cf file contains myhostname configuration
+      ansible.builtin.assert:
+        that: "'myhostname = {{ mail_hostname }}' in (mail_main_cf_file_content.content | b64decode)"
+        fail_msg: "main.cf file does not contain expected hostname configuration"
+        success_msg: "main.cf file contains expected hostname configuration"
+
+- name: Verify sasl_passwd file attributes
+  block:
+    - name: Stat sasl_passwd file
+      ansible.builtin.stat:
+        path: /etc/postfix/sasl_passwd
+      register: mail_sasl_passwd_file_stat
+
+    - name: Assert sasl_passwd file exists
+      ansible.builtin.assert:
+        that: mail_sasl_passwd_file_stat.stat.exists
+        fail_msg: "sasl_passwd file does not exist in /etc/postfix"
+        success_msg: "sasl_passwd file exists in /etc/postfix"
+
+    - name: Assert sasl_passwd file is a regular file
+      ansible.builtin.assert:
+        that: mail_sasl_passwd_file_stat.stat.isreg
+        fail_msg: "sasl_passwd file is not a regular file"
+        success_msg: "sasl_passwd file is a regular file"
+
+    - name: Assert sasl_passwd file mode
+      ansible.builtin.assert:
+        that: mail_sasl_passwd_file_stat.stat.mode == '0600'
+        fail_msg: "sasl_passwd file has incorrect mode: {{ mail_sasl_passwd_file_stat.stat.mode }}"
+        success_msg: "sasl_passwd file has correct mode"
+
+    - name: Assert sasl_passwd file ownership
+      ansible.builtin.assert:
+        that:
+          - mail_sasl_passwd_file_stat.stat.pw_name == 'root'
+          - mail_sasl_passwd_file_stat.stat.gr_name == 'root'
+        fail_msg: "sasl_passwd file has incorrect ownership: {{ mail_sasl_passwd_file_stat.stat.pw_name }}:{{ mail_sasl_passwd_file_stat.stat.gr_name }}"
+        success_msg: "sasl_passwd file has correct ownership"
+
+- name: Verify sasl_passwd file content
+  block:
+    - name: Slurp sasl_passwd file content
+      ansible.builtin.slurp:
+        src: /etc/postfix/sasl_passwd
+      register: mail_sasl_passwd_file_content
+
+    - name: Assert sasl_passwd file has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (mail_sasl_passwd_file_content.content | b64decode)"
+        fail_msg: "sasl_passwd file has Windows line endings (CRLF)"
+        success_msg: "sasl_passwd file has Unix line endings (LF)"
+
+    - name: Assert sasl_passwd file contains SMTP credentials
+      ansible.builtin.assert:
+        that: >-
+          '[{{ mail_smtp_server }}]:{{ mail_smtp_port }} {{ mail_smtp_username }}:{{ mail_smtp_password }}'
+          in (mail_sasl_passwd_file_content.content | b64decode)
+        fail_msg: "sasl_passwd file does not contain expected SMTP credentials"
+        success_msg: "sasl_passwd file contains expected SMTP credentials"

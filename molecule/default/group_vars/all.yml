@@ -66,6 +66,7 @@ mail_smtp_server: "smtp.example.com"
 mail_smtp_port: 587
 mail_smtp_username: "testuser"
 mail_smtp_password: "testpassword"
+mail_hostname: "mail.example2.com"
 mail_recipient: "test@example.com"
 
 # SSL
@@ -82,12 +83,22 @@ ssl_bundle_name: "bundle.crt"
 docker_system_prune_cron: ""
 
 # Samba
+samba_interfaces:
+  - "lo"
+  - "eth0"
+samba_server_string: "Samba TEST Server"
+samba_workgroup: "TESTWORKGROUP"
+samba_netbios_name: "TESTNAME"
 samba_password: "testpassword"
 samba_shares:
   - name: documents
     path: /srv/samba/documents
     comment: "Shared documents"
+    owner: root
+    group: root
   - name: media
     path: /srv/samba/media
     comment: "Shared media files"
     writeable: "no"
+    owner: root
+    group: root

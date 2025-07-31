@@ -11,14 +11,14 @@
       ansible.builtin.include_role:
         name: "{{ role }}"
       loop:
-        # - system
-        # - packages
-        # - firewall
+        - system
+        - packages
+        - firewall
         - fs
-        # - mail
-        # - ssl
-        # - samba
-        # - docker
+        - mail
+        - ssl
+        - samba
+        - docker
       loop_control:
         loop_var: role
 

@@ -31,7 +31,7 @@
     permanent: true
     immediate: true
   become: true
-  when: 
+  when:
     - firewall_in_allow_ssh
     - system_systemd_managed
 

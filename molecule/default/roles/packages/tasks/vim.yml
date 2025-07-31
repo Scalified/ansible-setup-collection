@@ -24,13 +24,13 @@
     - name: Assert .vimrc file mode
       ansible.builtin.assert:
         that: packages_vimrc_file_stat.stat.mode | string == '0644'
-        fail_msg: ".vimrc file mode is incorrect: {{ packages_vimrc_file_stat.stat.mode }}"
-        success_msg: ".vimrc file mode is correct"
+        fail_msg: ".vimrc file has incorrect mode: {{ packages_vimrc_file_stat.stat.mode }}"
+        success_msg: ".vimrc file has correct mode"
 
     - name: Assert .vimrc file ownership
       ansible.builtin.assert:
         that:
           - packages_vimrc_file_stat.stat.pw_name == 'root'
           - packages_vimrc_file_stat.stat.gr_name == 'root'
-        fail_msg: ".vimrc file ownership is incorrect: {{ packages_vimrc_file_stat.stat.pw_name }}:{{ packages_vimrc_file_stat.stat.gr_name }}"
-        success_msg: ".vimrc file ownership is correct"
+        fail_msg: ".vimrc file has incorrect ownership: {{ packages_vimrc_file_stat.stat.pw_name }}:{{ packages_vimrc_file_stat.stat.gr_name }}"
+        success_msg: ".vimrc file has correct ownership"

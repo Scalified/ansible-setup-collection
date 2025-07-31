@@ -6,7 +6,7 @@
         path: /var/lib/apt/lists
       register: apt_cache_stat
 
-    - name: Verify APT cache is recent
+    - name: Assert APT cache is recent
       ansible.builtin.assert:
         that:
           - apt_cache_stat.stat.exists
@@ -21,7 +21,7 @@
       register: apt_upgradable
       changed_when: false
 
-    - name: Verify minimal pending updates
+    - name: Assert minimal pending updates
       ansible.builtin.assert:
         that: apt_upgradable.stdout_lines | length <= 5
         fail_msg: "Too many pending updates found: {{ apt_upgradable.stdout_lines | length }}"

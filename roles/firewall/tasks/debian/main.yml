@@ -57,7 +57,7 @@
     direction: "{{ rule.direction | default('in') }}"
     interface: "{{ rule.interface | default(rule.if) | default(omit) }}"
     interface_in: "{{ rule.interface_in | default(rule.if_in) | default(omit) }}"
-    interface_out: "{{ rule.interface_out | default(rule.if_out)| default(omit) }}"
+    interface_out: "{{ rule.interface_out | default(rule.if_out) | default(omit) }}"
     protocol: "{{ rule.protocol | default(rule.proto) | default(omit) }}"
     route: "{{ rule.route | default(omit) }}"
     from: "{{ rule.from | default(rule.from_ip) | default(rule.src) | default('any') }}"

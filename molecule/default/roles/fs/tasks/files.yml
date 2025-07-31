@@ -17,11 +17,11 @@
       loop: "{{ range(0, fs_files | length) | list }}"
       loop_control:
         loop_var: file
-    
+
     - name: Assert files and directories are regular files or directories
       ansible.builtin.assert:
         that: >-
-          (fs_file_stat.results[file].stat.isreg and fs_files[file].state != 'directory') or 
+          (fs_file_stat.results[file].stat.isreg and fs_files[file].state != 'directory') or
           (fs_file_stat.results[file].stat.isdir and fs_files[file].state == 'directory')
         fail_msg: "File or directory {{ fs_files[file].path }} is not a regular file or directory"
         success_msg: "File or directory {{ fs_files[file].path }} is a regular file or directory"
@@ -43,8 +43,8 @@
         that:
           - fs_file_stat.results[file].stat.pw_name == (fs_files[file].owner | default(ansible_user_id))
           - fs_file_stat.results[file].stat.gr_name == (fs_files[file].group | default('root'))
-        fail_msg: "File or directory {{ fs_files[file].path }} ownership is incorrect"
-        success_msg: "File or directory {{ fs_files[file].path }} ownership is correct"
+        fail_msg: "File or directory {{ fs_files[file].path }} has incorrect ownership"
+        success_msg: "File or directory {{ fs_files[file].path }} has correct ownership"
       loop: "{{ range(0, fs_files | length) | list }}"
       loop_control:
         loop_var: file

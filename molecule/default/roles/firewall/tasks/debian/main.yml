@@ -24,7 +24,7 @@
       loop: "{{ firewall_ufw_profiles }}"
       loop_control:
         loop_var: profile
-    
+
     - name: Assert UFW profiles exist
       ansible.builtin.assert:
         that: profile_stat.stat.exists
@@ -34,8 +34,8 @@
       loop: "{{ firewall_ufw_profiles_stats.results }}"
       loop_control:
         loop_var: profile_stat
-      
-    - name: Verify UFW profiles are regular files
+
+    - name: Assert UFW profiles are regular files
       ansible.builtin.assert:
         that: profile_stat.stat.isreg
         fail_msg: "UFW profile {{ profile_stat.profile }} is not a regular file"
@@ -45,7 +45,7 @@
       loop_control:
         loop_var: profile_stat
 
-    - name: Verify UFW profiles mode
+    - name: Assert UFW profiles mode
       ansible.builtin.assert:
         that: profile_stat.stat.mode == '0644'
         fail_msg: "UFW profile {{ profile_stat.profile }} has incorrect mode: {{ profile_stat.stat.mode }}"
@@ -55,13 +55,13 @@
       loop_control:
         loop_var: profile_stat
 
-    - name: Verify UFW profiles ownership
+    - name: Assert UFW profiles ownership
       ansible.builtin.assert:
         that:
           - profile_stat.stat.pw_name == 'root'
           - profile_stat.stat.gr_name == 'root'
-        fail_msg: "UFW profile {{ profile_stat.profile }} ownership is incorrect: {{ profile_stat.stat }}"
-        success_msg: "UFW profile {{ profile_stat.profile }} ownership is correct"
+        fail_msg: "UFW profile {{ profile_stat.profile }} has incorrect ownership: {{ profile_stat.stat }}"
+        success_msg: "UFW profile {{ profile_stat.profile }} has correct ownership"
         quiet: true
       loop: "{{ firewall_ufw_profiles_stats.results }}"
       loop_control:

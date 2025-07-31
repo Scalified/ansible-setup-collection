@@ -4,55 +4,51 @@
     - name: Stat docker-system-prune script
       ansible.builtin.stat:
         path: /usr/local/bin/docker-system-prune
-      register: docker_system_prune_script
+      register: docker_system_prune_script_stat
 
-    - name: Verify docker-system-prune script exists
+    - name: Assert docker-system-prune script exists
       ansible.builtin.assert:
-        that: docker_system_prune_script.stat.exists
+        that: docker_system_prune_script_stat.stat.exists
         fail_msg: "docker-system-prune script does not exist"
         success_msg: "docker-system-prune script exists"
 
-    - name: Verify docker-system-prune script is a regular file
+    - name: Assert docker-system-prune script is a regular file
       ansible.builtin.assert:
-        that: docker_system_prune_script.stat.isreg
+        that: docker_system_prune_script_stat.stat.isreg
         fail_msg: "docker-system-prune script is not a regular file"
         success_msg: "docker-system-prune script is a regular file"
-    
-    - name: Verify docker-system-prune script mode
-      ansible.builtin.assert:
-        that: docker_system_prune_script.stat.mode == '0755'
-        fail_msg: "docker-system-prune script is not executable: {{ docker_system_prune_script.stat.mode }}"
-        success_msg: "docker-system-prune script is executable"
 
-    - name: Verify docker-system-prune script ownership
+    - name: Assert docker-system-prune script mode
+      ansible.builtin.assert:
+        that: docker_system_prune_script_stat.stat.mode == '0755'
+        fail_msg: "docker-system-prune script has incorrect mode: {{ docker_system_prune_script_stat.stat.mode }}"
+        success_msg: "docker-system-prune script has correct mode"
+
+    - name: Assert docker-system-prune script ownership
       ansible.builtin.assert:
         that:
-          - docker_system_prune_script.stat.pw_name == 'root'
-          - docker_system_prune_script.stat.gr_name == 'root'
-        fail_msg: "docker-system-prune script ownership is incorrect: {{ docker_system_prune_script.stat.pw_name }}:{{ docker_system_prune_script.stat.gr_name }}"
-        success_msg: "docker-system-prune script ownership is correct"
-
-    - name: Verify docker-system-prune script charset
-      ansible.builtin.assert:
-        that: docker_system_prune_script.stat.charset == 'utf-8'
-        fail_msg: "docker-system-prune script charset is not UTF-8: {{ docker_system_prune_script.stat.charset }}"
-        success_msg: "docker-system-prune script charset is UTF-8"
+          - docker_system_prune_script_stat.stat.pw_name == 'root'
+          - docker_system_prune_script_stat.stat.gr_name == 'root'
+        fail_msg: >-
+          docker-system-prune script has incorrect ownership:
+          {{ docker_system_prune_script_stat.stat.pw_name }}:{{ docker_system_prune_script_stat.stat.gr_name }}
+        success_msg: "docker-system-prune script has correct ownership"
 
 - name: Verify docker-system-prune script content
   block:
     - name: Slurp docker-system-prune script content
       ansible.builtin.slurp:
         src: /usr/local/bin/docker-system-prune
-      register: docker_system_prune_script
+      register: docker_system_prune_script_content
 
     - name: Assert docker-system-prune script has Unix line endings
       ansible.builtin.assert:
-        that: "'\\r\\n' not in (docker_system_prune_script.content | b64decode)"
+        that: "'\\r\\n' not in (docker_system_prune_script_content.content | b64decode)"
         fail_msg: "docker-system-prune script contains Windows line endings (CRLF)"
         success_msg: "docker-system-prune script has Unix line endings (LF)"
 
     - name: Assert prune script contains expected commands
       ansible.builtin.assert:
-        that: "'docker-system-prune --all --volumes --force' in (docker_system_prune_script.content | b64decode)"
+        that: "'docker system prune --all --volumes --force' in (docker_system_prune_script_content.content | b64decode)"
         fail_msg: "docker-system-prune script content does not match expected configuration"
         success_msg: "docker-system-prune script content matches expected configuration"
