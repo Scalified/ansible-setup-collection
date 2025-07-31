@@ -1,4 +1,7 @@
 ---
+- name: Include distribution-specific docker tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/setup.yml"
+
 - name: Verify Docker packages installed
   block:
     - name: Gather installed package facts

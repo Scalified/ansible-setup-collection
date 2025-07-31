@@ -1,4 +1,13 @@
 ---
+- name: Install Docker required packages
+  ansible.builtin.package:
+    name:
+      - gnupg
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
 - name: Create keyrings directory
   ansible.builtin.file:
     path: /etc/apt/keyrings

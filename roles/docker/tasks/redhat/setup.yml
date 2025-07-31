@@ -1,4 +1,14 @@
 ---
+- name: Install Docker required packages
+  ansible.builtin.package:
+    name:
+      - epel-release
+      - gnupg2
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
 - name: Add Docker GPG key
   ansible.builtin.rpm_key:
     key: https://download.docker.com/linux/rhel/gpg
