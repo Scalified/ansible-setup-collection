@@ -1,3 +1,7 @@
+# 2.2.0
+
+* [#20 Roles Reorganization](https://github.com/Scalified/ansible-setup-collection/pull/21)
+
 # 2.1.0
 
 * [#18 Roles: Samba](https://github.com/Scalified/ansible-setup-collection/issues/18)

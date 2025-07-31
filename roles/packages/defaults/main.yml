@@ -2,5 +2,8 @@
 # Packages to install
 packages_list: []
 
+# Bash configuration
+packages_bash_aliases: []
+
 # AGE settings
 packages_age_config_dir: "{{ ansible_env.HOME }}/.config/age"

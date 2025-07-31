@@ -20,6 +20,3 @@ system_vm_max_map_count: 262144
 # MOTD settings
 system_motd_src: "motd"
 system_motd_contacts: []
-
-# Bash configuration
-system_bash_aliases: []

@@ -11,7 +11,10 @@ system_motd_contacts:
     email: "jane.smith@example.com"
     mobile: "+1-555-999-0000"
 
-system_bash_aliases:
+# Packages
+packages_list:
+  - net-tools
+packages_bash_aliases:
   - alias: "testls"
     command: "ls -la"
     comment: "Test alias for detailed listing"
@@ -20,10 +23,6 @@ system_bash_aliases:
     comment: "Test alias for grep with line numbers"
   - alias: "testalias"
     command: "echo 'Hello from test alias'"
-
-# Packages
-packages_list:
-  - net-tools
 
 # Firewall
 firewall_ufw_profiles:

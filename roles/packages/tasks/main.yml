@@ -9,6 +9,9 @@
 - name: Include packages tasks
   ansible.builtin.include_tasks: packages.yml
 
+- name: Include Bash configuration tasks
+  ansible.builtin.include_tasks: bash.yml
+
 - name: Include VIM tasks
   ansible.builtin.include_tasks: vim.yml
 
