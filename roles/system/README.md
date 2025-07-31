@@ -45,7 +45,6 @@ Configures essential system settings and performs server setup
 | `system_vm_max_map_count`       | Virtual memory max map count for applications   | `262144`                 |
 | `system_motd_src`               | MOTD banner template source path                | `motd`                   |
 | `system_motd_contacts`          | Array of contact information for MOTD banner    | `[]`                     |
-| `system_bash_aliases`           | Array of bash aliases to configure              | `[]`                     |
 
 ### MOTD Contact Configuration
 
@@ -59,25 +58,6 @@ system_motd_contacts:
     mobile: "+1-555-0123"         # Optional
 ```
 
-### Bash Aliases Configuration
-
-The `system_bash_aliases` variable accepts an array of alias objects with the following structure:
-
-```yaml
-system_bash_aliases:
-  - alias: "myalias"              # Required: alias name
-    command: "echo 'Hello World'" # Required: command to execute
-    comment: "My custom alias"    # Optional: descriptive comment
-  - alias: "ll"                   # Override built-in aliases
-    command: "ls -la --color=auto"
-```
-
-**Built-in aliases provided:**
-- `ll` - Long listing with human-readable format (`ls -lah`)
-- `lt` - List sorted by size (`ll -s -1 -FS`)
-- `grep` - Colored grep output (`grep --color=auto`)
-- `hg` - Search command history (`history|grep`)
-
 ## Facts
 
 | Fact                     | Description                                           | Example Values             |
@@ -86,3 +66,9 @@ system_bash_aliases:
 | `system_architecture`    | Normalized architecture string for package management | `amd64`, `arm64`, `armhf`  |
 | `system_containerized`   | Indicates if the system is running in a container     | `true`, `false`            |
 | `system_systemd_managed` | Indicates if the system is managed by systemd         | `true`, `false`            |
+
+## Scripts
+
+| Name      | Description                                              | Usage Example |
+|-----------|----------------------------------------------------------|               |           
+| `thermal` | Displays `thermal_zone*` temperature readings in Celsius | `thermal`     |

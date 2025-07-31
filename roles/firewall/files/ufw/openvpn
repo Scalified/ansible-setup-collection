@@ -1,0 +1,4 @@
+[OpenVPN]
+title=OpenVPN Server
+description=OpenVPN virtual private network
+ports=1194

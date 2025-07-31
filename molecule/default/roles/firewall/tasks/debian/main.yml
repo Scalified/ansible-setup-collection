@@ -1,0 +1,88 @@
+---
+- name: Verify UFW packages
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert UFW package installed
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - ufw
+      loop_control:
+        loop_var: package
+
+- name: Verify UFW profiles attributes
+  block:
+    - name: Stat UFW profiles
+      ansible.builtin.stat:
+        path: /etc/ufw/applications.d/{{ profile }}
+      register: firewall_ufw_profiles_stats
+      loop: "{{ firewall_ufw_profiles }}"
+      loop_control:
+        loop_var: profile
+
+    - name: Assert UFW profiles exist
+      ansible.builtin.assert:
+        that: profile_stat.stat.exists
+        fail_msg: "UFW profile {{ profile_stat.profile }} does not exist"
+        success_msg: "UFW profile {{ profile_stat.profile }} exists"
+        quiet: true
+      loop: "{{ firewall_ufw_profiles_stats.results }}"
+      loop_control:
+        loop_var: profile_stat
+
+    - name: Assert UFW profiles are regular files
+      ansible.builtin.assert:
+        that: profile_stat.stat.isreg
+        fail_msg: "UFW profile {{ profile_stat.profile }} is not a regular file"
+        success_msg: "UFW profile {{ profile_stat.profile }} is a regular file"
+        quiet: true
+      loop: "{{ firewall_ufw_profiles_stats.results }}"
+      loop_control:
+        loop_var: profile_stat
+
+    - name: Assert UFW profiles mode
+      ansible.builtin.assert:
+        that: profile_stat.stat.mode == '0644'
+        fail_msg: "UFW profile {{ profile_stat.profile }} has incorrect mode: {{ profile_stat.stat.mode }}"
+        success_msg: "UFW profile {{ profile_stat.profile }} has correct mode"
+        quiet: true
+      loop: "{{ firewall_ufw_profiles_stats.results }}"
+      loop_control:
+        loop_var: profile_stat
+
+    - name: Assert UFW profiles ownership
+      ansible.builtin.assert:
+        that:
+          - profile_stat.stat.pw_name == 'root'
+          - profile_stat.stat.gr_name == 'root'
+        fail_msg: "UFW profile {{ profile_stat.profile }} has incorrect ownership: {{ profile_stat.stat }}"
+        success_msg: "UFW profile {{ profile_stat.profile }} has correct ownership"
+        quiet: true
+      loop: "{{ firewall_ufw_profiles_stats.results }}"
+      loop_control:
+        loop_var: profile_stat
+
+- name: Verify UFW profiles content
+  block:
+    - name: Slurp UFW profiles content
+      ansible.builtin.slurp:
+        src: /etc/ufw/applications.d/{{ profile }}
+      register: firewall_ufw_profile_contents
+      loop: "{{ firewall_ufw_profiles }}"
+      loop_control:
+        loop_var: profile
+
+    - name: Assert UFW profiles have Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (result.content | b64decode)"
+        fail_msg: "UFW profile {{ result.profile }} has Windows line endings (CRLF)"
+        success_msg: "UFW profile {{ result.profile }} has Unix line endings (LF)"
+        quiet: true
+      loop: "{{ firewall_ufw_profile_contents.results }}"
+      loop_control:
+        loop_var: result

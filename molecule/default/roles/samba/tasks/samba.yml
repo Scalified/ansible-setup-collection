@@ -16,9 +16,61 @@
       loop_control:
         loop_var: package
 
-- name: Verify Samba configuration
+- name: Verify Samba share directories attributes
   block:
-    - name: Check if smb.conf exists
+    - name: Stat share directories
+      ansible.builtin.stat:
+        path: "{{ share_dir.path }}"
+      register: samba_share_stats
+      loop: "{{ samba_shares }}"
+      loop_control:
+        loop_var: share_dir
+
+    - name: Assert share directories exist
+      ansible.builtin.assert:
+        that: share_dir_stat.stat.exists
+        fail_msg: "Share directory {{ share_dir_stat.share_dir }} does not exist"
+        success_msg: "Share directory {{ share_dir_stat.share_dir }} exists"
+        quiet: true
+      loop: "{{ samba_share_stats.results }}"
+      loop_control:
+        loop_var: share_dir_stat
+
+    - name: Assert share directories are directories
+      ansible.builtin.assert:
+        that: share_dir_stat.stat.isdir
+        fail_msg: "Share directory {{ share_dir_stat.share_dir }} is not a directory"
+        success_msg: "Share directory {{ share_dir_stat.share_dir }} is a directory"
+        quiet: true
+      loop: "{{ samba_share_stats.results }}"
+      loop_control:
+        loop_var: share_dir_stat
+
+    - name: Assert share directories mode
+      ansible.builtin.assert:
+        that: share_dir_stat.stat.mode == '0770'
+        fail_msg: "Share directory {{ share_dir_stat.share_dir }} has incorrect mode: {{ share_dir_stat.stat.mode }}"
+        success_msg: "Share directory {{ share_dir_stat.share_dir }} has correct mode"
+        quiet: true
+      loop: "{{ samba_share_stats.results }}"
+      loop_control:
+        loop_var: share_dir_stat
+
+    - name: Assert share directories ownership
+      ansible.builtin.assert:
+        that:
+          - share_dir_stat.stat.pw_name == 'root'
+          - share_dir_stat.stat.gr_name == 'root'
+        fail_msg: "Share directory {{ share_dir_stat.share_dir }} has incorrect ownership: {{ share_dir_stat.stat.pw_name }}:{{ share_dir_stat.stat.gr_name }}"
+        success_msg: "Share directory {{ share_dir_stat.share_dir }} has correct ownership"
+        quiet: true
+      loop: "{{ samba_share_stats.results }}"
+      loop_control:
+        loop_var: share_dir_stat
+
+- name: Verify smb.conf file attributes
+  block:
+    - name: Stat smb.conf file
       ansible.builtin.stat:
         path: /etc/samba/smb.conf
       register: samba_smb_conf_stat
@@ -31,14 +83,104 @@
         fail_msg: "/etc/samba/smb.conf file does not exist"
         success_msg: "/etc/samba/smb.conf file exists"
 
-    - name: Assert smb.conf permissions
+    - name: Assert smb.conf mode
+      ansible.builtin.assert:
+        that: samba_smb_conf_stat.stat.mode == '0644'
+        fail_msg: "smb.conf has incorrect mode: {{ samba_smb_conf_stat.stat.mode }}"
+        success_msg: "smb.conf has correct mode"
+
+    - name: Assert smb.conf ownership
       ansible.builtin.assert:
         that:
-          - samba_smb_conf_stat.stat.mode == '0644'
           - samba_smb_conf_stat.stat.pw_name == 'root'
           - samba_smb_conf_stat.stat.gr_name == 'root'
-        fail_msg: "/etc/samba/smb.conf has incorrect permissions or ownership"
-        success_msg: "/etc/samba/smb.conf has correct permissions and ownership"
+        fail_msg: "smb.conf has incorrect ownership: {{ samba_smb_conf_stat.stat.pw_name }}:{{ samba_smb_conf_stat.stat.gr_name }}"
+        success_msg: "smb.conf has correct ownership"
+
+- name: Verify smb.conf file content
+  block:
+    - name: Slurp smb.conf content
+      ansible.builtin.slurp:
+        src: /etc/samba/smb.conf
+      register: samba_smb_conf_content
+
+    - name: Assert smb.conf has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf has Windows line endings (CRLF)"
+        success_msg: "smb.conf has Unix line endings (LF)"
+
+    - name: Assert smb.conf contains correct interfaces
+      ansible.builtin.assert:
+        that: "'interfaces = lo eth0' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct interfaces"
+        success_msg: "smb.conf contains correct interfaces"
+
+    - name: Assert smb.conf contains correct server string
+      ansible.builtin.assert:
+        that: "'server string = Samba TEST Server' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct server string"
+        success_msg: "smb.conf contains correct server string"
+
+    - name: Assert smb.conf contains correct workgroup
+      ansible.builtin.assert:
+        that: "'workgroup = TESTWORKGROUP' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct workgroup"
+        success_msg: "smb.conf contains correct workgroup"
+
+    - name: Assert smb.conf contains correctnetbios name
+      ansible.builtin.assert:
+        that: "'netbios name = TESTNAME' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct netbios name"
+        success_msg: "smb.conf contains correct netbios name"
+
+    - name: Assert smb.conf contains correctsecurity
+      ansible.builtin.assert:
+        that: "'security = user' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct security setting"
+        success_msg: "smb.conf contains correct security setting"
+
+    - name: Assert smb.conf contains correct encrypt passwords setting
+      ansible.builtin.assert:
+        that: "'encrypt passwords = yes' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct encrypt passwords setting"
+        success_msg: "smb.conf contains correct encrypt passwords setting"
+
+    - name: Assert smb.conf contains correct log file setting
+      ansible.builtin.assert:
+        that: "'log file = /var/log/samba/log.%m' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct log file setting"
+        success_msg: "smb.conf contains correct log file setting"
+
+    - name: Assert smb.conf contains correct max log size
+      ansible.builtin.assert:
+        that: "'max log size = 50' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct max log size"
+        success_msg: "smb.conf contains correct max log size"
+
+    - name: Assert smb.conf contains correct DNS proxy setting
+      ansible.builtin.assert:
+        that: "'dns proxy = no' in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct DNS proxy setting"
+        success_msg: "smb.conf contains correct DNS proxy setting"
+
+    - name: Assert smb.conf shares
+      ansible.builtin.assert:
+        that:
+          - "(share.name ~ '') in (samba_smb_conf_content.content | b64decode)"
+          - "('path = ' ~ share.path) in (samba_smb_conf_content.content | b64decode)"
+          - "('comment = ' ~ share.comment) in (samba_smb_conf_content.content | b64decode)"
+          - "'browseable = yes' in (samba_smb_conf_content.content | b64decode)"
+          - "'writeable = yes' in (samba_smb_conf_content.content | b64decode)"
+          - "'create mask = 0770' in (samba_smb_conf_content.content | b64decode)"
+          - "'directory mask = 0770' in (samba_smb_conf_content.content | b64decode)"
+          - "('force user = ' ~ share.owner) in (samba_smb_conf_content.content | b64decode)"
+          - "('force group = ' ~ share.group) in (samba_smb_conf_content.content | b64decode)"
+        fail_msg: "smb.conf does not contain correct share configuration for {{ share.name }}"
+        success_msg: "smb.conf contains correct share configuration for {{ share.name }}"
+      loop: "{{ samba_shares }}"
+      loop_control:
+        loop_var: share
 
 - name: Verify Samba user
   block:
@@ -53,36 +195,3 @@
         that: samba_user_check.rc == 0
         fail_msg: "Samba user {{ ansible_user_id }} does not exist"
         success_msg: "Samba user {{ ansible_user_id }} exists"
-
-- name: Verify Samba shares
-  block:
-    - name: Check test share directories
-      ansible.builtin.stat:
-        path: "{{ item.path }}"
-      register: samba_share_stats
-      loop: "{{ samba_shares }}"
-
-    - name: Assert share directories exist
-      ansible.builtin.assert:
-        that: item.stat.exists
-        fail_msg: "Share directory {{ item.item.path }} does not exist"
-        success_msg: "Share directory {{ item.item.path }} exists"
-      loop: "{{ samba_share_stats.results }}"
-
-    - name: Assert share directories have correct permissions
-      ansible.builtin.assert:
-        that:
-          - item.stat.mode == '0770'
-          - item.stat.pw_name == ansible_user_id
-          - item.stat.gr_name == 'root'
-        fail_msg: "Share directory {{ item.item.path }} has incorrect permissions or ownership"
-        success_msg: "Share directory {{ item.item.path }} has correct permissions and ownership"
-      loop: "{{ samba_share_stats.results }}"
-
-    - name: Verify smb.conf for shares configuration
-      ansible.builtin.command: "grep {{ item.path }} /etc/samba/smb.conf"
-      register: samba_shares_conf_check
-      changed_when: false
-      failed_when: samba_shares_conf_check.rc != 0
-      loop: "{{ samba_shares }}"
-      no_log: true

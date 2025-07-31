@@ -3,7 +3,10 @@
     "allow": [
       "Bash(yamllint:*)",
       "Bash(ansible-lint:*)",
-      "Bash(wsl:*)"
+      "Bash(wsl:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(sed:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

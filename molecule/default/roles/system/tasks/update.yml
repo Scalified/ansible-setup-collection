@@ -1,7 +1,7 @@
 ---
 - name: Verify package manager functionality
   block:
-    - name: Verify package manager is available
+    - name: Assert package manager is available
       ansible.builtin.command: "{{ ansible_pkg_mgr }} --version"
       register: system_package_manager_version
       changed_when: false
@@ -9,7 +9,3 @@
 
     - name: Include distribution-specific update tasks
       ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
-
-    - name: Verify autoremove configuration
-      ansible.builtin.debug:
-        msg: "Autoremove is enabled (default configuration)"

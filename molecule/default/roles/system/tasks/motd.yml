@@ -1,91 +1,92 @@
 ---
-- name: Verify MOTD file properties
+- name: Verify MOTD file attributes
   block:
-    - name: Check if /etc/motd file exists
+    - name: Stat MOTD file
       ansible.builtin.stat:
         path: /etc/motd
       register: system_motd_file_stat
 
-    - name: Verify motd file exists
+    - name: Assert MOTD file exists
       ansible.builtin.assert:
         that: system_motd_file_stat.stat.exists
-        fail_msg: "MOTD file /etc/motd does not exist"
-        success_msg: "MOTD file /etc/motd exists"
+        fail_msg: "MOTD file does not exist"
+        success_msg: "MOTD file exists"
 
-    - name: Verify motd file permissions
+    - name: Assert MOTD file is a regular file
+      ansible.builtin.assert:
+        that: system_motd_file_stat.stat.isreg
+        fail_msg: "MOTD file is not a regular file"
+        success_msg: "MOTD file is a regular file"
+
+    - name: Assert MOTD file mode
       ansible.builtin.assert:
         that: system_motd_file_stat.stat.mode == '0644'
-        fail_msg: "MOTD file /etc/motd has incorrect permissions: {{ system_motd_file_stat.stat.mode }}"
-        success_msg: "MOTD file /etc/motd has correct permissions (0644)"
+        fail_msg: "MOTD file has incorrect mode: {{ system_motd_file_stat.stat.mode }}"
+        success_msg: "MOTD file has correct mode"
 
-- name: Verify MOTD content structure
+    - name: Assert MOTD file ownership
+      ansible.builtin.assert:
+        that:
+          - system_motd_file_stat.stat.pw_name == 'root'
+          - system_motd_file_stat.stat.gr_name == 'root'
+        fail_msg: "MOTD file has incorrect ownership: {{ system_motd_file_stat.stat.pw_name }}:{{ system_motd_file_stat.stat.gr_name }}"
+        success_msg: "MOTD file has correct ownership"
+
+- name: Verify MOTD file content
   block:
-    - name: Read motd file content
+    - name: Slurp MOTD file content
       ansible.builtin.slurp:
         src: /etc/motd
       register: system_motd_content
 
-    - name: Decode motd content
-      ansible.builtin.set_fact:
-        system_motd_text: "{{ system_motd_content.content | b64decode }}"
-
-    - name: Verify warning banner is present
+    - name: Assert MOTD file has Unix line endings
       ansible.builtin.assert:
-        that: "'PRIVATE Host' in system_motd_text"
+        that: "'\\r\\n' not in (system_motd_content.content | b64decode)"
+        fail_msg: "MOTD file contains Windows line endings (CRLF)"
+        success_msg: "MOTD file has Unix line endings (LF)"
+
+    - name: Assert MOTD warning banner is present
+      ansible.builtin.assert:
+        that: "'PRIVATE Host' in (system_motd_content.content | b64decode)"
         fail_msg: "MOTD file does not contain expected warning banner"
         success_msg: "MOTD file contains warning banner"
 
-    - name: Verify contact section header is present
+    - name: Assert MOTD section header is present
       ansible.builtin.assert:
-        that: "'If opened accidentally, immediately disconnect and contact:' in system_motd_text"
+        that: "'If opened accidentally, immediately disconnect and contact:' in (system_motd_content.content | b64decode)"
         fail_msg: "MOTD file missing contact section header"
         success_msg: "MOTD file contains contact section header"
 
-- name: Verify contact information
-  block:
-    - name: Read motd file content
-      ansible.builtin.slurp:
-        src: /etc/motd
-      register: system_motd_content
-
-    - name: Decode motd content
-      ansible.builtin.set_fact:
-        system_motd_text: "{{ system_motd_content.content | b64decode }}"
-
-    - name: Verify contact names are present and uppercase
+    - name: Assert MOTD contact names are present and uppercase
       ansible.builtin.assert:
-        that:
-          - "contact.name | upper in system_motd_text"
+        that: "contact.name | upper in (system_motd_content.content | b64decode)"
         fail_msg: "Contact name '{{ contact.name }}' not found in MOTD (should be uppercase)"
         success_msg: "Contact name '{{ contact.name }}' found in MOTD"
       loop: "{{ system_motd_contacts }}"
       loop_control:
         loop_var: contact
 
-    - name: Verify contact positions are present when defined
+    - name: Assert MOTD contact positions are present when defined
       ansible.builtin.assert:
-        that:
-          - "contact.position | upper in system_motd_text"
+        that: "contact.position | upper in (system_motd_content.content | b64decode)"
         fail_msg: "Contact position '{{ contact.position }}' not found in MOTD (should be uppercase)"
         success_msg: "Contact position '{{ contact.position }}' found in MOTD"
       loop: "{{ system_motd_contacts }}"
       loop_control:
         loop_var: contact
 
-    - name: Verify contact emails are present when defined
+    - name: Assert MOTD contact emails are present when defined
       ansible.builtin.assert:
-        that:
-          - "contact.email in system_motd_text"
+        that: "contact.email in (system_motd_content.content | b64decode)"
         fail_msg: "Contact email '{{ contact.email }}' not found in MOTD"
         success_msg: "Contact email '{{ contact.email }}' found in MOTD"
       loop: "{{ system_motd_contacts }}"
       loop_control:
         loop_var: contact
 
-    - name: Verify contact mobile numbers are present when defined
+    - name: Assert MOTD contact mobile numbers are present when defined
       ansible.builtin.assert:
-        that:
-          - "contact.mobile in system_motd_text"
+        that: "contact.mobile in (system_motd_content.content | b64decode)"
         fail_msg: "Contact mobile '{{ contact.mobile }}' not found in MOTD"
         success_msg: "Contact mobile '{{ contact.mobile }}' found in MOTD"
       loop: "{{ system_motd_contacts }}"

@@ -16,102 +16,136 @@
       loop_control:
         loop_var: package
 
-- name: Verify SSL CA key directory
+- name: Verify SSL CA key directory attributes
   block:
-    - name: Check SSL CA key directory
+    - name: Stat SSL CA key directory
       ansible.builtin.stat:
         path: "{{ ssl_keys_ca_dir }}"
       register: ssl_ca_key_dir_stat
 
-    - name: Verify SSL CA key directory exists
+    - name: Assert SSL CA key directory exists
       ansible.builtin.assert:
         that: ssl_ca_key_dir_stat.stat.exists
         fail_msg: "SSL CA key directory {{ ssl_keys_ca_dir }} does not exist"
         success_msg: "SSL CA key directory {{ ssl_keys_ca_dir }} exists"
 
-    - name: Verify SSL CA key directory is a directory
+    - name: Assert SSL CA key directory is a directory
       ansible.builtin.assert:
         that: ssl_ca_key_dir_stat.stat.isdir
         fail_msg: "{{ ssl_keys_ca_dir }} is not a directory"
         success_msg: "{{ ssl_keys_ca_dir }} is a directory"
 
-    - name: Verify SSL CA key directory permissions
+    - name: Assert SSL CA key directory mode
       ansible.builtin.assert:
         that: ssl_ca_key_dir_stat.stat.mode == '0700'
-        fail_msg: "SSL CA key directory has incorrect permissions: {{ ssl_ca_key_dir_stat.stat.mode }}"
-        success_msg: "SSL CA key directory has correct permissions (0700)"
+        fail_msg: "SSL CA key directory has incorrect mode: {{ ssl_ca_key_dir_stat.stat.mode }}"
+        success_msg: "SSL CA key directory has correct mode"
 
-- name: Verify SSL server key directory
+    - name: Assert SSL CA key directory ownership
+      ansible.builtin.assert:
+        that:
+          - ssl_ca_key_dir_stat.stat.pw_name == 'root'
+          - ssl_ca_key_dir_stat.stat.gr_name == 'root'
+        fail_msg: "SSL CA key directory has incorrect ownership: {{ ssl_ca_key_dir_stat.stat.pw_name }}:{{ ssl_ca_key_dir_stat.stat.gr_name }}"
+        success_msg: "SSL CA key directory has correct ownership"
+
+- name: Verify SSL server key directory attributes
   block:
-    - name: Check SSL server key directory
+    - name: Stat SSL server key directory
       ansible.builtin.stat:
         path: "{{ ssl_keys_server_dir }}"
       register: ssl_server_key_dir_stat
 
-    - name: Verify SSL server key directory exists
+    - name: Assert SSL server key directory exists
       ansible.builtin.assert:
         that: ssl_server_key_dir_stat.stat.exists
         fail_msg: "SSL server key directory {{ ssl_keys_server_dir }} does not exist"
         success_msg: "SSL server key directory {{ ssl_keys_server_dir }} exists"
 
-    - name: Verify SSL server key directory is a directory
+    - name: Assert SSL server key directory is a directory
       ansible.builtin.assert:
         that: ssl_server_key_dir_stat.stat.isdir
         fail_msg: "{{ ssl_keys_server_dir }} is not a directory"
         success_msg: "{{ ssl_keys_server_dir }} is a directory"
 
-    - name: Verify SSL server key directory permissions
+    - name: Assert SSL server key directory mode
       ansible.builtin.assert:
         that: ssl_server_key_dir_stat.stat.mode == '0700'
-        fail_msg: "SSL server key directory has incorrect permissions: {{ ssl_server_key_dir_stat.stat.mode }}"
-        success_msg: "SSL server key directory has correct permissions (0700)"
+        fail_msg: "SSL server key directory has incorrect mode: {{ ssl_server_key_dir_stat.stat.mode }}"
+        success_msg: "SSL server key directory has correct mode"
+
+    - name: Assert SSL server key directory ownership
+      ansible.builtin.assert:
+        that:
+          - ssl_server_key_dir_stat.stat.pw_name == 'root'
+          - ssl_server_key_dir_stat.stat.gr_name == 'root'
+        fail_msg: "SSL server key directory has incorrect ownership: {{ ssl_server_key_dir_stat.stat.pw_name }}:{{ ssl_server_key_dir_stat.stat.gr_name }}"
+        success_msg: "SSL server key directory has correct ownership"
 
 - name: Verify SSL CA certificate directory
   block:
-    - name: Check SSL CA certificate directory
+    - name: Stat SSL CA certificate directory
       ansible.builtin.stat:
         path: "{{ ssl_certs_ca_dir }}"
       register: ssl_ca_cert_dir_stat
 
-    - name: Verify SSL CA certificate directory exists
+    - name: Assert SSL CA certificate directory exists
       ansible.builtin.assert:
         that: ssl_ca_cert_dir_stat.stat.exists
         fail_msg: "SSL CA certificate directory {{ ssl_certs_ca_dir }} does not exist"
         success_msg: "SSL CA certificate directory {{ ssl_certs_ca_dir }} exists"
 
-    - name: Verify SSL CA certificate directory is a directory
+    - name: Assert SSL CA certificate directory is a directory
       ansible.builtin.assert:
         that: ssl_ca_cert_dir_stat.stat.isdir
         fail_msg: "{{ ssl_certs_ca_dir }} is not a directory"
         success_msg: "{{ ssl_certs_ca_dir }} is a directory"
 
-    - name: Verify SSL CA certificate directory permissions
+    - name: Assert SSL CA certificate directory mode
       ansible.builtin.assert:
         that: ssl_ca_cert_dir_stat.stat.mode == '0755'
-        fail_msg: "SSL CA certificate directory has incorrect permissions: {{ ssl_ca_cert_dir_stat.stat.mode }}"
-        success_msg: "SSL CA certificate directory has correct permissions (0755)"
+        fail_msg: "SSL CA certificate directory has incorrect mode: {{ ssl_ca_cert_dir_stat.stat.mode }}"
+        success_msg: "SSL CA certificate directory has correct mode"
 
-- name: Verify SSL server certificate directory
+    - name: Assert SSL CA certificate directory ownership
+      ansible.builtin.assert:
+        that:
+          - ssl_ca_cert_dir_stat.stat.pw_name == 'root'
+          - ssl_ca_cert_dir_stat.stat.gr_name == 'root'
+        fail_msg: "SSL CA certificate directory has incorrect ownership: {{ ssl_ca_cert_dir_stat.stat.pw_name }}:{{ ssl_ca_cert_dir_stat.stat.gr_name }}"
+        success_msg: "SSL CA certificate directory has correct ownership"
+
+- name: Verify SSL server certificate directory attributes
   block:
-    - name: Check SSL server certificate directory
+    - name: Stat SSL server certificate directory
       ansible.builtin.stat:
         path: "{{ ssl_certs_server_dir }}"
       register: ssl_server_cert_dir_stat
 
-    - name: Verify SSL server certificate directory exists
+    - name: Assert SSL server certificate directory exists
       ansible.builtin.assert:
         that: ssl_server_cert_dir_stat.stat.exists
         fail_msg: "SSL server certificate directory {{ ssl_certs_server_dir }} does not exist"
         success_msg: "SSL server certificate directory {{ ssl_certs_server_dir }} exists"
 
-    - name: Verify SSL server certificate directory is a directory
+    - name: Assert SSL server certificate directory is a directory
       ansible.builtin.assert:
         that: ssl_server_cert_dir_stat.stat.isdir
         fail_msg: "{{ ssl_certs_server_dir }} is not a directory"
         success_msg: "{{ ssl_certs_server_dir }} is a directory"
 
-    - name: Verify SSL server certificate directory permissions
+    - name: Assert SSL server certificate directory mode
       ansible.builtin.assert:
         that: ssl_server_cert_dir_stat.stat.mode == '0755'
-        fail_msg: "SSL server certificate directory has incorrect permissions: {{ ssl_server_cert_dir_stat.stat.mode }}"
-        success_msg: "SSL server certificate directory has correct permissions (0755)"
+        fail_msg: "SSL server certificate directory has incorrect mode: {{ ssl_server_cert_dir_stat.stat.mode }}"
+        success_msg: "SSL server certificate directory has correct mode"
+
+    - name: Assert SSL server certificate directory ownership
+      ansible.builtin.assert:
+        that:
+          - ssl_server_cert_dir_stat.stat.pw_name == 'root'
+          - ssl_server_cert_dir_stat.stat.gr_name == 'root'
+        fail_msg: >-
+          SSL server certificate directory has incorrect ownership:
+          {{ ssl_server_cert_dir_stat.stat.pw_name }}:{{ ssl_server_cert_dir_stat.stat.gr_name }}
+        success_msg: "SSL server certificate directory has correct ownership"

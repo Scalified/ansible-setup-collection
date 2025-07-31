@@ -2,6 +2,9 @@
 - name: Include packages verifications
   ansible.builtin.include_tasks: packages.yml
 
+- name: Include bash verifications
+  ansible.builtin.include_tasks: bash.yml
+
 - name: Include vim verifications
   ansible.builtin.include_tasks: vim.yml
 

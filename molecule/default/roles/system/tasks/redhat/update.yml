@@ -7,7 +7,7 @@
       changed_when: false
       failed_when: false
 
-    - name: Verify recent DNF activity
+    - name: Assert recent DNF activity
       ansible.builtin.assert:
         that:
           - package_history is defined
@@ -27,7 +27,7 @@
       changed_when: false
       failed_when: false
 
-    - name: Verify system update status
+    - name: Assert system update status
       ansible.builtin.assert:
         that: package_updates_check.rc in [0, 100]
         fail_msg: "Error checking for updates: {{ package_updates_check.stderr }}"

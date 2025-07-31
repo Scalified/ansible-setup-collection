@@ -8,13 +8,14 @@
   delay: 10
   become: true
 
-- name: UFW deny all incoming traffic
-  community.general.ufw:
-    comment: UFW deny all incoming traffic
-    default: deny
-    direction: incoming
+- name: Add UFW profiles
+  ansible.builtin.copy:
+    src: ufw/
+    dest: /etc/ufw/applications.d/
+    owner: root
+    group: root
+    mode: "0644"
   become: true
-  when: firewall_in_deny_all
 
 - name: UFW allow SSH service
   community.general.ufw:
@@ -24,7 +25,9 @@
     protocol: tcp
     direction: in
   become: true
-  when: firewall_in_allow_ssh
+  when:
+    - system_systemd_managed
+    - firewall_in_allow_ssh
 
 - name: UFW allow all outgoing traffic
   community.general.ufw:
@@ -32,29 +35,43 @@
     default: allow
     direction: outgoing
   become: true
-  when: firewall_out_allow_all
+  when:
+    - system_systemd_managed
+    - firewall_out_allow_all
+
+- name: UFW deny all incoming traffic
+  community.general.ufw:
+    comment: UFW deny all incoming traffic
+    default: deny
+    direction: incoming
+  become: true
+  when:
+    - system_systemd_managed
+    - firewall_in_deny_all
 
 - name: UFW apply rule
   community.general.ufw:
     comment: "{{ rule.comment | default(omit) }}"
     rule: "{{ rule.rule | default('allow') }}"
-    name: "{{ rule.name | default(omit) }}"
+    name: "{{ rule.name | default(rule.app) | default(omit) }}"
     direction: "{{ rule.direction | default('in') }}"
-    interface: "{{ rule.interface | default(omit) }}"
-    interface_in: "{{ rule.interface_in | default(omit) }}"
-    interface_out: "{{ rule.interface_out | default(omit) }}"
-    protocol: "{{ rule.protocol | default(omit) }}"
+    interface: "{{ rule.interface | default(rule.if) | default(omit) }}"
+    interface_in: "{{ rule.interface_in | default(rule.if_in) | default(omit) }}"
+    interface_out: "{{ rule.interface_out | default(rule.if_out) | default(omit) }}"
+    protocol: "{{ rule.protocol | default(rule.proto) | default(omit) }}"
     route: "{{ rule.route | default(omit) }}"
-    from: "{{ rule.from | default('any') }}"
+    from: "{{ rule.from | default(rule.from_ip) | default(rule.src) | default('any') }}"
     from_port: "{{ rule.from_port | default(omit) }}"
-    to: "{{ rule.to | default(omit) }}"
-    to_port: "{{ rule.to_port | default(omit) }}"
+    to: "{{ rule.to | default(rule.to_ip) | default(rule.dest) | default(omit) }}"
+    to_port: "{{ rule.to_port | default(rule.port) | default(omit) }}"
   become: true
   loop: "{{ firewall_rules }}"
   loop_control:
     loop_var: rule
+  when: system_systemd_managed
 
 - name: Enable UFW service
   community.general.ufw:
     state: enabled
   become: true
+  when: system_systemd_managed

@@ -1,0 +1,4 @@
+[PPTP]
+title=Point-to-Point Tunneling Protocol
+description=VPN/tunnel
+ports=47|1723/tcp

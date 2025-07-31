@@ -1,40 +1,36 @@
 ---
-- name: Verify SSL bundle file
+- name: Verify SSL bundle file attributes
   block:
-    - name: Check SSL bundle file
+    - name: Stat SSL bundle file
       ansible.builtin.stat:
         path: "{{ ssl_bundle_path }}"
       register: ssl_bundle_stat
 
-    - name: Verify SSL bundle exists
+    - name: Assert SSL bundle file exists
       ansible.builtin.assert:
         that: ssl_bundle_stat.stat.exists
         fail_msg: "SSL bundle does not exist at {{ ssl_bundle_path }}"
         success_msg: "SSL bundle exists at {{ ssl_bundle_path }}"
 
-    - name: Verify SSL bundle is a file
+    - name: Assert SSL bundle is a regular file
       ansible.builtin.assert:
         that: ssl_bundle_stat.stat.isreg
-        fail_msg: "{{ ssl_bundle_path }} is not a regular file"
-        success_msg: "{{ ssl_bundle_path }} is a regular file"
+        fail_msg: "SSL bundle is not a regular file"
+        success_msg: "SSL bundle is a regular file"
 
-    - name: Verify SSL bundle permissions
+    - name: Assert SSL bundle file mode
       ansible.builtin.assert:
         that: ssl_bundle_stat.stat.mode == '0600'
-        fail_msg: "SSL bundle has incorrect permissions: {{ ssl_bundle_stat.stat.mode }}"
-        success_msg: "SSL bundle has correct permissions (0600)"
+        fail_msg: "SSL bundle has incorrect mode: {{ ssl_bundle_stat.stat.mode }}"
+        success_msg: "SSL bundle has correct mode"
 
-    - name: Verify SSL bundle owner
+    - name: Assert SSL bundle file ownership
       ansible.builtin.assert:
-        that: ssl_bundle_stat.stat.pw_name == 'root'
-        fail_msg: "SSL bundle owner is not root: {{ ssl_bundle_stat.stat.pw_name }}"
-        success_msg: "SSL bundle owner is root"
-
-    - name: Verify SSL bundle group
-      ansible.builtin.assert:
-        that: ssl_bundle_stat.stat.gr_name == 'root'
-        fail_msg: "SSL bundle group is not root: {{ ssl_bundle_stat.stat.gr_name }}"
-        success_msg: "SSL bundle group is root"
+        that:
+          - ssl_bundle_stat.stat.pw_name == 'root'
+          - ssl_bundle_stat.stat.gr_name == 'root'
+        fail_msg: "SSL bundle has incorrect ownership: {{ ssl_bundle_stat.stat.pw_name }}:{{ ssl_bundle_stat.stat.gr_name }}"
+        success_msg: "SSL bundle has correct ownership"
 
 - name: Verify SSL bundle contains certificates
   block:
