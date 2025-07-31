@@ -19,10 +19,10 @@
 
 - name: Ensure bashrc file exists
   block:
-    - name: Check if .bashrc file exists
+    - name: Stat if .bashrc file
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.bashrc"
-      register: system_bashrc_exists
+      register: packages_bashrc_stat
 
     - name: Copy .bashrc from skeleton when missing
       ansible.builtin.copy:
@@ -30,7 +30,7 @@
         dest: "{{ ansible_env.HOME }}/.bashrc"
         mode: '0644'
         remote_src: true
-      when: not system_bashrc_exists.stat.exists
+      when: not packages_bashrc_stat.stat.exists
 
 - name: Configure bash aliases
   ansible.builtin.template:
