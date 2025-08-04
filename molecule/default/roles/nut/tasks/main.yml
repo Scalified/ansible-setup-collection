@@ -4,3 +4,6 @@
 
 - name: Include nut verifications
   ansible.builtin.include_tasks: nut.yml
+
+- name: Include UPS verifications
+  ansible.builtin.include_tasks: ups.yml

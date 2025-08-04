@@ -114,3 +114,5 @@ nut_ups_config:
   productid: "AAAA"
   serial: "ABC12345678"
   bus: "001"
+nut_ups_config_extra:
+  extra: extratest

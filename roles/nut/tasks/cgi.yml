@@ -1,7 +1,4 @@
 ---
-- name: Include distribution-specific tasks
-  ansible.builtin.include_tasks: "{{ system_os_family }}/cgi.yml"
-
 - name: Install NUT CGI package
   ansible.builtin.package:
     name:
@@ -24,3 +21,6 @@
   loop_control:
     loop_var: file
   become: true
+
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/cgi.yml"

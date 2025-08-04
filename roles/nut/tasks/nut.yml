@@ -2,6 +2,15 @@
 - name: Include distribution-specific tasks
   ansible.builtin.include_tasks: "{{ system_os_family }}/nut.yml"
 
+- name: Install NUT required packages
+  ansible.builtin.package:
+    name:
+      - nut
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
 - name: Deploy NUT configuration
   ansible.builtin.template:
     src: nut.conf
