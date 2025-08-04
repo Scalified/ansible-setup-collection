@@ -1,0 +1,31 @@
+---
+- name: Include NUT tasks
+  ansible.builtin.include_tasks: nut.yml
+
+- name: Include NUT UPS tasks
+  ansible.builtin.include_tasks: ups.yml
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Include NUT UPSD tasks
+  ansible.builtin.include_tasks: upsd.yml
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Include NUT UPS variables tasks
+  ansible.builtin.include_tasks: ups_vars.yml
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Include NUT UPSMON tasks
+  ansible.builtin.include_tasks: upsmon.yml
+  when: nut_mode in ['standalone', 'netserver', 'netclient']
+
+- name: Include NUT UPSSCHED tasks
+  ansible.builtin.include_tasks: upssched.yml
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Include NUT CGI tasks
+  ansible.builtin.include_tasks: cgi.yml
+  when: nut_mode in ['standalone', 'netserver']

@@ -8,7 +8,7 @@
   delay: 10
   become: true
 
-- name: Add UFW profiles
+- name: Deploy UFW profiles
   ansible.builtin.copy:
     src: ufw/
     dest: /etc/ufw/applications.d/

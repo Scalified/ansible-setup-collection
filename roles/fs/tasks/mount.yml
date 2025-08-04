@@ -1,5 +1,5 @@
 ---
-- name: Copy auto remount script
+- name: Deploy auto remount script
   ansible.builtin.template:
     src: auto-remount
     dest: /usr/local/bin/auto-remount

@@ -1,0 +1,16 @@
+---
+- name: Install NUT package
+  ansible.builtin.package:
+    name:
+      - nut
+    state: present
+  become: true
+
+- name: Deploy NUT configuration
+  ansible.builtin.template:
+    src: nut.conf
+    dest: /etc/nut/nut.conf
+    owner: root
+    group: nut
+    mode: "0640"
+  become: true

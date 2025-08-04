@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+
+set -e
+
+COMMAND="$1"
+UPS="{{ nut_ups_name }}"
+UPS_TITLE="${UPS^^}"
+VARIABLES=$(upsc $UPS 2> /dev/null || true)
+
+read_value() {
+  local variable="$1"
+  echo "$VARIABLES" | grep "${variable}:" | sed 's/^[^:]*: //' | awk '{$1=$1;print}'
+}
+
+send_mail() {
+  local level="$1"
+  local description="$2"
+
+  local body="
+<!DOCTYPE html>
+<html lang=\"en\">
+  <head>
+    <meta charset=\"utf-8\">
+    <title>[$level]: $description</title>
+  </head>
+  <style type=\"text/css\">
+    body {
+      font-family: Consolas, monospace;;
+      font-size: 12px;
+    }
+    table {
+      border-width: 1px;
+      border-color: #3A3A3A;
+      border-style: dotted;
+      border-collapse: collapse;
+    }
+    table th {
+      border-width: 1px;
+      padding: 8px;
+      border-style: dotted;
+      border-color: #3A3A3A;
+      background-color: #E8E8E8;
+    }
+    table td {
+      border-width: 1px;
+      padding: 8px;
+      border-style: dotted;
+      border-color: #3A3A3A;
+      background-color: #ffffff;
+    }
+  </style>
+  <body>
+    <table>
+      <tr>
+        <th colspan=\"2\">INFO</th>
+      </tr>
+      <tr>
+        <td><b>Host</b></td>
+        <td>$(hostname)</td>
+      </tr>
+      <tr>
+        <td><b>Date</b></td>
+        <td>$(date)</td>
+      </tr>
+    </table>
+    <br>"
+
+  if [ -n "$VARIABLES" ]; then
+    local device="$(read_value 'device.mfr') $(read_value 'device.model')"
+
+    local ups_status=$(read_value 'ups.status')
+    local ups_status_color="#00FF00"
+    if [[ "$ups_status" =~ .*(OL).* ]]; then
+      ups_status_color="#00FF00"
+    fi
+    if [[ "$ups_status" =~ .*(CHRG|DISCHRG|CAL).* ]]; then
+      ups_status_color="#80FF00"
+    fi
+    if [[ "$ups_status" =~ .*(OB|HB|BYPASS).* ]]; then
+      ups_status_color="#FFFF00"
+    fi
+    if [[ "$ups_status" =~ .*(LB|FSD).* ]]; then
+      ups_status_color="#FF8000"
+    fi
+    if [[ "$ups_status" =~ .*(OFF|OVER|TRIM).* ]]; then
+      ups_status_color="#FF0000"
+    fi
+
+    local awk_functions='
+      function min(x, y) {
+        return x < y ? x : y
+      }
+      function bg_color(value) {
+        r = int(min(510 * value, 255))
+        g = int(min(510 * (1 - value), 255))
+        return sprintf("#%02X%02X00", r, g)
+      }'
+    body="$body
+    <br>
+    <table>
+      <tr>
+        <th colspan=\"2\">$device SUMMARY</th>
+      </tr>
+      <tr>
+        <td><b>STATUS</b></td>
+        <td bgcolor=\"$ups_status_color\" style=\"background:$ups_status_color;\">$ups_status</td>
+      </tr>
+      <tr>
+        <td><b>LOAD</b></td>
+        $(read_value 'ups.load' | awk "$awk_functions"'{
+	  color = bg_color($1/100)
+	  printf("<td bgcolor=\"%s\" style=\"background:%s;\">%d%%</td>\n", color, color, $1)}')
+      </tr>
+$(echo "$(read_value 'battery.charge');$(read_value 'battery.runtime')" | awk -F ';' "$awk_functions"'{
+      color = bg_color((100 - $1)/100)
+      hours = int($2/3600)
+      minutes = int(($2%3600)/60)
+      printf("\
+      <tr>\n\
+        <td><b>CHARGE LEVEL</b></td>\n\
+        <td bgcolor=\"%s\" style=\"background:%s;\">%d%%</td>\n\
+      </tr>\n\
+      <tr>\n\
+        <td><b>TIME REMAINING</b></td>\n\
+        <td bgcolor=\"%s\" style=\"background:%s;\">%dh %dm</td>\n\
+      </tr>", color, color, $1, color, color, hours, minutes)}')
+      <tr>
+        <td><b>SHUTDOWN CHARGE LEVEL</b></td>
+        <td>$(read_value 'battery.charge.low')</td>
+      </tr>
+     </table>
+     <br>
+     <br>
+     <table>
+       <tr>
+         <th colspan=\"2\">$device DETAILS</th>
+       </tr>
+$(echo "$VARIABLES" | awk '{
+       idx = index($0, ":")
+       key = substr($0, 0, idx -1)
+       value = substr($0, idx + 1); \
+       gsub(/^ +| +$/, "", key); \
+       gsub(/^ +| +$/, "", value); \
+       print "\
+       <tr>\n\
+         <td>"key"</td>\n\
+         <td>"value"</td>\n\
+       </tr>"}')
+     </table>
+  </body>
+</html>"
+  fi
+
+  mail -a "Content-Type: text/html;" -s "[$level]: $description" root <<< "$body"
+}
+
+case $COMMAND in
+    online)
+        send_mail "INFO" "$UPS_TITLE UPS ON LINE POWER"
+	;;
+    onbatt)
+        send_mail "WARN" "$UPS_TITLE UPS ON BATTERY POWER"
+        ;;
+    lowbatt)
+        send_mail "WARN" "$UPS_TITLE UPS BATTERY IS LOW"
+        ;;
+    fsd)
+        send_mail "WARN" "$UPS_TITLE UPS FORCED SHUTDOWN IN PROGRESS"
+        ;;
+    commok)
+        send_mail "INFO" "COMMUNICATION WITH $UPS_TITLE UPS ESTABLISHED"
+        ;;
+    commbad)
+        send_mail "ERROR" "COMMUNICATION WITH $UPS_TITLE UPS LOST"
+        ;;
+    shutdown)
+        send_mail "WARN" "SYSTEM SHUTDOWN IN PROGRESS"
+        ;;
+    replbatt)
+        send_mail "ERROR" "$UPS_TITLE UPS BATTERY NEEDS TO BE REPLACED"
+        ;;
+    nocomm)
+        send_mail "FATAL" "$UPS_TITLE UPS UNAVAILABLE"
+        ;;
+    noparent)
+        send_mail "FATAL" "SYSTEM SHUTDOWN PROCESS HAS DIED"
+        ;;
+    cal)
+        send_mail "WARN" "$UPS_TITLE UPS CALIBRATION IN PROGRESS"
+        ;;
+esac

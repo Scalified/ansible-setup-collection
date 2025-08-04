@@ -4,7 +4,7 @@
     state: present
   become: true
 
-- name: Configure VIM
+- name: Deploy VIM configuration
   ansible.builtin.copy:
     src: .vimrc
     dest: "{{ ansible_env.HOME }}/.vimrc"

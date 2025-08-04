@@ -1,0 +1,28 @@
+---
+- name: Install NUT CGI package
+  ansible.builtin.package:
+    name:
+      - nut-cgi
+    state: present
+  become: true
+
+- name: Disable Apache HTTPD service
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+    enabled: false
+  become: true
+
+- name: Deploy NUT CGI configurations
+  ansible.builtin.template:
+    src: "{{ file }}"
+    dest: "/etc/nut/"
+    owner: root
+    group: nut
+    mode: "640"
+  loop:
+    - hosts.conf
+    - upsset.conf
+  loop_control:
+    loop_var: file
+  become: true

@@ -1,0 +1,20 @@
+- name: Deploy UPS update vairable script
+  ansible.builtin.template:
+    src: ups-update-variable
+    dest: /usr/local/bin/ups-update-variable
+    owner: root
+    group: nut
+    mode: "0750"
+  become: true
+
+- name: Update UPS variables
+  ansible.builtin.command: >-
+    ups-update-variable "{{ variable.key }}" "{{ variable.value }}" "{{ nut_ups_name }}"
+  become: true
+  register: nut_ups_update_variable_result
+  changed_when: >-
+    nut_ups_update_variable_result.rc != 0 or
+    "updated ups" in nut_ups_update_variable_result.stdout | lower
+  with_dict: "{{ nut_ups_variables }}"
+  loop_control:
+    loop_var: variable

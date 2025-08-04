@@ -1,5 +1,5 @@
 ---
-- name: Update motd banner
+- name: Deploy motd banner
   ansible.builtin.template:
     src: "{{ system_motd_src }}"
     dest: /etc/motd

@@ -32,7 +32,7 @@
         remote_src: true
       when: not packages_bashrc_stat.stat.exists
 
-- name: Configure bash aliases
+- name: Deploy bash aliases
   ansible.builtin.template:
     src: .bash_aliases
     dest: "{{ ansible_env.HOME }}/.bash_aliases"

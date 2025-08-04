@@ -1,0 +1,44 @@
+#!/bin/sh
+
+set -e
+
+VARIABLE="$1"
+VALUE="$2"
+UPS_NAME="${3:-eaton}"
+
+USER="{{ nut_users_admin_name }}"
+PASSWORD="{{ nut_users_admin_password }}"
+
+check_argument() {
+  argument="$1"
+  argument_name="$2"
+  if [ -z "$argument" ] || [ "$argument" = "" ]; then
+    echo "[ERROR]: Missing argument '$argument_name'"
+    echo "  USAGE: $0 \"battery.charge.low\" \"80\" <ups name: optional>"
+    exit 1
+  fi
+}
+
+read_ups_variable() {
+  upsc "$UPS_NAME" "$VARIABLE" 2>/dev/null
+}
+
+write_ups_variable() {
+  echo "[INFO]: Setting UPS '$VARIABLE' value to: '$VALUE'"
+  result=$(upsrw -s "$VARIABLE=$VALUE" -u "$USER" -p "$PASSWORD" -w "$UPS_NAME" 2>&1)
+  if [ "$result" = "SUCCESS" ]; then
+    echo "[INFO]: Updated UPS '$VARIABLE' value to: '$VALUE'"
+  else
+    echo "[ERROR]: Failed to set UPS '$VARIABLE' value to: '$VALUE'"
+    exit 1
+  fi
+}
+
+check_argument "$VARIABLE" "variable"
+check_argument "$VALUE" "value"
+
+current_variable=$(read_ups_variable)
+if [ "$current_variable" != "$VALUE" ]; then
+  echo "[INFO]: Current UPS '$VARIABLE' value is: '$current_variable'"
+  write_ups_variable
+fi
