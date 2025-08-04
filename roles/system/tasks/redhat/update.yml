@@ -10,7 +10,7 @@
   ansible.builtin.dnf:
     name: "*"
     state: latest # noqa package-latest
-  retries: 2
+  retries: 3
   delay: 30
   become: true
   changed_when: false

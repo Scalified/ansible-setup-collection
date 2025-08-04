@@ -3,6 +3,8 @@
   ansible.builtin.package:
     name: age
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Create AGE config directory

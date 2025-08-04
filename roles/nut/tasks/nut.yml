@@ -1,15 +1,11 @@
 ---
-- name: Install NUT package
-  ansible.builtin.package:
-    name:
-      - nut
-    state: present
-  become: true
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/nut.yml"
 
 - name: Deploy NUT configuration
   ansible.builtin.template:
     src: nut.conf
-    dest: /etc/nut/nut.conf
+    dest: "{{ nut_dir }}/nut.conf"
     owner: root
     group: nut
     mode: "0640"

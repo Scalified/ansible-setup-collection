@@ -11,7 +11,7 @@
 - name: Deploy NUT UPSD configuration
   ansible.builtin.template:
     src: "{{ file }}"
-    dest: "/etc/nut/{{ file }}"
+    dest: "{{ nut_dir }}/{{ file }}"
     owner: root
     group: nut
     mode: "640"

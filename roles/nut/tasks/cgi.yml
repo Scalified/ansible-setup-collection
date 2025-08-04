@@ -1,22 +1,20 @@
 ---
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/cgi.yml"
+
 - name: Install NUT CGI package
   ansible.builtin.package:
     name:
       - nut-cgi
     state: present
-  become: true
-
-- name: Disable Apache HTTPD service
-  ansible.builtin.service:
-    name: apache2
-    state: stopped
-    enabled: false
+  retries: 3
+  delay: 10
   become: true
 
 - name: Deploy NUT CGI configurations
   ansible.builtin.template:
     src: "{{ file }}"
-    dest: "/etc/nut/"
+    dest: "{{ nut_dir }}/{{ file }}"
     owner: root
     group: nut
     mode: "640"

@@ -16,5 +16,9 @@
     nut_ups_update_variable_result.rc != 0 or
     "updated ups" in nut_ups_update_variable_result.stdout | lower
   with_dict: "{{ nut_ups_variables }}"
+  when:
+    - nut_ups_variables is defined
+    - nut_ups_variables is not none
+    - nut_ups_variables | length > 0
   loop_control:
     loop_var: variable

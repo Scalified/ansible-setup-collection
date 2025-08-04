@@ -5,6 +5,8 @@
       - ca-certificates
       - python3-cryptography
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Create SSL keys directories

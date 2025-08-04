@@ -1,0 +1,14 @@
+---
+- name: Install epel-release package
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
+- name: Install NUT required packages
+  ansible.builtin.package:
+    name: nut
+    state: present
+  become: true

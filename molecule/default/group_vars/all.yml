@@ -101,3 +101,16 @@ samba_shares:
     writeable: "no"
     owner: root
     group: root
+
+# NUT
+nut_mode: standalone
+nut_ups_name: "testups"
+nut_ups_config:
+  driver: usbhid-ups
+  port: auto
+  vendor: EATON
+  vendorid: "1234"
+  product: Ellipse PRO
+  productid: "AAAA"
+  serial: "ABC12345678"
+  bus: "001"

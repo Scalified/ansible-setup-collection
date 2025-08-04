@@ -2,6 +2,8 @@
   ansible.builtin.package:
     name: vim
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Deploy VIM configuration

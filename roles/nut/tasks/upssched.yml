@@ -20,7 +20,7 @@
 - name: Deploy NUT UPSSCHED configuration
   ansible.builtin.template:
     src: upssched.conf
-    dest: /etc/nut/upssched.conf
+    dest: "{{ nut_dir }}/upssched.conf"
     owner: root
     group: nut
     mode: "0640"

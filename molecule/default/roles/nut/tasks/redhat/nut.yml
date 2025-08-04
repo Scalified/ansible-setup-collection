@@ -1,17 +1,17 @@
-- name: Verify mandatory distribution packages installation
+---
+- name: Verify NUT required packages installed
   block:
     - name: Gather installed package facts
       ansible.builtin.package_facts:
         manager: auto
 
-    - name: Assert packages installed
+    - name: "Assert NUT required package installed"
       ansible.builtin.assert:
         that: "'{{ package }}' in ansible_facts.packages"
         fail_msg: "{{ package }} package is not installed"
         success_msg: "{{ package }} package is installed"
       loop:
         - epel-release
-        - httpd-tools
-        - gnupg2
+        - nut
       loop_control:
         loop_var: package

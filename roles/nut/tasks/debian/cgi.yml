@@ -1,0 +1,7 @@
+---
+- name: Disable Apache HTTPD service
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+    enabled: false
+  become: true

@@ -9,7 +9,7 @@
 - name: Deploy NUT UPSMON configuration
   ansible.builtin.template:
     src: upsmon.conf
-    dest: /etc/nut/upsmon.conf
+    dest: "{{ nut_dir }}/upsmon.conf"
     owner: root
     group: nut
     mode: "0640"

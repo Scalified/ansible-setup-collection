@@ -1,4 +1,7 @@
 ---
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ system_os_family }}/main.yml"
+
 - name: Include NUT tasks
   ansible.builtin.include_tasks: nut.yml
 

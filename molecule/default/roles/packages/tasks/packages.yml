@@ -1,5 +1,5 @@
 ---
-- name: Verify mandatory packages are installed
+- name: Verify mandatory packages installation
   block:
     - name: Gather installed package facts
       ansible.builtin.package_facts:
@@ -22,10 +22,10 @@
       loop_control:
         loop_var: package
 
-    - name: Include distribution-specific package tasks
-      ansible.builtin.include_tasks: "{{ system_os_family }}/packages.yml"
+- name: Include distribution-specific verification tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/packages.yml"
 
-- name: Verify listed packages are installed
+- name: Verify listed packages installation
   block:
     - name: Gather installed package facts
       ansible.builtin.package_facts:

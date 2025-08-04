@@ -13,7 +13,7 @@
 - name: Deploy NUT UPS configuration
   ansible.builtin.template:
     src: ups.conf
-    dest: /etc/nut/ups.conf
+    dest: "{{ nut_dir }}/ups.conf"
     owner: root
     group: nut
     mode: "640"
