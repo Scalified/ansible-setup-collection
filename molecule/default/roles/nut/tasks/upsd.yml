@@ -4,32 +4,32 @@
     - name: Stat UPSD state path directory
       ansible.builtin.stat:
         path: "{{ nut_upsd_statepath }}"
-      register: upsd_statepath_stat
+      register: nut_upsd_statepath_stat
 
     - name: Assert UPSD state path directory exists
       ansible.builtin.assert:
-        that: upsd_statepath_stat.stat.exists
+        that: nut_upsd_statepath_stat.stat.exists
         fail_msg: "UPSD state path directory does not exist: {{ nut_upsd_statepath }}"
         success_msg: "UPSD state path directory exists: {{ nut_upsd_statepath }}"
 
     - name: Assert UPSD state path directory is a directory
       ansible.builtin.assert:
-        that: upsd_statepath_stat.stat.isdir
+        that: nut_upsd_statepath_stat.stat.isdir
         fail_msg: "UPSD state path is not a directory: {{ nut_upsd_statepath }}"
         success_msg: "UPSD state path is a directory: {{ nut_upsd_statepath }}"
 
     - name: Assert UPSD state path directory mode
       ansible.builtin.assert:
-        that: upsd_statepath_stat.stat.mode == '0770'
-        fail_msg: "UPSD state path directory has incorrect mode: {{ upsd_statepath_stat.stat.mode }}"
+        that: nut_upsd_statepath_stat.stat.mode == '0770'
+        fail_msg: "UPSD state path directory has incorrect mode: {{ nut_upsd_statepath_stat.stat.mode }}"
         success_msg: "UPSD state path directory has correct mode"
 
     - name: Assert UPSD state path directory ownership
       ansible.builtin.assert:
         that:
-          - upsd_statepath_stat.stat.pw_name == 'root'
-          - upsd_statepath_stat.stat.gr_name == 'nut'
-        fail_msg: "UPSD state path directory has incorrect ownership: {{ upsd_statepath_stat.stat.pw_name }}:{{ upsd_statepath_stat.stat.gr_name }}"
+          - nut_upsd_statepath_stat.stat.pw_name == 'root'
+          - nut_upsd_statepath_stat.stat.gr_name == 'nut'
+        fail_msg: "UPSD state path directory has incorrect ownership: {{ nut_upsd_statepath_stat.stat.pw_name }}:{{ nut_upsd_statepath_stat.stat.gr_name }}"
         success_msg: "UPSD state path directory has correct ownership"
 
 - name: Verify NUT UPSD configuration file attributes
@@ -37,32 +37,32 @@
     - name: Stat NUT UPSD configuration file
       ansible.builtin.stat:
         path: "{{ nut_dir }}/upsd.conf"
-      register: upsd_conf_stat
+      register: nut_upsd_conf_stat
 
     - name: Assert NUT UPSD configuration file exists
       ansible.builtin.assert:
-        that: upsd_conf_stat.stat.exists
+        that: nut_upsd_conf_stat.stat.exists
         fail_msg: "NUT UPSD configuration file does not exist"
         success_msg: "NUT UPSD configuration file exists"
 
     - name: Assert NUT UPSD configuration file is a regular file
       ansible.builtin.assert:
-        that: upsd_conf_stat.stat.isreg
+        that: nut_upsd_conf_stat.stat.isreg
         fail_msg: "NUT UPSD configuration file is not a regular file"
         success_msg: "NUT UPSD configuration file is a regular file"
 
     - name: Assert NUT UPSD configuration file mode
       ansible.builtin.assert:
-        that: upsd_conf_stat.stat.mode == '0640'
-        fail_msg: "NUT UPSD configuration file has incorrect mode: {{ upsd_conf_stat.stat.mode }}"
+        that: nut_upsd_conf_stat.stat.mode == '0640'
+        fail_msg: "NUT UPSD configuration file has incorrect mode: {{ nut_upsd_conf_stat.stat.mode }}"
         success_msg: "NUT UPSD configuration file has correct mode"
 
     - name: Assert NUT UPSD configuration file ownership
       ansible.builtin.assert:
         that:
-          - upsd_conf_stat.stat.pw_name == 'root'
-          - upsd_conf_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT UPSD configuration file has incorrect ownership: {{ upsd_conf_stat.stat.pw_name }}:{{ upsd_conf_stat.stat.gr_name }}"
+          - nut_upsd_conf_stat.stat.pw_name == 'root'
+          - nut_upsd_conf_stat.stat.gr_name == 'nut'
+        fail_msg: "NUT UPSD configuration file has incorrect ownership: {{ nut_upsd_conf_stat.stat.pw_name }}:{{ nut_upsd_conf_stat.stat.gr_name }}"
         success_msg: "NUT UPSD configuration file has correct ownership"
 
 - name: Verify NUT UPSD configuration file content
@@ -70,23 +70,23 @@
     - name: Slurp NUT UPSD configuration file content
       ansible.builtin.slurp:
         src: "{{ nut_dir }}/upsd.conf"
-      register: upsd_conf_content
+      register: nut_upsd_conf_content
 
     - name: Assert NUT UPSD configuration file has Unix line endings
       ansible.builtin.assert:
-        that: "'\\r\\n' not in (upsd_conf_content.content | b64decode)"
+        that: "'\\r\\n' not in (nut_upsd_conf_content.content | b64decode)"
         fail_msg: "NUT UPSD configuration file contains Windows line endings (CRLF)"
         success_msg: "NUT UPSD configuration file has Unix line endings (LF)"
 
     - name: Assert UPSD configuration contains LISTEN directive
       ansible.builtin.assert:
-        that: "'LISTEN    *  3493' in (upsd_conf_content.content | b64decode)"
+        that: "'LISTEN    *  3493' in (nut_upsd_conf_content.content | b64decode)"
         fail_msg: "UPSD configuration does not contain LISTEN directive"
         success_msg: "UPSD configuration contains LISTEN directive"
 
     - name: Assert UPSD configuration contains STATEPATH directive
       ansible.builtin.assert:
-        that: "'STATEPATH {{ nut_upsd_statepath }}' in (upsd_conf_content.content | b64decode)"
+        that: "'STATEPATH {{ nut_upsd_statepath }}' in (nut_upsd_conf_content.content | b64decode)"
         fail_msg: "UPSD configuration does not contain STATEPATH directive"
         success_msg: "UPSD configuration contains STATEPATH directive"
 
@@ -95,32 +95,32 @@
     - name: Stat NUT UPSD users file
       ansible.builtin.stat:
         path: "{{ nut_dir }}/upsd.users"
-      register: upsd_users_stat
+      register: nut_upsd_users_stat
 
     - name: Assert NUT UPSD users file exists
       ansible.builtin.assert:
-        that: upsd_users_stat.stat.exists
+        that: nut_upsd_users_stat.stat.exists
         fail_msg: "NUT UPSD users file does not exist"
         success_msg: "NUT UPSD users file exists"
 
     - name: Assert NUT UPSD users file is a regular file
       ansible.builtin.assert:
-        that: upsd_users_stat.stat.isreg
+        that: nut_upsd_users_stat.stat.isreg
         fail_msg: "NUT UPSD users file is not a regular file"
         success_msg: "NUT UPSD users file is a regular file"
 
     - name: Assert NUT UPSD users file mode
       ansible.builtin.assert:
-        that: upsd_users_stat.stat.mode == '0640'
-        fail_msg: "NUT UPSD users file has incorrect mode: {{ upsd_users_stat.stat.mode }}"
+        that: nut_upsd_users_stat.stat.mode == '0640'
+        fail_msg: "NUT UPSD users file has incorrect mode: {{ nut_upsd_users_stat.stat.mode }}"
         success_msg: "NUT UPSD users file has correct mode"
 
     - name: Assert NUT UPSD users file ownership
       ansible.builtin.assert:
         that:
-          - upsd_users_stat.stat.pw_name == 'root'
-          - upsd_users_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT UPSD users file has incorrect ownership: {{ upsd_users_stat.stat.pw_name }}:{{ upsd_users_stat.stat.gr_name }}"
+          - nut_upsd_users_stat.stat.pw_name == 'root'
+          - nut_upsd_users_stat.stat.gr_name == 'nut'
+        fail_msg: "NUT UPSD users file has incorrect ownership: {{ nut_upsd_users_stat.stat.pw_name }}:{{ nut_upsd_users_stat.stat.gr_name }}"
         success_msg: "NUT UPSD users file has correct ownership"
 
 - name: Verify NUT UPSD users file content
@@ -128,58 +128,58 @@
     - name: Slurp NUT UPSD users file content
       ansible.builtin.slurp:
         src: "{{ nut_dir }}/upsd.users"
-      register: upsd_users_content
+      register: nut_upsd_users_content
 
     - name: Assert NUT UPSD users file has Unix line endings
       ansible.builtin.assert:
-        that: "'\\r\\n' not in (upsd_users_content.content | b64decode)"
+        that: "'\\r\\n' not in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "NUT UPSD users file contains Windows line endings (CRLF)"
         success_msg: "NUT UPSD users file has Unix line endings (LF)"
 
     - name: Assert UPSD users file contains admin user
       ansible.builtin.assert:
-        that: "'[{{ nut_users_admin_name }}]' in (upsd_users_content.content | b64decode)"
+        that: "'[{{ nut_users_admin_name }}]' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain admin user"
         success_msg: "UPSD users file contains admin user"
 
     - name: Assert UPSD users file contains admin password
       ansible.builtin.assert:
-        that: "'password = {{ nut_users_admin_password }}' in (upsd_users_content.content | b64decode)"
+        that: "'password = {{ nut_users_admin_password }}' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain admin password"
         success_msg: "UPSD users file contains admin password"
 
     - name: Assert UPSD users file contains SET directive
       ansible.builtin.assert:
-        that: "'actions = SET' in (upsd_users_content.content | b64decode)"
+        that: "'actions = SET' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain admin actions"
         success_msg: "UPSD users file contains admin actions"
 
     - name: Assert UPSD users file contains FSD directive
       ansible.builtin.assert:
-        that: "'actions = FSD' in (upsd_users_content.content | b64decode)"
+        that: "'actions = FSD' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain FSD directive"
         success_msg: "UPSD users file contains FSD directive"
 
     - name: Assert UPSD users file contains instcmds ALL directive
       ansible.builtin.assert:
-        that: "'instcmds = ALL' in (upsd_users_content.content | b64decode)"
+        that: "'instcmds = ALL' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain instcmds ALL directive"
         success_msg: "UPSD users file contains instcmds ALL directive"
 
     - name: Assert UPSD users file contains upsmon user
       ansible.builtin.assert:
-        that: "'[{{ nut_users_monitor_name }}]' in (upsd_users_content.content | b64decode)"
+        that: "'[{{ nut_users_monitor_name }}]' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain upsmon user"
         success_msg: "UPSD users file contains upsmon user"
 
     - name: Assert UPSD users file contains upsmon password
       ansible.builtin.assert:
-        that: "'password = {{ nut_users_monitor_password }}' in (upsd_users_content.content | b64decode)"
+        that: "'password = {{ nut_users_monitor_password }}' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain upsmon password"
         success_msg: "UPSD users file contains upsmon password"
 
     - name: Assert UPSD users file contains upsmon upsmon directive
       ansible.builtin.assert:
-        that: "'upsmon primary' in (upsd_users_content.content | b64decode)"
+        that: "'upsmon primary' in (nut_upsd_users_content.content | b64decode)"
         fail_msg: "UPSD users file does not contain upsmon directive"
         success_msg: "UPSD users file contains upsmon directive"

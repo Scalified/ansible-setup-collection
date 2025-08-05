@@ -29,6 +29,7 @@ This is an **Ansible Collection** for server setup automation, published as: `sc
 * Follow all ansible-lint rules:
     * Use **Fully Qualified Collection Names (FQCN)**.
     * Provide descriptive task names.
+    * Variables names from within roles must use `<role>_` as a prefix.
 * Use consistent **indentation**, **naming**, and **file structure** across all roles.
 * Prefer **Ansible modules** over `ansible.builtin.shell` or `ansible.builtin.command`.
 * Avoid `set_fact` unless required.

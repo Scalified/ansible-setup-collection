@@ -3,12 +3,12 @@
   block:
     - name: Get upsmon runas user groups
       ansible.builtin.command: "id -Gn {{ nut_users_upsmon_runas_name }}"
-      register: upsmon_runas_groups
+      register: nut_upsmon_runas_groups
       changed_when: false
 
     - name: Assert upsmon runas user is in the nut group
       ansible.builtin.assert:
-        that: "'nut' in upsmon_runas_groups.stdout.split()"
+        that: "'nut' in nut_upsmon_runas_groups.stdout.split()"
         fail_msg: "UPSMON runas user {{ nut_users_upsmon_runas_name }} is not in the nut group"
         success_msg: "UPSMON runas user {{ nut_users_upsmon_runas_name }} is in the nut group"
 
@@ -17,32 +17,32 @@
     - name: Stat NUT UPSMON configuration file
       ansible.builtin.stat:
         path: "{{ nut_dir }}/upsmon.conf"
-      register: upsmon_conf_stat
+      register: nut_upsmon_conf_stat
 
     - name: Assert NUT UPSMON configuration file exists
       ansible.builtin.assert:
-        that: upsmon_conf_stat.stat.exists
+        that: nut_upsmon_conf_stat.stat.exists
         fail_msg: "NUT UPSMON configuration file does not exist"
         success_msg: "NUT UPSMON configuration file exists"
 
     - name: Assert NUT UPSMON configuration file is a regular file
       ansible.builtin.assert:
-        that: upsmon_conf_stat.stat.isreg
+        that: nut_upsmon_conf_stat.stat.isreg
         fail_msg: "NUT UPSMON configuration file is not a regular file"
         success_msg: "NUT UPSMON configuration file is a regular file"
 
     - name: Assert NUT UPSMON configuration file mode
       ansible.builtin.assert:
-        that: upsmon_conf_stat.stat.mode == '0640'
-        fail_msg: "NUT UPSMON configuration file has incorrect mode: {{ upsmon_conf_stat.stat.mode }}"
+        that: nut_upsmon_conf_stat.stat.mode == '0640'
+        fail_msg: "NUT UPSMON configuration file has incorrect mode: {{ nut_upsmon_conf_stat.stat.mode }}"
         success_msg: "NUT UPSMON configuration file has correct mode"
 
     - name: Assert NUT UPSMON configuration file ownership
       ansible.builtin.assert:
         that:
-          - upsmon_conf_stat.stat.pw_name == 'root'
-          - upsmon_conf_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT UPSMON configuration file has incorrect ownership: {{ upsmon_conf_stat.stat.pw_name }}:{{ upsmon_conf_stat.stat.gr_name }}"
+          - nut_upsmon_conf_stat.stat.pw_name == 'root'
+          - nut_upsmon_conf_stat.stat.gr_name == 'nut'
+        fail_msg: "NUT UPSMON configuration file has incorrect ownership: {{ nut_upsmon_conf_stat.stat.pw_name }}:{{ nut_upsmon_conf_stat.stat.gr_name }}"
         success_msg: "NUT UPSMON configuration file has correct ownership"
 
 - name: Verify NUT UPSMON configuration file content
@@ -50,17 +50,17 @@
     - name: Slurp NUT UPSMON configuration file content
       ansible.builtin.slurp:
         src: "{{ nut_dir }}/upsmon.conf"
-      register: upsmon_conf_content
+      register: nut_upsmon_conf_content
 
     - name: Assert NUT UPSMON configuration file has Unix line endings
       ansible.builtin.assert:
-        that: "'\\r\\n' not in (upsmon_conf_content.content | b64decode)"
+        that: "'\\r\\n' not in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "NUT UPSMON configuration file contains Windows line endings (CRLF)"
         success_msg: "NUT UPSMON configuration file has Unix line endings (LF)"
 
     - name: Assert UPSMON configuration contains RUN_AS_USER directive
       ansible.builtin.assert:
-        that: "'RUN_AS_USER {{ nut_users_upsmon_runas_name }}' in (upsmon_conf_content.content | b64decode)"
+        that: "'RUN_AS_USER {{ nut_users_upsmon_runas_name }}' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain RUN_AS_USER {{ nut_users_upsmon_runas_name }} directive"
         success_msg: "UPSMON configuration contains RUN_AS_USER directive"
 
@@ -69,61 +69,61 @@
         that: >-
           'MONITOR {{ nut_ups_name }}@{{ nut_upsmon_server }}:{{ nut_upsmon_port }} 1
           {{ nut_users_monitor_name }} {{ nut_users_monitor_password }} {{ nut_upsmon_priority }}'
-          in (upsmon_conf_content.content | b64decode)
+          in (nut_upsmon_conf_content.content | b64decode)
         fail_msg: "UPSMON configuration does not contain MONITOR directive"
         success_msg: "UPSMON configuration contains MONITOR directive"
 
     - name: Assert UPSMON configuration contains MINSUPPLIES directive
       ansible.builtin.assert:
-        that: "'MINSUPPLIES 1' in (upsmon_conf_content.content | b64decode)"
+        that: "'MINSUPPLIES 1' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain MINSUPPLIES directive"
         success_msg: "UPSMON configuration contains MINSUPPLIES directive"
 
     - name: Assert UPSMON configuration contains SHUTDOWNCMD directive
       ansible.builtin.assert:
-        that: "'SHUTDOWNCMD \"/sbin/shutdown -h +0\"' in (upsmon_conf_content.content | b64decode)"
+        that: '''SHUTDOWNCMD "/sbin/shutdown -h +0"'' in (nut_upsmon_conf_content.content | b64decode)'
         fail_msg: "UPSMON configuration does not contain SHUTDOWNCMD directive"
         success_msg: "UPSMON configuration contains SHUTDOWNCMD directive"
 
     - name: Assert UPSMON configuration contains NOTIFYCMD directive
       ansible.builtin.assert:
-        that: "'NOTIFYCMD /usr/sbin/upssched' in (upsmon_conf_content.content | b64decode)"
+        that: "'NOTIFYCMD /usr/sbin/upssched' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain NOTIFYCMD directive"
         success_msg: "UPSMON configuration contains NOTIFYCMD directive"
 
     - name: Assert UPSMON configuration contains POLLFREQ directive
       ansible.builtin.assert:
-        that: "'POLLFREQ 5' in (upsmon_conf_content.content | b64decode)"
+        that: "'POLLFREQ 5' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain POLLFREQ directive"
         success_msg: "UPSMON configuration contains POLLFREQ directive"
 
     - name: Assert UPSMON configuration contains POLLFREQALERT directive
       ansible.builtin.assert:
-        that: "'POLLFREQALERT 5' in (upsmon_conf_content.content | b64decode)"
+        that: "'POLLFREQALERT 5' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain POLLFREQALERT directive"
         success_msg: "UPSMON configuration contains POLLFREQALERT directive"
 
     - name: Assert UPSMON configuration contains HOSTSYNC directive
       ansible.builtin.assert:
-        that: "'HOSTSYNC 15' in (upsmon_conf_content.content | b64decode)"
+        that: "'HOSTSYNC 15' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain HOSTSYNC directive"
         success_msg: "UPSMON configuration contains HOSTSYNC directive"
 
     - name: Assert UPSMON configuration contains DEADTIME directive
       ansible.builtin.assert:
-        that: "'DEADTIME 15' in (upsmon_conf_content.content | b64decode)"
+        that: "'DEADTIME 15' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain DEADTIME directive"
         success_msg: "UPSMON configuration contains DEADTIME directive"
 
     - name: Assert UPSMON configuration contains POWERDOWNFLAG directive
       ansible.builtin.assert:
-        that: "'POWERDOWNFLAG {{ nut_upsmon_powerdownflag }}' in (upsmon_conf_content.content | b64decode)"
+        that: "'POWERDOWNFLAG {{ nut_upsmon_powerdownflag }}' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain POWERDOWNFLAG directive"
         success_msg: "UPSMON configuration contains POWERDOWNFLAG directive"
 
     - name: Assert UPSMON configuration contains NOTIFYFLAG directives
       ansible.builtin.assert:
-        that: "'{{ directive }}' in (upsmon_conf_content.content | b64decode)"
+        that: "'{{ directive }}' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain {{ directive }} directive"
         success_msg: "UPSMON configuration contains {{ directive }} directive"
       loop:
@@ -143,18 +143,18 @@
 
     - name: Assert UPSMON configuration contains RBWARNTIME directive
       ansible.builtin.assert:
-        that: "'RBWARNTIME 43200' in (upsmon_conf_content.content | b64decode)"
+        that: "'RBWARNTIME 43200' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain RBWARNTIME directive"
         success_msg: "UPSMON configuration contains RBWARNTIME directive"
 
     - name: Assert UPSMON configuration contains NOCOMMWARNTIME directive
       ansible.builtin.assert:
-        that: "'NOCOMMWARNTIME 300' in (upsmon_conf_content.content | b64decode)"
+        that: "'NOCOMMWARNTIME 300' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain NOCOMMWARNTIME directive"
         success_msg: "UPSMON configuration contains NOCOMMWARNTIME directive"
 
     - name: Assert UPSMON configuration contains FINALDELAY directive
       ansible.builtin.assert:
-        that: "'FINALDELAY 5' in (upsmon_conf_content.content | b64decode)"
+        that: "'FINALDELAY 5' in (nut_upsmon_conf_content.content | b64decode)"
         fail_msg: "UPSMON configuration does not contain FINALDELAY directive"
         success_msg: "UPSMON configuration contains FINALDELAY directive"
