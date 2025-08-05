@@ -100,3 +100,6 @@
         that: "'I_HAVE_SECURED_MY_CGI' in (upsset_conf_content.content | b64decode)"
         fail_msg: "Upsset configuration does not contain I_HAVE_SECURED_MY_CGI directive"
         success_msg: "Upsset configuration contains I_HAVE_SECURED_MY_CGI directive"
+
+- name: Include distribution-specific verification tests
+  ansible.builtin.include_tasks: "{{ system_os_family }}/cgi.yml"

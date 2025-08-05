@@ -29,6 +29,6 @@
 
     - name: Assert docker user is in the docker group
       ansible.builtin.assert:
-        that: docker_user in upsmon_runas_groups.stdout.split()
+        that: docker_user in docker_user_groups.stdout.split()
         fail_msg: "{{ docker_user }} user is not in the docker group"
         success_msg: "{{ docker_user }} user is in the docker group"

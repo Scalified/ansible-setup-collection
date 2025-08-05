@@ -9,4 +9,6 @@
     state: stopped
     enabled: false
   become: true
-  when: "'apache2' in services | default({})"
+  when:
+    - system_systemd_managed
+    - services.apache2 is defined

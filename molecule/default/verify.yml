@@ -17,6 +17,7 @@
         - fs
         - mail
         - ssl
+        - nut
         - samba
         - docker
       loop_control:
@@ -34,6 +35,7 @@
           - "  ✓ FS:        PASSED   "
           - "  ✓ Mail:      PASSED   "
           - "  ✓ SSL:       PASSED   "
+          - "  ✓ NUT:       PASSED   "
           - "  ✓ Samba:     PASSED   "
           - "  ✓ Docker:    PASSED   "
           - "========================"

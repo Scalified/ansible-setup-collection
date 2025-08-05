@@ -37,7 +37,7 @@
 
     - name: Assert SSL CA key directory mode
       ansible.builtin.assert:
-        that: ssl_ca_key_dir_stat.stat.mode == '0700'
+        that: ssl_ca_key_dir_stat.stat.mode == '0710'
         fail_msg: "SSL CA key directory has incorrect mode: {{ ssl_ca_key_dir_stat.stat.mode }}"
         success_msg: "SSL CA key directory has correct mode"
 
@@ -45,7 +45,7 @@
       ansible.builtin.assert:
         that:
           - ssl_ca_key_dir_stat.stat.pw_name == 'root'
-          - ssl_ca_key_dir_stat.stat.gr_name == 'root'
+          - ssl_ca_key_dir_stat.stat.gr_name == 'ssl-cert'
         fail_msg: "SSL CA key directory has incorrect ownership: {{ ssl_ca_key_dir_stat.stat.pw_name }}:{{ ssl_ca_key_dir_stat.stat.gr_name }}"
         success_msg: "SSL CA key directory has correct ownership"
 
@@ -70,7 +70,7 @@
 
     - name: Assert SSL server key directory mode
       ansible.builtin.assert:
-        that: ssl_server_key_dir_stat.stat.mode == '0700'
+        that: ssl_server_key_dir_stat.stat.mode == '0710'
         fail_msg: "SSL server key directory has incorrect mode: {{ ssl_server_key_dir_stat.stat.mode }}"
         success_msg: "SSL server key directory has correct mode"
 
@@ -78,7 +78,7 @@
       ansible.builtin.assert:
         that:
           - ssl_server_key_dir_stat.stat.pw_name == 'root'
-          - ssl_server_key_dir_stat.stat.gr_name == 'root'
+          - ssl_server_key_dir_stat.stat.gr_name == 'ssl-cert'
         fail_msg: "SSL server key directory has incorrect ownership: {{ ssl_server_key_dir_stat.stat.pw_name }}:{{ ssl_server_key_dir_stat.stat.gr_name }}"
         success_msg: "SSL server key directory has correct ownership"
 
