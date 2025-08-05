@@ -9,7 +9,6 @@
     state: stopped
     enabled: false
   become: true
-  when: 
+  when:
     - system_systemd_managed
     - services.httpd is defined
-
