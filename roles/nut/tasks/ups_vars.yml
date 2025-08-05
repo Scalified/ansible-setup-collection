@@ -1,7 +1,7 @@
 - name: Deploy UPS update vairable script
   ansible.builtin.template:
     src: ups-update-variable
-    dest: /usr/local/bin/ups-update-variable
+    dest: /usr/local/sbin/ups-update-variable
     owner: root
     group: nut
     mode: "0750"

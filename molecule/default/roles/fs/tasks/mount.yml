@@ -3,7 +3,7 @@
   block:
     - name: Stat auto-remount script
       ansible.builtin.stat:
-        path: /usr/local/bin/auto-remount
+        path: /usr/local/sbin/auto-remount
       register: fs_auto_remount_script
 
     - name: Assert auto-remount script exists
@@ -36,7 +36,7 @@
   block:
     - name: Slurp auto-remount script content
       ansible.builtin.slurp:
-        src: /usr/local/bin/auto-remount
+        src: /usr/local/sbin/auto-remount
       register: fs_auto_remount_script_content
 
     - name: Assert auto-remount script has Unix line endings

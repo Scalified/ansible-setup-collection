@@ -38,7 +38,7 @@
   block:
     - name: Stat UPSSCHED cmd script
       ansible.builtin.stat:
-        path: "/usr/local/bin/upssched-cmd"
+        path: "/usr/local/sbin/upssched-cmd"
       register: nut_upssched_cmd_stat
 
     - name: Assert UPSSCHED cmd script exists
@@ -71,7 +71,7 @@
   block:
     - name: Slurp UPSSCHED cmd script content
       ansible.builtin.slurp:
-        src: "/usr/local/bin/upssched-cmd"
+        src: "/usr/local/sbin/upssched-cmd"
       register: nut_upssched_cmd_content
 
     - name: Assert UPSSCHED cmd script has Unix line endings
@@ -128,7 +128,7 @@
 
     - name: Assert UPSSCHED configuration contains CMDSCRIPT directive
       ansible.builtin.assert:
-        that: "'CMDSCRIPT /usr/local/bin/upssched-cmd' in (nut_upssched_conf_content.content | b64decode)"
+        that: "'CMDSCRIPT /usr/local/sbin/upssched-cmd' in (nut_upssched_conf_content.content | b64decode)"
         fail_msg: "UPSSCHED configuration does not contain CMDSCRIPT directive"
         success_msg: "UPSSCHED configuration contains CMDSCRIPT directive"
 

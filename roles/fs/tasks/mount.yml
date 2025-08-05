@@ -2,7 +2,7 @@
 - name: Deploy auto remount script
   ansible.builtin.template:
     src: auto-remount
-    dest: /usr/local/bin/auto-remount
+    dest: /usr/local/sbin/auto-remount
     mode: "0755"
   become: true
 

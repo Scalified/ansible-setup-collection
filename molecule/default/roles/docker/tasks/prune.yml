@@ -3,7 +3,7 @@
   block:
     - name: Stat docker-system-prune script
       ansible.builtin.stat:
-        path: /usr/local/bin/docker-system-prune
+        path: /usr/local/sbin/docker-system-prune
       register: docker_system_prune_script_stat
 
     - name: Assert docker-system-prune script exists

@@ -1,6 +1,6 @@
 namespace: scalified
 name: setup
-version: 2.2.0
+version: 2.3.0
 readme: README.md
 authors:
   - Vladyslav Baidak <vld.x@hotmail.com>
@@ -20,8 +20,10 @@ tags:
   - firewall
   - filesystem
   - mail
-  - baseline
   - ssl
+  - nut
+  - samba
+  - baseline
 
 repository: https://github.com/scalified/ansible-setup-collection
 documentation: https://github.com/scalified/ansible-setup-collection
