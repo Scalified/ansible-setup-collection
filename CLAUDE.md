@@ -39,7 +39,7 @@ This is an **Ansible Collection** for server setup automation, published as: `sc
 
 ### System Role Facts
 
-- `system_os_family` — Operating system family. Possible values: `Debian`, `RedHat`.
+- `system_os_family` — Operating system family. Possible values: `debian`, `redHat`.
 - `system_containerized` — Boolean. Indicates if the system is running in a container.
 - `system_systemd_managed` — Boolean. Indicates if `systemd` is available on the system.
 - `system_architecture` — System architecture. Possible values: `amd64`, `arm64`.

@@ -11,7 +11,7 @@ Ansible collection for server setup with system configuration and essential tool
 
 - **Ansible:** >= 2.16.0
 - **Python:** >= 3.6
-- **Target OS:** Ubuntu, Rocky
+- **Target OS:** Debian, Rocky
 - **Privileges:** Most roles require `become: true` (sudo access)
 
 ## Installation
