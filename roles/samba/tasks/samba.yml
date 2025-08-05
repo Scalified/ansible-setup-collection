@@ -5,6 +5,8 @@
       - samba
       - python3-pexpect
     state: present
+  retries: 3
+  delay: 10
   become: true
 
 - name: Create Samba shares directories
@@ -19,7 +21,7 @@
   loop_control:
     loop_var: share
 
-- name: Copy Samba configuration file
+- name: Deploy Samba configuration
   ansible.builtin.template:
     src: smb.conf
     dest: /etc/samba/smb.conf

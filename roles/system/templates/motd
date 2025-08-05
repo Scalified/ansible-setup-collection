@@ -24,7 +24,7 @@ If opened accidentally, immediately disconnect and contact:
 
     ----------------------------------------------------    
 {% if contact.email is defined %}
-    email:  {{ contact.email }}
+    email:   {{ contact.email }}
 {% endif %}
 {% if contact.mobile is defined %}
     mobile:  {{ contact.mobile }}

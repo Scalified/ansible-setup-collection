@@ -1,0 +1,20 @@
+---
+- name: Include NUT UPS scan tasks
+  ansible.builtin.include_tasks: ups_scan.yml
+  when: nut_ups_config_required_attrs | difference((nut_ups_config | default({})).keys()) | length > 0
+
+- name: Check NUT UPS configuration attributes
+  ansible.builtin.fail:
+    msg: >-
+      Missing '{{ nut_ups_config_required_attrs | difference(nut_ups_config.keys()) }}'
+      required key(s) in the UPS configuration
+  when: nut_ups_config_required_attrs | difference(nut_ups_config.keys()) | length > 0
+
+- name: Deploy NUT UPS configuration
+  ansible.builtin.template:
+    src: ups.conf
+    dest: "{{ nut_dir }}/ups.conf"
+    owner: root
+    group: nut
+    mode: "640"
+  become: true

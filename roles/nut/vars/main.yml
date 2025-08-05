@@ -1,0 +1,12 @@
+---
+nut_ups_config_required_attrs:
+  - driver
+  - vendorid
+  - productid
+  - port
+
+nut_upsd_statepath: /var/run/nut
+
+nut_upsmon_powerdownflag: /etc/killpower
+
+nut_upssched_run_dir: /run/nut/upssched

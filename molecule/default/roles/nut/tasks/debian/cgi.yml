@@ -1,0 +1,12 @@
+---
+- name: Verify Apache2 service is stopped
+  block:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+      become: true
+
+    - name: Assert Apache2 service is stopped
+      ansible.builtin.assert:
+        that: services.apache2.state is not defined or services.apache2.state == 'stopped'
+        fail_msg: "Apache2 service is not stopped"
+        success_msg: "Apache2 service is stopped or not defined"

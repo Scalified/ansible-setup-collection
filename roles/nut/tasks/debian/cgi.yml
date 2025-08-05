@@ -1,0 +1,14 @@
+---
+- name: Gather service facts
+  ansible.builtin.service_facts:
+  become: true
+
+- name: Disable Apache HTTPD service
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+    enabled: false
+  become: true
+  when:
+    - system_systemd_managed
+    - services.apache2 is defined

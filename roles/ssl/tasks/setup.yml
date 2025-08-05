@@ -5,6 +5,14 @@
       - ca-certificates
       - python3-cryptography
     state: present
+  retries: 3
+  delay: 10
+  become: true
+
+- name: Create SSL cert group
+  ansible.builtin.group:
+    name: ssl-cert
+    state: present
   become: true
 
 - name: Create SSL keys directories
@@ -12,8 +20,8 @@
     path: "{{ dir }}"
     state: directory
     owner: root
-    group: root
-    mode: "0700"
+    group: ssl-cert
+    mode: "0710"
   loop:
     - "{{ ssl_keys_ca_dir }}"
     - "{{ ssl_keys_server_dir }}"

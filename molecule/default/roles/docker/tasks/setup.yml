@@ -1,5 +1,5 @@
 ---
-- name: Include distribution-specific docker tasks
+- name: Include distribution-specific verification tasks
   ansible.builtin.include_tasks: "{{ system_os_family }}/setup.yml"
 
 - name: Verify Docker packages installed
@@ -20,15 +20,15 @@
       loop_control:
         loop_var: package
 
-- name: Verify user in docker group
+- name: Verify docker user in docker group
   block:
-    - name: Check if user is in docker group
-      ansible.builtin.command: groups {{ ansible_user_id }}
+    - name: Get user groups
+      ansible.builtin.command: "id -Gn {{ docker_user }}"
       register: docker_user_groups
       changed_when: false
 
-    - name: Assert user is in docker group
+    - name: Assert docker user is in the docker group
       ansible.builtin.assert:
-        that: "'docker' in docker_user_groups.stdout"
-        fail_msg: "User {{ ansible_user_id }} is not in docker group"
-        success_msg: "User {{ ansible_user_id }} is in docker group"
+        that: docker_user in docker_user_groups.stdout.split()
+        fail_msg: "{{ docker_user }} user is not in the docker group"
+        success_msg: "{{ docker_user }} user is in the docker group"

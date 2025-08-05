@@ -1,5 +1,5 @@
 ---
-- name: Copy scripts
+- name: Deploy scripts
   ansible.builtin.copy:
     src: "{{ script }}"
     dest: "/usr/local/bin/{{ script }}"

@@ -1,0 +1,21 @@
+---
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ system_os_family }}/main.yml"
+
+- name: Include nut verifications
+  ansible.builtin.include_tasks: nut.yml
+
+- name: Include UPS verifications
+  ansible.builtin.include_tasks: ups.yml
+
+- name: Include UPSD verifications
+  ansible.builtin.include_tasks: upsd.yml
+
+- name: Include UPSMON verifications
+  ansible.builtin.include_tasks: upsmon.yml
+
+- name: Include UPSSCHED verifications
+  ansible.builtin.include_tasks: upssched.yml
+
+- name: Include CGI verifications
+  ansible.builtin.include_tasks: cgi.yml

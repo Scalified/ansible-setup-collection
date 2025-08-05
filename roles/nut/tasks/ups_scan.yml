@@ -1,0 +1,63 @@
+---
+- name: Scan UPS devices
+  ansible.builtin.command: sudo nut-scanner -qPU
+  changed_when: false
+  register: nut_ups_devices
+  become: true
+
+- name: Abort if no UPS devices detected
+  ansible.builtin.fail:
+    msg: "No UPS devices detected"
+  when: nut_ups_devices.stdout_lines | length == 0
+
+- name: Prompt to enter the UPS configuration number
+  ansible.builtin.pause:
+    prompt: |
+      Scanned UPS devices:
+
+      {{
+         ['  [ '] | product(range(1, nut_ups_devices.stdout_lines | length + 1)) | map('join')
+                  | zip(nut_ups_devices.stdout_lines) | map('join', ']: ') | join('\n')
+      }}
+
+      Enter the UPS configuration number: [1 - {{ nut_ups_devices.stdout_lines | length }}]
+  register: nut_ups_config_number
+  until:
+    - nut_ups_config_number.user_input | int > 0
+    - nut_ups_config_number.user_input | int < nut_ups_devices.stdout_lines | length + 1
+  retries: 3
+  delay: 0
+  failed_when: false
+
+- name: Abort if invalid UPS configuration number entered
+  ansible.builtin.fail:
+    msg: "Maximum number of invalid UPS configuration number attempts reached"
+  when: nut_ups_config_number.failed
+
+- name: Prompt to enter the UPS name
+  ansible.builtin.pause:
+    prompt: Enter the UPS configuration name
+  register: nut_ups_config_name
+  until: nut_ups_config_name.user_input is match('^[\\w-]{3,20}$')
+  retries: 3
+  delay: 0
+  failed_when: false
+
+- name: Abort if invalid UPS configuration name entered max times
+  ansible.builtin.fail:
+    msg: "Invalid UPS configuration name entered max times"
+  when: nut_ups_config_name.failed
+
+- name: Set UPS configuration facts
+  ansible.builtin.set_fact:
+    nut_ups_name: "{{ nut_ups_config_name.user_input | default(nut_ups_name) }}"
+    nut_ups_config: >
+      {{
+        nut_ups_devices.stdout_lines[nut_ups_config_number.user_input | int - 1]
+          | regex_replace('^.*:\s*', '')
+          | split(',')
+          | map('regex_replace', '^\s*([-_\w]+)\s*=\s*"?([-_\w\s]+)"?\s*$', '\1=\2')
+          | map('split', '=')
+          | community.general.dict
+          | combine(nut_ups_config | default({}), list_merge='keep')
+      }}

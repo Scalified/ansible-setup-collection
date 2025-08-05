@@ -1,5 +1,5 @@
 ---
-- name: Copy host stats script
+- name: Deploy host stats script
   ansible.builtin.copy:
     src: send-host-stats
     dest: /usr/local/bin/send-host-stats

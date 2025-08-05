@@ -1,5 +1,5 @@
 ---
-- name: Include distribution-specific vim tasks
+- name: Include distribution-specific verification tasks
   ansible.builtin.include_tasks: "{{ system_os_family }}/vim.yml"
 
 - name: Verify vim configuration file

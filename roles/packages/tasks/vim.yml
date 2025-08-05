@@ -2,9 +2,11 @@
   ansible.builtin.package:
     name: vim
     state: present
+  retries: 3
+  delay: 10
   become: true
 
-- name: Configure VIM
+- name: Deploy VIM configuration
   ansible.builtin.copy:
     src: .vimrc
     dest: "{{ ansible_env.HOME }}/.vimrc"

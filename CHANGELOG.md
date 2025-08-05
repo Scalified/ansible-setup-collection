@@ -1,3 +1,17 @@
+# 2.3.0
+
+* [#22 Roles: NUT](https://github.com/Scalified/ansible-setup-collection/issues/22)
+
+## Features
+
+- **Roles: NUT**: Added new role for Network UPS Tools (NUT) configuration and monitoring
+    - Installs NUT server and client packages
+    - Configures UPS monitoring with support for various UPS models
+    - Provides comprehensive UPS status monitoring and alerting
+    - Supports automatic shutdown on battery events
+    - Includes flexible configuration for multiple UPS devices
+    - Provides comprehensive molecule tests and documentation
+
 # 2.2.0
 
 * [#20 Roles Reorganization](https://github.com/Scalified/ansible-setup-collection/pull/21)

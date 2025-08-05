@@ -12,7 +12,7 @@
     upgrade: "{{ system_update_type }}"
     autoremove: "{{ system_update_autoremove }}"
     autoclean: "{{ system_update_autoclean }}"
-  retries: 2
+  retries: 3
   delay: 30
   become: true
   notify: "system : request reboot"

@@ -1,0 +1,7 @@
+---
+- name: Ensure NUT UPSD server is running
+  ansible.builtin.command: "upsc {{ nut_ups_name }}"
+  changed_when: false
+  retries: 3
+  delay: 10
+  listen: upsc test

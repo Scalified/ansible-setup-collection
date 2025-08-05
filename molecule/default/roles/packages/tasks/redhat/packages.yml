@@ -1,4 +1,4 @@
-- name: Verify mandatory distribution packages are installed
+- name: Verify mandatory distribution packages installation
   block:
     - name: Gather installed package facts
       ansible.builtin.package_facts:

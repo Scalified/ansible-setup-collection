@@ -7,5 +7,5 @@
       changed_when: false
       failed_when: system_package_manager_version.rc != 0
 
-    - name: Include distribution-specific update tasks
-      ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"
+- name: Include distribution-specific verification tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/update.yml"

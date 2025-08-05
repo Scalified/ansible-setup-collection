@@ -1,0 +1,33 @@
+---
+- name: Create NUT UPSD state path directory
+  ansible.builtin.file:
+    path: "{{ nut_upsd_statepath }}"
+    state: directory
+    owner: root
+    group: nut
+    mode: "0770"
+  become: true
+
+- name: Deploy NUT UPSD configuration
+  ansible.builtin.template:
+    src: "{{ file }}"
+    dest: "{{ nut_dir }}/{{ file }}"
+    owner: root
+    group: nut
+    mode: "640"
+  loop:
+    - upsd.conf
+    - upsd.users
+  loop_control:
+    loop_var: file
+  become: true
+
+- name: Enable NUT UPSD service
+  ansible.builtin.systemd_service:
+    name: nut-server
+    enabled: true
+    daemon-reload: true
+    state: started
+  become: true
+  notify: upsc test
+  when: system_systemd_managed

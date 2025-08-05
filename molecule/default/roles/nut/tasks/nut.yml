@@ -1,0 +1,68 @@
+---
+- name: Verify NUT required packages installed
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: "Assert NUT required package installed"
+      ansible.builtin.assert:
+        that: "'{{ package }}' in ansible_facts.packages"
+        fail_msg: "{{ package }} package is not installed"
+        success_msg: "{{ package }} package is installed"
+      loop:
+        - nut
+      loop_control:
+        loop_var: package
+
+- name: Verify NUT configuration file attributes
+  block:
+    - name: Stat NUT configuration file
+      ansible.builtin.stat:
+        path: "{{ nut_dir }}/nut.conf"
+      register: nut_conf_stat
+
+    - name: Assert NUT configuration file exists
+      ansible.builtin.assert:
+        that: nut_conf_stat.stat.exists
+        fail_msg: "NUT configuration file does not exist"
+        success_msg: "NUT configuration file exists"
+
+    - name: Assert NUT configuration file is a regular file
+      ansible.builtin.assert:
+        that: nut_conf_stat.stat.isreg
+        fail_msg: "NUT configuration file is not a regular file"
+        success_msg: "NUT configuration file is a regular file"
+
+    - name: Assert NUT configuration file mode
+      ansible.builtin.assert:
+        that: nut_conf_stat.stat.mode == '0640'
+        fail_msg: "NUT configuration file has incorrect mode: {{ nut_conf_stat.stat.mode }}"
+        success_msg: "NUT configuration file has correct mode"
+
+    - name: Assert NUT configuration file ownership
+      ansible.builtin.assert:
+        that:
+          - nut_conf_stat.stat.pw_name == 'root'
+          - nut_conf_stat.stat.gr_name == 'nut'
+        fail_msg: "NUT configuration file has incorrect ownership: {{ nut_conf_stat.stat.pw_name }}:{{ nut_conf_stat.stat.gr_name }}"
+        success_msg: "NUT configuration file has correct ownership"
+
+- name: Verify NUT configuration file content
+  block:
+    - name: Slurp NUT configuration file content
+      ansible.builtin.slurp:
+        src: "{{ nut_dir }}/nut.conf"
+      register: nut_conf_content
+
+    - name: Assert NUT configuration file has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (nut_conf_content.content | b64decode)"
+        fail_msg: "NUT configuration file contains Windows line endings (CRLF)"
+        success_msg: "NUT configuration file has Unix line endings (LF)"
+
+    - name: Assert NUT mode is set to none
+      ansible.builtin.assert:
+        that: "'MODE={{ nut_mode }}' in (nut_conf_content.content | b64decode)"
+        fail_msg: "NUT configuration file does not contain 'MODE={{ nut_mode }}'"
+        success_msg: "NUT configuration file contains 'MODE={{ nut_mode }}'"

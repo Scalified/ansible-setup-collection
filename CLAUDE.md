@@ -1,50 +1,60 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository
+This file provides context and structure for Claude Code (claude.ai/code) to work effectively with this repository.
 
 ## Overview
 
-**Ansible** collection for server setup automation. Published on **Ansible Galaxy** as `scalified.setup` and must conform to **Galaxy** standards. Designed primarily for `Debian/RedHat` OS and tested on them
+This is an **Ansible Collection** for server setup automation, published as: `scalified.setup`.
 
-## Commands
+- Complies with **Ansible Galaxy** standards.
+- Supports and is tested on **Debian** and **RedHat** systems.
 
-- `ansible-lint` - Lint validation  
-- `molecule test` - Full test cycle
+## Development Commands
 
-> On **Windows** systems, run the above commands using the **WSL** prefix, for example: `wsl ansible-lint`
+- `ansible-lint` — validates code style and Ansible best practices.
+- `molecule test` — runs the full test suite.
 
-## Structure
+> ⚠️ On Windows, use `wsl` to run these commands, e.g., `wsl ansible-lint`
 
-- `roles/` - Individual setup roles (system, packages, docker, etc.)
-- `molecule/default/` - Test configuration in molecule.yml
-- `galaxy.yml` - Collection metadata
-- `.ansible-lint.yml` - Lint rules
+## Repository Structure
 
-## Code Style
+- `roles/` — Role definitions (e.g., system, packages, docker)
+- `molecule/default/` — Molecule test scenario configuration
+- `galaxy.yml` — Ansible Galaxy metadata
+- `.ansible-lint.yml` — Ansible Lint rules configuration
 
-- All files must end with a newline
-- All Ansible Lint rules must be followed, including the use of fully qualified collection names (FQCN), proper task naming, and other best practices
-- Follow consistent indentation, naming, and structure across roles and tasks
+## Code Style & Conventions
 
-## Development
+* All files must end with a newline.
+* Follow all ansible-lint rules:
+    * Use **Fully Qualified Collection Names (FQCN)**.
+    * Provide descriptive task names.
+    * Variables names from within roles must use `<role>_` as a prefix.
+* Use consistent **indentation**, **naming**, and **file structure** across all roles.
+* Prefer **Ansible modules** over `ansible.builtin.shell` or `ansible.builtin.command`.
+* Avoid `set_fact` unless required.
+* Each role must include:
+    * `README.md` — usage documentation, consistent format.
+    * `meta/main.yml` — Galaxy metadata and role dependencies.
 
-- Each role must include:
-    - `README.md` - usage examples documentation (must follow the same style for all roles)
-    - `meta/main.yml` - **Galaxy** information and role dependencies
-- Prefer **Ansible** modules over raw `ansible.builtin.shell` or `ansible.builtin.command` usage
-- Avoid using `set_fact` unless absolutely necessary
-- The `system` role sets the following **Ansible** facts:
-    - `system_os_family` - OS family (`Debian/RedHat`)
-    - `system_containerized` - indicates if running inside a container
-    - `system_systemd_managed` - indicates if `systemd` is available
-    - `system_architecture` - system architecture (`amd64`, `arm64`)
-- Each distribution-specific tasks or variables file must be placed inside a folder named after the distribution in lowercase (e.g., debian for Debian)
-- When including distribution-specific tasks or variables, use the `system_os_family` variable to dynamically reference the appropriate distribution folder
+### System Role Facts
+
+- `system_os_family` — Operating system family. Possible values: `Debian`, `RedHat`.
+- `system_containerized` — Boolean. Indicates if the system is running in a container.
+- `system_systemd_managed` — Boolean. Indicates if `systemd` is available on the system.
+- `system_architecture` — System architecture. Possible values: `amd64`, `arm64`.
+
+### Distribution-Specific Logic
+
+* Use lowercase folders for each OS (e.g., `debian/`, `redhat/`).
+* Reference these using the `system_os_family` variable dynamically in tasks and vars.
 
 ## Molecule Tests
 
-- Use `molecule test` for integration testing
-- Each file containing logic that requires testing must have a corresponding **Molecule** verification file with the same name in `molecule/default/roles/{role}/tasks/`
-- Role-specific verifications are defined in `molecule/default/verify.yml`
-- For test scenarios with multiple steps, use `block` to group **Molecule** tasks logically
-- Every new **Molecule** test must follow the same structure and syntax as the existing tests
+* Run integration tests with: molecule test.
+* Every file with logic must have a corresponding test file in: `molecule/default/roles/<role>/tasks/`
+* Role-level verifications are placed in: `molecule/default/verify.yml`
+* Use the following test files as templates:
+    * `packages/tasks/packages.yml` — verify package installations.
+    * `fs/tasks/mount.yml` — verify files, directories, scripts attributes and content.
+    * `docker/tasks/setup.yml` - verify user group.

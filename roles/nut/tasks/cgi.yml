@@ -1,0 +1,26 @@
+---
+- name: Install NUT CGI package
+  ansible.builtin.package:
+    name:
+      - nut-cgi
+    state: present
+  retries: 3
+  delay: 10
+  become: true
+
+- name: Deploy NUT CGI configurations
+  ansible.builtin.template:
+    src: "{{ file }}"
+    dest: "{{ nut_dir }}/{{ file }}"
+    owner: root
+    group: nut
+    mode: "0640"
+  loop:
+    - hosts.conf
+    - upsset.conf
+  loop_control:
+    loop_var: file
+  become: true
+
+- name: Include distribution-specific tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/cgi.yml"

@@ -1,0 +1,18 @@
+---
+nut_mode: netserver # none, standalone, netserver, netclient
+
+nut_upsd_listen_hosts:
+  - "*" # use all interfaces since NUT UPSD does not have time to pick up one on restart
+nut_upsd_listen_port: 3493
+
+nut_users_admin_name: nutadmin
+nut_users_admin_password: nutadmin
+nut_users_monitor_name: upsmon
+nut_users_monitor_password: nut
+nut_users_upsmon_runas_name: nutmon
+
+nut_upsmon_server: localhost
+nut_upsmon_port: "{{ nut_upsd_listen_port }}"
+nut_upsmon_priority: primary
+
+nut_upssched_run_user: "{{ nut_users_upsmon_runas_name }}"

@@ -1,5 +1,5 @@
 ---
-- name: Include distribution-specific mail verifications
+- name: Include distribution-specific verification tasks
   ansible.builtin.include_tasks: "{{ system_os_family }}/mail.yml"
 
 - name: Verify root mail forwarding in /etc/aliases
