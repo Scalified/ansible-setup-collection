@@ -38,7 +38,7 @@
   block:
     - name: Slurp docker-system-prune script content
       ansible.builtin.slurp:
-        src: /usr/local/bin/docker-system-prune
+        src: /usr/local/sbin/docker-system-prune
       register: docker_system_prune_script_content
 
     - name: Assert docker-system-prune script has Unix line endings

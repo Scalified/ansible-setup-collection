@@ -42,9 +42,10 @@
     state: present
   become: true
 
-- name: Update apt cache
+- name: Update APT cache
   ansible.builtin.apt:
     update_cache: true
+    cache_valid_time: 3600
   retries: 3
   delay: 10
   become: true
