@@ -8,7 +8,7 @@
     mode: "0770"
   become: true
 
-- name: Deploy UPSSCHED CMD script
+- name: Deploy NUT UPSSCHED CMD script
   ansible.builtin.template:
     src: upssched-cmd
     dest: /usr/local/bin/upssched-cmd

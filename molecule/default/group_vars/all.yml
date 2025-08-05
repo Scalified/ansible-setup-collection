@@ -79,6 +79,7 @@ ssl_bundle_generate: true
 ssl_bundle_name: "bundle.crt"
 
 # Docker
+docker_user: "{{ ansible_user_id }}"
 docker_system_prune_cron: ""
 
 # Samba
@@ -116,3 +117,11 @@ nut_ups_config:
   bus: "001"
 nut_ups_config_extra:
   extra: extratest
+nut_users_admin_name: testadmin
+nut_users_admin_password: testadminpass
+nut_users_monitor_name: testupsmon
+nut_users_monitor_password: testupsmonpass
+nut_users_upsmon_runas_name: testnutmon
+nut_upsmon_server: localhost
+nut_upsmon_port: 3493
+nut_upsmon_priority: secondary

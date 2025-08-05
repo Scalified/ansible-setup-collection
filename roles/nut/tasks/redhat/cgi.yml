@@ -1,1 +1,12 @@
 ---
+- name: Gather service facts
+  ansible.builtin.service_facts:
+  become: true
+
+- name: Disable Apache HTTPD service
+  ansible.builtin.service:
+    name: httpd
+    state: stopped
+    enabled: false
+  become: true
+  when: "'httpd' in services | default({})"

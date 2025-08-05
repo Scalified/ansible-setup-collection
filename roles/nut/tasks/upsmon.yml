@@ -1,5 +1,5 @@
 ---
-- name: Add UPSMON process user
+- name: Add NUT UPSMON process user
   ansible.builtin.user:
     name: "{{ nut_users_upsmon_runas_name }}"
     create_home: false

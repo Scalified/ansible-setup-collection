@@ -1,0 +1,163 @@
+---
+- name: Verify NUT USSCHED run directory
+  block:
+    - name: Stat NUT UPSSCHED run directory
+      ansible.builtin.stat:
+        path: "{{ nut_upssched_run_dir }}"
+      register: upssched_run_dir_stat
+
+    - name: Assert NUT UPSSCHED run directory exists
+      ansible.builtin.assert:
+        that: upssched_run_dir_stat.stat.exists
+        fail_msg: "NUT UPSSCHED run directory does not exist"
+        success_msg: "NUT UPSSCHED run directory exists"
+
+    - name: Assert NUT UPSSCHED run directory is a directory
+      ansible.builtin.assert:
+        that: upssched_run_dir_stat.stat.isdir
+        fail_msg: "NUT UPSSCHED run directory is not a directory"
+        success_msg: "NUT UPSSCHED run directory is a directory"
+
+    - name: Assert NUT UPSSCHED run directory mode
+      ansible.builtin.assert:
+        that: upssched_run_dir_stat.stat.mode == '0770'
+        fail_msg: "NUT UPSSCHED run directory has incorrect mode: {{ upssched_run_dir_stat.stat.mode }}"
+        success_msg: "NUT UPSSCHED run directory has correct mode"
+
+    - name: Assert NUT UPSSCHED run directory ownership
+      ansible.builtin.assert:
+        that:
+          - upssched_run_dir_stat.stat.pw_name == 'root'
+          - upssched_run_dir_stat.stat.gr_name == 'nut'
+        fail_msg: "NUT UPSSCHED run directory has incorrect ownership: {{ upssched_run_dir_stat.stat.pw_name }}:{{ upssched_run_dir_stat.stat.gr_name }}"
+        success_msg: "NUT UPSSCHED run directory has correct ownership"
+
+- name: Verify UPSSCHED cmd script
+  block:
+    - name: Stat UPSSCHED cmd script
+      ansible.builtin.stat:
+        path: "/usr/local/bin/upssched-cmd"
+      register: upssched_cmd_stat
+
+    - name: Assert UPSSCHED cmd script exists
+      ansible.builtin.assert:
+        that: upssched_cmd_stat.stat.exists
+        fail_msg: "UPSSCHED cmd script does not exist"
+        success_msg: "UPSSCHED cmd script exists"
+
+    - name: Assert UPSSCHED cmd script is a regular file
+      ansible.builtin.assert:
+        that: upssched_cmd_stat.stat.isreg
+        fail_msg: "UPSSCHED cmd script is not a regular file"
+        success_msg: "UPSSCHED cmd script is a regular file"
+
+    - name: Assert UPSSCHED cmd script mode
+      ansible.builtin.assert:
+        that: upssched_cmd_stat.stat.mode == '0750'
+        fail_msg: "UPSSCHED cmd script has incorrect mode: {{ upssched_cmd_stat.stat.mode }}"
+        success_msg: "UPSSCHED cmd script has correct mode"
+
+    - name: Assert UPSSCHED cmd script ownership
+      ansible.builtin.assert:
+        that:
+          - upssched_cmd_stat.stat.pw_name == 'root'
+          - upssched_cmd_stat.stat.gr_name == 'nut'
+        fail_msg: "UPSSCHED cmd script has incorrect ownership: {{ upssched_cmd_stat.stat.pw_name }}:{{ upssched_cmd_stat.stat.gr_name }}"
+        success_msg: "UPSSCHED cmd script has correct ownership"
+
+- name: Verify UPPSSCHED cmd script content
+  block:
+    - name: Slurp UPSSCHED cmd script content
+      ansible.builtin.slurp:
+        src: "/usr/local/bin/upssched-cmd"
+      register: upssched_cmd_content
+
+    - name: Assert UPSSCHED cmd script has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (upssched_cmd_content.content | b64decode)"
+        fail_msg: "UPSSCHED cmd script contains Windows line endings (CRLF)"
+        success_msg: "UPSSCHED cmd script has Unix line endings (LF)"
+
+- name: Verify NUT UPSSCHED configuration file attributes
+  block:
+    - name: Stat NUT UPSSCHED configuration file
+      ansible.builtin.stat:
+        path: "{{ nut_dir }}/upssched.conf"
+      register: upssched_conf_stat
+
+    - name: Assert NUT UPSSCHED configuration file exists
+      ansible.builtin.assert:
+        that: upssched_conf_stat.stat.exists
+        fail_msg: "NUT UPSSCHED configuration file does not exist"
+        success_msg: "NUT UPSSCHED configuration file exists"
+
+    - name: Assert NUT UPSSCHED configuration file is a regular file
+      ansible.builtin.assert:
+        that: upssched_conf_stat.stat.isreg
+        fail_msg: "NUT UPSSCHED configuration file is not a regular file"
+        success_msg: "NUT UPSSCHED configuration file is a regular file"
+
+    - name: Assert NUT UPSSCHED configuration file mode
+      ansible.builtin.assert:
+        that: upssched_conf_stat.stat.mode == '0640'
+        fail_msg: "NUT UPSSCHED configuration file has incorrect mode: {{ upssched_conf_stat.stat.mode }}"
+        success_msg: "NUT UPSSCHED configuration file has correct mode"
+
+    - name: Assert NUT UPSSCHED configuration file ownership
+      ansible.builtin.assert:
+        that:
+          - upssched_conf_stat.stat.pw_name == 'root'
+          - upssched_conf_stat.stat.gr_name == 'nut'
+        fail_msg: "NUT UPSSCHED configuration file has incorrect ownership: {{ upssched_conf_stat.stat.pw_name }}:{{ upssched_conf_stat.stat.gr_name }}"
+        success_msg: "NUT UPSSCHED configuration file has correct ownership"
+
+- name: Verify NUT UPSSCHED configuration file content
+  block:
+    - name: Slurp NUT UPSSCHED configuration file content
+      ansible.builtin.slurp:
+        src: "{{ nut_dir }}/upssched.conf"
+      register: upssched_conf_content
+
+    - name: Assert NUT UPSSCHED configuration file has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (upssched_conf_content.content | b64decode)"
+        fail_msg: "NUT UPSSCHED configuration file contains Windows line endings (CRLF)"
+        success_msg: "NUT UPSSCHED configuration file has Unix line endings (LF)"
+
+    - name: Assert UPSSCHED configuration contains CMDSCRIPT directive
+      ansible.builtin.assert:
+        that: "'CMDSCRIPT /usr/local/bin/upssched-cmd' in (upssched_conf_content.content | b64decode)"
+        fail_msg: "UPSSCHED configuration does not contain CMDSCRIPT directive"
+        success_msg: "UPSSCHED configuration contains CMDSCRIPT directive"
+
+    - name: Assert UPSSCHED configuration contains PIPEFN directive
+      ansible.builtin.assert:
+        that: "'PIPEFN {{ nut_upssched_run_dir }}/upssched.pipe' in (upssched_conf_content.content | b64decode)"
+        fail_msg: "UPSSCHED configuration does not contain PIPEFN directive"
+        success_msg: "UPSSCHED configuration contains PIPEFN directive"
+
+    - name: Assert UPSSCHED configuration contains LOCKFN directive
+      ansible.builtin.assert:
+        that: "'LOCKFN {{ nut_upssched_run_dir }}/upssched.lock' in (upssched_conf_content.content | b64decode)"
+        fail_msg: "UPSSCHED configuration does not contain LOCKFN directive"
+        success_msg: "UPSSCHED configuration contains LOCKFN directive"
+
+    - name: Assert UPSSCHED configuration contains AT direcitves
+      ansible.builtin.assert:
+        that: "'{{ directive }}' in (upssched_conf_content.content | b64decode)"
+        fail_msg: "UPSSCHED configuration does not contain {{ directive }} directive"
+        success_msg: "UPSSCHED configuration contains {{ directive }} directive"
+      loop:
+        - "AT COMMBAD          * START-TIMER  commbad 30"
+        - "AT COMMOK           * CANCEL-TIMER commbad commok"
+        - "AT ONLINE           * EXECUTE      online"
+        - "AT ONBATT           * EXECUTE      onbatt"
+        - "AT LOWBATT          * EXECUTE      lowbatt"
+        - "AT FSD              * EXECUTE      fsd"
+        - "AT SHUTDOWN         * EXECUTE      shutdown"
+        - "AT REPLBATT         * EXECUTE      replbatt"
+        - "AT NOCOMM           * EXECUTE      nocomm"
+        - "AT NOPARENT         * EXECUTE      noparent"
+        - "AT CAL              * EXECUTE      cal"
+      loop_control:
+        loop_var: directive

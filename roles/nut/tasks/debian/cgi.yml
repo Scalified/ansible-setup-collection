@@ -1,7 +1,12 @@
 ---
+- name: Gather service facts
+  ansible.builtin.service_facts:
+  become: true
+
 - name: Disable Apache HTTPD service
   ansible.builtin.service:
     name: apache2
     state: stopped
     enabled: false
   become: true
+  when: "'apache2' in services | default({})"

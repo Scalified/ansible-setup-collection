@@ -5,7 +5,6 @@
       ansible.builtin.stat:
         path: "{{ nut_dir }}/ups.conf"
       register: ups_conf_stat
-      become: true
 
     - name: Assert NUT UPS configuration file exists
       ansible.builtin.assert:

@@ -21,7 +21,6 @@
       ansible.builtin.stat:
         path: "{{ nut_dir }}/nut.conf"
       register: nut_conf_stat
-      become: true
 
     - name: Assert NUT configuration file exists
       ansible.builtin.assert:
