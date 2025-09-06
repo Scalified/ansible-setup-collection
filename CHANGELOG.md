@@ -1,3 +1,7 @@
+# 2.4.0
+
+* [#24 Change sysctl](https://github.com/Scalified/ansible-setup-collection/issues/24)
+
 # 2.3.0
 
 * [#22 Roles: NUT](https://github.com/Scalified/ansible-setup-collection/issues/22)

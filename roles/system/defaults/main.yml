@@ -15,7 +15,9 @@ system_hostname: "{{ ansible_hostname }}"
 system_timezone: "UTC"
 
 # System kernel parameters
-system_vm_max_map_count: 262144
+system_sysctl:
+  vm.max_map_count: 262144
+  fs.aio-max-nr: 1048576
 
 # MOTD settings
 system_motd_src: "motd"
