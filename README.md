@@ -31,6 +31,7 @@ ansible-galaxy collection install git+https://github.com/scalified/ansible-setup
 ### Requirements File
 
 `requirements.yml`:
+
 ```yaml
 ---
 collections:
@@ -43,15 +44,15 @@ ansible-galaxy collection install -r requirements.yml
 
 ## Roles
 
-* [Roles: System](roles/system/README.md)
-* [Roles: Packages](roles/packages/README.md)
-* [Roles: Firewall](roles/firewall/README.md)
-* [Roles: FS](roles/fs/README.md)
-* [Roles: Mail](roles/mail/README.md)
-* [Roles: Baseline](roles/baseline/README.md)
-* [Roles: SSL](roles/ssl/README.md)
-* [Roles: Docker](roles/docker/README.md)
-* [Roles: Samba](roles/samba/README.md)
+* [System](roles/system/README.md)
+* [Packages](roles/packages/README.md)
+* [Firewall](roles/firewall/README.md)
+* [FS](roles/fs/README.md)
+* [Mail](roles/mail/README.md)
+* [Baseline](roles/baseline/README.md)
+* [SSL](roles/ssl/README.md)
+* [Docker](roles/docker/README.md)
+* [Samba](roles/samba/README.md)
 
 ---
 

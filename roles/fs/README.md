@@ -1,4 +1,4 @@
-# Roles: FS
+# FS
 
 Manages files, directories and automates the mounting process
 
