@@ -1,4 +1,4 @@
-# Roles: Baseline
+# Baseline
 
 Baseline role that coordinates the execution of multiple essential roles for system setup and configuration
 

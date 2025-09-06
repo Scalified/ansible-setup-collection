@@ -1,4 +1,4 @@
-# Roles: SSL
+# SSL
 
 Manages SSL certificates and keys
 

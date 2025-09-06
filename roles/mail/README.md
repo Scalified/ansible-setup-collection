@@ -1,4 +1,4 @@
-# Roles: Mail
+# Mail
 
 Configures mail and stats
 

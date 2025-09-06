@@ -26,7 +26,7 @@
 
 ## Features
 
-- **Roles: Samba**: Added new role for Samba server configuration and file sharing
+- **Samba**: Added new role for Samba server configuration and file sharing
     - Installs Samba server packages and dependencies
     - Configures SMB shares with customizable permissions and ownership
     - Supports user authentication and password management
@@ -46,29 +46,29 @@
 
 ## Features
 
-- **Roles: Docker**: Added new role for Docker installation and configuration
+- **Docker**: Added new role for Docker installation and configuration
     - Installs Docker Engine and Docker Compose
     - Configures Docker daemon settings and user permissions
     - Supports container runtime management and Docker service control
-- **Roles: SSL**: Manages SSL certificates, including creation, deployment, and trust configuration
+- **SSL**: Manages SSL certificates, including creation, deployment, and trust configuration
     - Supports both generation and deployment of SSL certificates and keys
     - Handles CA and server certificate management
     - Updates system trust stores for supported platforms
-- **Roles: Baseline**: Provides initial system configuration and essential settings
+- **Baseline**: Provides initial system configuration and essential settings
     - Sets up recommended system defaults and security hardening
     - Configures basic environment and system parameters
     - Prepares the system for further automation and role application
-- **Roles: Mail**: Added new role for mail configuration
+- **Mail**: Added new role for mail configuration
     - Sets up outgoing mail delivery
     - Redirects system mail to a specified address
     - Schedules periodic host statistics email reports
-- **Roles: FS**: Added new role for filesystem management
+- **FS**: Added new role for filesystem management
     - Manages filesystems and mount points
     - Supports shares mount
-- **Roles: Firewall**: Added new role for host firewall management
+- **Firewall**: Added new role for host firewall management
     - Supports Debian (UFW) and RedHat (firewalld) firewalls
     - Allows custom rule definitions and SSH/ports configuration
-- **Roles: Packages**: Introduced a new role for package management and configuration
+- **Packages**: Introduced a new role for package management and configuration
     - Installs essential system packages and supports user-defined package lists
     - Handles OS-specific package installation logic
     - Installs and configures VIM with a custom .vimrc

@@ -1,4 +1,4 @@
-# Roles: System
+# System
 
 Configures essential system settings and performs server setup
 

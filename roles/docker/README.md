@@ -1,4 +1,4 @@
-# Roles: Docker
+# Docker
 
 Installs and configures Docker
 

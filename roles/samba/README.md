@@ -1,4 +1,4 @@
-# Roles: Samba
+# Samba
 
 Installs and configures Samba server for file sharing
 

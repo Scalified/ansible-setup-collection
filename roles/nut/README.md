@@ -1,4 +1,4 @@
-# Roles: NUT
+# NUT
 
 Installs and configures Network UPS Tools (NUT) for UPS monitoring and management
 
