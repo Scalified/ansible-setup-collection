@@ -54,8 +54,8 @@
   ansible.builtin.include_tasks: time.yml
   when: not system_containerized
 
-- name: Include virtual machine specific settings tasks
-  ansible.builtin.include_tasks: vm.yml
+- name: Include system kernel parameters tasks
+  ansible.builtin.include_tasks: sysctl.yml
   when: not system_containerized
 
 - name: Include MOTD banner configuration tasks
