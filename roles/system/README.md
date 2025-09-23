@@ -37,7 +37,6 @@ Configures essential system settings and performs server setup
 |---------------------------------|-------------------------------------------------|--------------------------|
 | `system_reboot_timeout`         | Timeout in seconds for system reboot operations | `300`                    |
 | `system_update_type`            | Type of system updates: `safe` or `full`        | `safe`                   |
-| `system_update_cache_valid_time`| Package cache validity time in seconds          | `3600`                   |
 | `system_update_autoremove`      | Remove unused packages after updates            | `true`                   |
 | `system_update_autoclean`       | Clean package cache after updates               | `true`                   |
 | `system_hostname`               | Hostname to set on target servers               | `{{ ansible_hostname }}` |

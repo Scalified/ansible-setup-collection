@@ -1,3 +1,7 @@
+# 2.4.1
+
+[#26 Cache valid time issue on Debian](https://github.com/Scalified/ansible-setup-collection/issues/26)
+
 # 2.4.0
 
 * [#24 Change sysctl](https://github.com/Scalified/ansible-setup-collection/issues/24)
