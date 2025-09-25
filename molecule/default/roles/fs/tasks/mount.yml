@@ -50,30 +50,30 @@
     - name: Stat remount scripts directory
       ansible.builtin.stat:
         path: "{{ fs_mount_auto_remount_scripts_dir }}"
-      register: fs_auto_remount_dir
+      register: fs_auto_remount_dir_stat
 
     - name: Assert remount scripts directory exists
       ansible.builtin.assert:
-        that: fs_auto_remount_dir.stat.exists
+        that: fs_auto_remount_dir_stat.stat.exists
         fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} does not exist"
         success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} exists"
 
     - name: Assert remount scripts directory is a directory
       ansible.builtin.assert:
-        that: fs_auto_remount_dir.stat.isdir
+        that: fs_auto_remount_dir_stat.stat.isdir
         fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} is not a directory"
         success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} is a directory"
 
     - name: Assert remount scripts directory mode
       ansible.builtin.assert:
-        that: fs_auto_remount_dir.stat.mode | string == '0755'
-        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has incorrect mode: {{ fs_auto_remount_dir.stat.mode }}"
+        that: fs_auto_remount_dir_stat.stat.mode | string == '0755'
+        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has incorrect mode: {{ fs_auto_remount_dir_stat.stat.mode }}"
         success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has correct mode"
 
     - name: Assert remount scripts directory ownership
       ansible.builtin.assert:
         that:
-          - fs_auto_remount_dir.stat.pw_name == 'root'
-          - fs_auto_remount_dir.stat.gr_name == 'root'
-        fail_msg: "Remount scripts directory has incorrect ownership: {{ fs_auto_remount_dir.stat.pw_name }}:{{ fs_auto_remount_dir.stat.gr_name }}"
+          - fs_auto_remount_dir_stat.stat.pw_name == 'root'
+          - fs_auto_remount_dir_stat.stat.gr_name == 'root'
+        fail_msg: "Remount scripts directory has incorrect ownership: {{ fs_auto_remount_dir_stat.stat.pw_name }}:{{ fs_auto_remount_dir_stat.stat.gr_name }}"
         success_msg: "Remount scripts directory has correct ownership"

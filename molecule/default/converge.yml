@@ -1,5 +1,5 @@
 ---
-- name: Setup Test
+- name: Converge
   hosts: all
   gather_facts: true
   roles:
