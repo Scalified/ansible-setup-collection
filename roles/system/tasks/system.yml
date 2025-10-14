@@ -1,0 +1,18 @@
+---
+- name: Include system hostname configuration tasks
+  ansible.builtin.include_tasks: hostname.yml
+  when: not system_containerized
+
+- name: Include system time and timezone configuration tasks
+  ansible.builtin.include_tasks: time.yml
+  when: not system_containerized
+
+- name: Include system kernel parameters tasks
+  ansible.builtin.include_tasks: sysctl.yml
+  when: not system_containerized
+
+- name: Include MOTD banner configuration tasks
+  ansible.builtin.include_tasks: motd.yml
+
+- name: Include scripts tasks
+  ansible.builtin.include_tasks: scripts.yml

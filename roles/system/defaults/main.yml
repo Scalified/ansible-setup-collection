@@ -3,6 +3,7 @@
 system_reboot_timeout: 300
 
 # System update settings
+system_update_only: false
 system_update_type: "safe"
 system_update_autoremove: true
 system_update_autoclean: true
