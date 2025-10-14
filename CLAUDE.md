@@ -55,6 +55,6 @@ This is an **Ansible Collection** for server setup automation, published as: `sc
 * Every file with logic must have a corresponding test file in: `molecule/default/roles/<role>/tasks/`
 * Role-level verifications are placed in: `molecule/default/verify.yml`
 * Use the following test files as templates:
-    * `packages/tasks/packages.yml` — verify package installations.
-    * `fs/tasks/mount.yml` — verify files, directories, scripts attributes and content.
-    * `docker/tasks/setup.yml` - verify user group.
+    * `molecule/default/packages/tasks/packages.yml` — verify package installations.
+    * `molecule/default/fs/tasks/mount.yml` — verify files, directories, scripts attributes and content.
+    * `molecule/default/docker/tasks/setup.yml` - verify user group.

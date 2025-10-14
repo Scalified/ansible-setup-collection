@@ -1,3 +1,7 @@
+# 2.5.0
+
+[#29 System Update Only](https://github.com/Scalified/ansible-setup-collection/issues/29)
+
 # 2.4.1
 
 [#26 Cache valid time issue on Debian](https://github.com/Scalified/ansible-setup-collection/issues/26)
