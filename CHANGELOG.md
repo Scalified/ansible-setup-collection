@@ -1,3 +1,7 @@
+# 2.6.0
+
+[#31 SSL Directories as defaults](https://github.com/Scalified/ansible-setup-collection/issues/31)
+
 # 2.5.0
 
 [#29 System Update Only](https://github.com/Scalified/ansible-setup-collection/issues/29)

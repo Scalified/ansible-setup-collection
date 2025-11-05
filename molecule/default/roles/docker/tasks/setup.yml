@@ -10,9 +10,9 @@
 
     - name: "Assert Docker package installed"
       ansible.builtin.assert:
-        that: "'{{ package }}' in ansible_facts.packages"
-        fail_msg: "{{ package }} package is not installed"
-        success_msg: "{{ package }} package is installed"
+        that: "package in ansible_facts.packages"
+        fail_msg: "'{{ package }}' package is not installed"
+        success_msg: "'{{ package }}' package is installed"
       loop:
         - docker-ce
         - docker-ce-cli

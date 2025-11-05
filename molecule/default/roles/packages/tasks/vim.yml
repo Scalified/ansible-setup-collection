@@ -12,25 +12,25 @@
     - name: Assert .vimrc file exists
       ansible.builtin.assert:
         that: packages_vimrc_file_stat.stat.exists
-        fail_msg: ".vimrc file does not exist"
-        success_msg: ".vimrc file exists"
+        fail_msg: "'.vimrc' file does not exist"
+        success_msg: "'.vimrc' file exists"
 
     - name: Assert .vimrc file is a regular file
       ansible.builtin.assert:
         that: packages_vimrc_file_stat.stat.isreg
-        fail_msg: ".vimrc file is not a regular file"
-        success_msg: ".vimrc file is a regular file"
+        fail_msg: "'.vimrc' file is not a regular file"
+        success_msg: "'.vimrc' file is a regular file"
 
     - name: Assert .vimrc file mode
       ansible.builtin.assert:
         that: packages_vimrc_file_stat.stat.mode | string == '0644'
-        fail_msg: ".vimrc file has incorrect mode: {{ packages_vimrc_file_stat.stat.mode }}"
-        success_msg: ".vimrc file has correct mode"
+        fail_msg: "'.vimrc' file has incorrect mode: {{ packages_vimrc_file_stat.stat.mode }}"
+        success_msg: "'.vimrc' file has correct mode"
 
     - name: Assert .vimrc file ownership
       ansible.builtin.assert:
         that:
           - packages_vimrc_file_stat.stat.pw_name == 'root'
           - packages_vimrc_file_stat.stat.gr_name == 'root'
-        fail_msg: ".vimrc file has incorrect ownership: {{ packages_vimrc_file_stat.stat.pw_name }}:{{ packages_vimrc_file_stat.stat.gr_name }}"
-        success_msg: ".vimrc file has correct ownership"
+        fail_msg: "'.vimrc' file has incorrect ownership: {{ packages_vimrc_file_stat.stat.pw_name }}:{{ packages_vimrc_file_stat.stat.gr_name }}"
+        success_msg: "'.vimrc' file has correct ownership"

@@ -6,7 +6,7 @@
       - "  FS: files and directories management"
       - "========================================="
 
-- name: Include mount tasks
+- name: Include drives tasks
   ansible.builtin.include_tasks: "drives.yml"
   when: fs_drives | length > 0
 
@@ -15,3 +15,4 @@
 
 - name: Include files tasks
   ansible.builtin.include_tasks: "files.yml"
+  when: fs_files | length > 0

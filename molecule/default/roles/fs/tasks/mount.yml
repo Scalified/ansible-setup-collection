@@ -55,20 +55,20 @@
     - name: Assert remount scripts directory exists
       ansible.builtin.assert:
         that: fs_auto_remount_dir_stat.stat.exists
-        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} does not exist"
-        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} exists"
+        fail_msg: "Remount scripts directory '{{ fs_mount_auto_remount_scripts_dir }}' does not exist"
+        success_msg: "Remount scripts directory '{{ fs_mount_auto_remount_scripts_dir }}' exists"
 
     - name: Assert remount scripts directory is a directory
       ansible.builtin.assert:
         that: fs_auto_remount_dir_stat.stat.isdir
-        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} is not a directory"
-        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} is a directory"
+        fail_msg: "Remount scripts directory '{{ fs_mount_auto_remount_scripts_dir }}' is not a directory"
+        success_msg: "Remount scripts directory '{{ fs_mount_auto_remount_scripts_dir }}' is a directory"
 
     - name: Assert remount scripts directory mode
       ansible.builtin.assert:
         that: fs_auto_remount_dir_stat.stat.mode | string == '0755'
-        fail_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has incorrect mode: {{ fs_auto_remount_dir_stat.stat.mode }}"
-        success_msg: "Remount scripts directory {{ fs_mount_auto_remount_scripts_dir }} has correct mode"
+        fail_msg: "Remount scripts directory '{{ fs_mount_auto_remount_scripts_dir }}' has incorrect mode: {{ fs_auto_remount_dir_stat.stat.mode }}"
+        success_msg: "Remount scripts directory '{{ fs_mount_auto_remount_scripts_dir }}' has correct mode"
 
     - name: Assert remount scripts directory ownership
       ansible.builtin.assert:

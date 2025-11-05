@@ -7,9 +7,9 @@
 
     - name: "Assert NUT required package installed"
       ansible.builtin.assert:
-        that: "'{{ package }}' in ansible_facts.packages"
-        fail_msg: "{{ package }} package is not installed"
-        success_msg: "{{ package }} package is installed"
+        that: "package in ansible_facts.packages"
+        fail_msg: "'{{ package }}' package is not installed"
+        success_msg: "'{{ package }}' package is installed"
       loop:
         - nut
       loop_control:
@@ -45,7 +45,9 @@
         that:
           - nut_conf_stat.stat.pw_name == 'root'
           - nut_conf_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT configuration file has incorrect ownership: {{ nut_conf_stat.stat.pw_name }}:{{ nut_conf_stat.stat.gr_name }}"
+        fail_msg: >-
+          NUT configuration file has incorrect ownership:
+          {{ nut_conf_stat.stat.pw_name }}:{{ nut_conf_stat.stat.gr_name }}
         success_msg: "NUT configuration file has correct ownership"
 
 - name: Verify NUT configuration file content
@@ -63,6 +65,6 @@
 
     - name: Assert NUT mode is set to none
       ansible.builtin.assert:
-        that: "'MODE={{ nut_mode }}' in (nut_conf_content.content | b64decode)"
+        that: "('MODE=' ~ nut_mode) in (nut_conf_content.content | b64decode)"
         fail_msg: "NUT configuration file does not contain 'MODE={{ nut_mode }}'"
         success_msg: "NUT configuration file contains 'MODE={{ nut_mode }}'"

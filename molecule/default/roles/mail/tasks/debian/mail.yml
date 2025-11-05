@@ -7,9 +7,9 @@
 
     - name: "Assert package installed"
       ansible.builtin.assert:
-        that: "'{{ package }}' in ansible_facts.packages"
-        fail_msg: "{{ package }} package is not installed"
-        success_msg: "{{ package }} package is installed"
+        that: "package in ansible_facts.packages"
+        fail_msg: "'{{ package }}' package is not installed"
+        success_msg: "'{{ package }}' package is installed"
       loop:
         - exim4
         - mailutils
@@ -26,20 +26,22 @@
     - name: Assert 99_exim4-config_rewrite_rules file exists
       ansible.builtin.assert:
         that: mail_exim4_config_rewrite_rules_stat.stat.exists
-        fail_msg: "99_exim4-config_rewrite_rules file does not exist in /etc/exim4/conf.d/rewrite"
-        success_msg: "99_exim4-config_rewrite_rules file exists in /etc/exim4/conf.d/rewrite"
+        fail_msg: "'99_exim4-config_rewrite_rules' file does not exist in '/etc/exim4/conf.d/rewrite'"
+        success_msg: "'99_exim4-config_rewrite_rules' file exists in '/etc/exim4/conf.d/rewrite'"
 
     - name: Assert 99_exim4-config_rewrite_rules file is a regular file
       ansible.builtin.assert:
         that: mail_exim4_config_rewrite_rules_stat.stat.isreg
-        fail_msg: "99_exim4-config_rewrite_rules file is not a regular file"
-        success_msg: "99_exim4-config_rewrite_rules file is a regular file"
+        fail_msg: "'99_exim4-config_rewrite_rules' file is not a regular file"
+        success_msg: "'99_exim4-config_rewrite_rules' file is a regular file"
 
     - name: Assert 99_exim4-config_rewrite_rules file mode
       ansible.builtin.assert:
         that: mail_exim4_config_rewrite_rules_stat.stat.mode == '0644'
-        fail_msg: "99_exim4-config_rewrite_rules file has incorrect mode: {{ mail_exim4_config_rewrite_rules_stat.stat.mode }}"
-        success_msg: "99_exim4-config_rewrite_rules file has correct mode"
+        fail_msg: >-
+          '99_exim4-config_rewrite_rules' file has incorrect mode:
+          {{ mail_exim4_config_rewrite_rules_stat.stat.mode }}
+        success_msg: "'99_exim4-config_rewrite_rules' file has correct mode"
 
     - name: Assert 99_exim4-config_rewrite_rules file ownership
       ansible.builtin.assert:
@@ -47,9 +49,9 @@
           - mail_exim4_config_rewrite_rules_stat.stat.pw_name == 'root'
           - mail_exim4_config_rewrite_rules_stat.stat.gr_name == 'root'
         fail_msg: >-
-          99_exim4-config_rewrite_rules file has incorrect ownership:
+          '99_exim4-config_rewrite_rules' file has incorrect ownership:
           {{ mail_exim4_config_rewrite_rules_stat.stat.pw_name }}:{{ mail_exim4_config_rewrite_rules_stat.stat.gr_name }}
-        success_msg: "99_exim4-config_rewrite_rules file has correct ownership"
+        success_msg: "'99_exim4-config_rewrite_rules' file has correct ownership"
 
 - name: Verify 99_exim4-config_rewrite_rules file content
   block:
@@ -61,14 +63,14 @@
     - name: Assert 99_exim4-config_rewrite_rules file has Unix line endings
       ansible.builtin.assert:
         that: "'\\r\\n' not in (mail_exim4_config_rewrite_rules_content.content | b64decode)"
-        fail_msg: "99_exim4-config_rewrite_rules file has Windows line endings (CRLF)"
-        success_msg: "99_exim4-config_rewrite_rules file has Unix line endings (LF)"
+        fail_msg: "'99_exim4-config_rewrite_rules' file has Windows line endings (CRLF)"
+        success_msg: "'99_exim4-config_rewrite_rules' file has Unix line endings (LF)"
 
     - name: Assert 99_exim4-config_rewrite_rules file content
       ansible.builtin.assert:
-        that: "'{{ mail_hostname }}' in (mail_exim4_config_rewrite_rules_content.content | b64decode)"
-        fail_msg: "99_exim4-config_rewrite_rules file does not contain expected SMTP server"
-        success_msg: "99_exim4-config_rewrite_rules file contains expected SMTP server"
+        that: "mail_hostname in (mail_exim4_config_rewrite_rules_content.content | b64decode)"
+        fail_msg: "'99_exim4-config_rewrite_rules' file does not contain expected SMTP server"
+        success_msg: "'99_exim4-config_rewrite_rules' file contains expected SMTP server"
 
 - name: Verify passwd.client file attributes
   block:
@@ -80,28 +82,30 @@
     - name: Assert passwd.client file exists
       ansible.builtin.assert:
         that: passwd_client_file_stat.stat.exists
-        fail_msg: "passwd.client file does not exist in /etc/exim4"
-        success_msg: "passwd.client file exists in /etc/exim4"
+        fail_msg: "'passwd.client' file does not exist in '/etc/exim4'"
+        success_msg: "'passwd.client' file exists in '/etc/exim4'"
 
     - name: Assert passwd.client file is a regular file
       ansible.builtin.assert:
         that: passwd_client_file_stat.stat.isreg
-        fail_msg: "passwd.client file is not a regular file"
-        success_msg: "passwd.client file is a regular file"
+        fail_msg: "'passwd.client' file is not a regular file"
+        success_msg: "'passwd.client' file is a regular file"
 
     - name: Assert passwd.client file mode
       ansible.builtin.assert:
         that: passwd_client_file_stat.stat.mode == '0640'
-        fail_msg: "passwd.client file has incorrect mode: {{ passwd_client_file_stat.stat.mode }}"
-        success_msg: "passwd.client file has correct mode"
+        fail_msg: "'passwd.client' file has incorrect mode: {{ passwd_client_file_stat.stat.mode }}"
+        success_msg: "'passwd.client' file has correct mode"
 
     - name: Assert passwd.client file ownership
       ansible.builtin.assert:
         that:
           - passwd_client_file_stat.stat.pw_name == 'root'
           - passwd_client_file_stat.stat.gr_name == 'Debian-exim'
-        fail_msg: "passwd.client file has incorrect ownership: {{ passwd_client_file_stat.stat.pw_name }}:{{ passwd_client_file_stat.stat.gr_name }}"
-        success_msg: "passwd.client file has correct ownership"
+        fail_msg: >-
+          'passwd.client' file has incorrect ownership:
+          {{ passwd_client_file_stat.stat.pw_name }}:{{ passwd_client_file_stat.stat.gr_name }}
+        success_msg: "'passwd.client' file has correct ownership"
 
 - name: Verify passwd.client file content
   block:
@@ -118,9 +122,11 @@
 
     - name: Assert passwd.client file content
       ansible.builtin.assert:
-        that: "'{{ mail_smtp_server }}:{{ mail_smtp_username }}:{{ mail_smtp_password }}' in (passwd_client_file_content.content | b64decode)"
-        fail_msg: "passwd.client file does not contain expected SMTP credentials"
-        success_msg: "passwd.client file contains expected SMTP credentials"
+        that: >-
+          (mail_smtp_server ~ ':' ~ mail_smtp_username ~ ':' ~ mail_smtp_password) in
+          (passwd_client_file_content.content | b64decode)
+        fail_msg: "'passwd.client' file does not contain expected SMTP credentials"
+        success_msg: "'passwd.client' file contains expected SMTP credentials"
 
 - name: Verify update-exim4.conf.conf file attributes
   block:
@@ -132,20 +138,21 @@
     - name: Assert update-exim4.conf.conf file exists
       ansible.builtin.assert:
         that: mail_update_exim4_conf_conf_stat.stat.exists
-        fail_msg: "update-exim4.conf.conf file does not exist in /etc/exim4"
-        success_msg: "update-exim4.conf.conf file exists in /etc/exim4"
+        fail_msg: "'update-exim4.conf.conf' file does not exist in '/etc/exim4'"
+        success_msg: "'update-exim4.conf.conf' file exists in '/etc/exim4'"
 
     - name: Assert update-exim4.conf.conf file is a regular file
       ansible.builtin.assert:
         that: mail_update_exim4_conf_conf_stat.stat.isreg
-        fail_msg: "update-exim4.conf.conf file is not a regular file"
-        success_msg: "update-exim4.conf.conf file is a regular file"
+        fail_msg: "'update-exim4.conf.conf' file is not a regular file"
+        success_msg: "'update-exim4.conf.conf' file is a regular file"
 
     - name: Assert update-exim4.conf.conf file mode
       ansible.builtin.assert:
         that: mail_update_exim4_conf_conf_stat.stat.mode == '0644'
-        fail_msg: "update-exim4.conf.conf file has incorrect mode: {{ mail_update_exim4_conf_conf_stat.stat.mode }}"
-        success_msg: "update-exim4.conf.conf file has correct mode"
+        fail_msg: >-
+          'update-exim4.conf.conf' file has incorrect mode: {{ mail_update_exim4_conf_conf_stat.stat.mode }}
+        success_msg: "'update-exim4.conf.conf' file has correct mode"
 
     - name: Assert update-exim4.conf.conf file ownership
       ansible.builtin.assert:
@@ -153,9 +160,9 @@
           - mail_update_exim4_conf_conf_stat.stat.pw_name == 'root'
           - mail_update_exim4_conf_conf_stat.stat.gr_name == 'root'
         fail_msg: >-
-          update-exim4.conf.conf file has incorrect ownership:
+          'update-exim4.conf.conf' file has incorrect ownership:
           {{ mail_update_exim4_conf_conf_stat.stat.pw_name }}:{{ mail_update_exim4_conf_conf_stat.stat.gr_name }}
-        success_msg: "update-exim4.conf.conf file has correct ownership"
+        success_msg: "'update-exim4.conf.conf' file has correct ownership"
 
 - name: Verify update-exim4.conf.conf file content
   block:
@@ -167,11 +174,13 @@
     - name: Assert update-exim4.conf.conf file has Unix line endings
       ansible.builtin.assert:
         that: "'\\r\\n' not in (mail_update_exim4_conf_conf_file_content.content | b64decode)"
-        fail_msg: "update-exim4.conf.conf file has Windows line endings (CRLF)"
-        success_msg: "update-exim4.conf.conf file has Unix line endings (LF)"
+        fail_msg: "'update-exim4.conf.conf' file has Windows line endings (CRLF)"
+        success_msg: "'update-exim4.conf.conf' file has Unix line endings (LF)"
 
     - name: Assert update-exim4.conf.conf file contains SMTP server and port
       ansible.builtin.assert:
-        that: "\"dc_smarthost='{{ mail_smtp_server }}::{{ mail_smtp_port }}'\" in (mail_update_exim4_conf_conf_file_content.content | b64decode)"
+        that: >-
+          "dc_smarthost='" ~ mail_smtp_server ~ "::" ~ mail_smtp_port ~ "'" in
+          (mail_update_exim4_conf_conf_file_content.content | b64decode)
         fail_msg: "update-exim4.conf.conf file does not contain expected SMTP server and port"
         success_msg: "update-exim4.conf.conf file contains expected SMTP server and port"

@@ -29,7 +29,9 @@
         that:
           - nut_hosts_conf_stat.stat.pw_name == 'root'
           - nut_hosts_conf_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT hosts configuration file has incorrect ownership: {{ nut_hosts_conf_stat.stat.pw_name }}:{{ nut_hosts_conf_stat.stat.gr_name }}"
+        fail_msg: >-
+          NUT hosts configuration file has incorrect ownership:
+          {{ nut_hosts_conf_stat.stat.pw_name }}:{{ nut_hosts_conf_stat.stat.gr_name }}
         success_msg: "NUT hosts configuration file has correct ownership"
 
 - name: Verify NUT upsset configuration file attributes
@@ -62,7 +64,9 @@
         that:
           - nut_upsset_conf_stat.stat.pw_name == 'root'
           - nut_upsset_conf_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT upsset configuration file has incorrect ownership: {{ nut_upsset_conf_stat.stat.pw_name }}:{{ nut_upsset_conf_stat.stat.gr_name }}"
+        fail_msg: >-
+          NUT upsset configuration file has incorrect ownership:
+          {{ nut_upsset_conf_stat.stat.pw_name }}:{{ nut_upsset_conf_stat.stat.gr_name }}
         success_msg: "NUT upsset configuration file has correct ownership"
 
 - name: Verify NUT CGI configuration file content
@@ -81,10 +85,10 @@
     - name: Assert hosts configuration contains MONITOR directive
       ansible.builtin.assert:
         that: >
-          'MONITOR {{ nut_ups_name }}@localhost "{{ nut_ups_name | upper }}"'
+          ('MONITOR ' ~ nut_ups_name ~ '@localhost "' ~ (nut_ups_name | upper) ~ '"')
           in (nut_hosts_conf_content.content | b64decode)
-        fail_msg: "Hosts configuration does not contain MONITOR directive"
-        success_msg: "Hosts configuration contains MONITOR directive"
+        fail_msg: "Hosts configuration does not contain 'MONITOR' directive"
+        success_msg: "Hosts configuration contains 'MONITOR' directive"
 
     - name: Slurp NUT upsset configuration file content
       ansible.builtin.slurp:
@@ -100,8 +104,8 @@
     - name: Assert upsset configuration contains I_HAVE_SECURED_MY_CGI directive
       ansible.builtin.assert:
         that: "'I_HAVE_SECURED_MY_CGI' in (nut_upsset_conf_content.content | b64decode)"
-        fail_msg: "Upsset configuration does not contain I_HAVE_SECURED_MY_CGI directive"
-        success_msg: "Upsset configuration contains I_HAVE_SECURED_MY_CGI directive"
+        fail_msg: "Upsset configuration does not contain 'I_HAVE_SECURED_MY_CGI' directive"
+        success_msg: "Upsset configuration contains 'I_HAVE_SECURED_MY_CGI' directive"
 
 - name: Include distribution-specific verification tests
   ansible.builtin.include_tasks: "{{ system_os_family }}/cgi.yml"

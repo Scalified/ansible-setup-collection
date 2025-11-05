@@ -8,8 +8,8 @@
     - name: Assert AGE package is installed
       ansible.builtin.assert:
         that: "'age' in ansible_facts.packages"
-        fail_msg: "age package is not installed"
-        success_msg: "age package is installed"
+        fail_msg: "'age' package is not installed"
+        success_msg: "'age' package is installed"
 
 - name: Verify AGE directtory attributes
   block:
@@ -21,20 +21,20 @@
     - name: Assert AGE config directory exists
       ansible.builtin.assert:
         that: packages_age_config_dir_stat.stat.exists
-        fail_msg: "AGE config directory {{ packages_age_config_dir }} does not exist"
-        success_msg: "AGE config directory {{ packages_age_config_dir }} exists"
+        fail_msg: "AGE config directory '{{ packages_age_config_dir }}' does not exist"
+        success_msg: "AGE config directory '{{ packages_age_config_dir }}' exists"
 
     - name: Assert AGE config directory is a directory
       ansible.builtin.assert:
         that: packages_age_config_dir_stat.stat.isdir
-        fail_msg: "AGE config directory {{ packages_age_config_dir }} is not a directory"
-        success_msg: "AGE config directory {{ packages_age_config_dir }} is a directory"
+        fail_msg: "AGE config directory '{{ packages_age_config_dir }}' is not a directory"
+        success_msg: "AGE config directory '{{ packages_age_config_dir }}' is a directory"
 
     - name: Assert AGE config directory mode
       ansible.builtin.assert:
         that: packages_age_config_dir_stat.stat.mode | string == '0700'
-        fail_msg: "AGE config directory {{ packages_age_config_dir }} has incorrect mode: {{ packages_age_config_dir_stat.stat.mode }}"
-        success_msg: "AGE config directory {{ packages_age_config_dir }} has correct mode (0700)"
+        fail_msg: "AGE config directory '{{ packages_age_config_dir }}' has incorrect mode: {{ packages_age_config_dir_stat.stat.mode }}"
+        success_msg: "AGE config directory '{{ packages_age_config_dir }}' has correct mode (0700)"
 
 - name: Verify AGE private key attributes
   block:
@@ -46,13 +46,13 @@
     - name: Assert AGE private key file exists
       ansible.builtin.assert:
         that: packages_age_key_file_stat.stat.exists
-        fail_msg: "AGE private key file does not exist in {{ packages_age_config_dir }}"
-        success_msg: "AGE private key file exists in {{ packages_age_config_dir }}"
+        fail_msg: "AGE private key file does not exist in: {{ packages_age_config_dir }}"
+        success_msg: "AGE private key file exists in: {{ packages_age_config_dir }}"
     - name: Assert AGE private key file is a file
       ansible.builtin.assert:
         that: packages_age_key_file_stat.stat.isfile
-        fail_msg: "AGE private key file is not a regular file in {{ packages_age_config_dir }}"
-        success_msg: "AGE private key file is a regular file in {{ packages_age_config_dir }}"
+        fail_msg: "AGE private key file is not a regular file in: {{ packages_age_config_dir }}"
+        success_msg: "AGE private key file is a regular file in: {{ packages_age_config_dir }}"
 
     - name: Assert AGE private key file mode
       ansible.builtin.assert:

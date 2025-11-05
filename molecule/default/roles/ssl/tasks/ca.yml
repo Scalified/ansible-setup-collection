@@ -9,14 +9,14 @@
     - name: Assert SSL CA private key file exists
       ansible.builtin.assert:
         that: ssl_ca_key_stat.stat.exists
-        fail_msg: "SSL CA private key does not exist at {{ ssl_keys_ca_path }}"
-        success_msg: "SSL CA private key exists at {{ ssl_keys_ca_path }}"
+        fail_msg: "SSL CA private key does not exist at '{{ ssl_keys_ca_path }}'"
+        success_msg: "SSL CA private key exists at '{{ ssl_keys_ca_path }}'"
 
     - name: Assert SSL CA private key is a regular file
       ansible.builtin.assert:
         that: ssl_ca_key_stat.stat.isreg
-        fail_msg: "{{ ssl_keys_ca_path }} is not a regular file"
-        success_msg: "{{ ssl_keys_ca_path }} is a regular file"
+        fail_msg: "'{{ ssl_keys_ca_path }}' is not a regular file"
+        success_msg: "'{{ ssl_keys_ca_path }}' is a regular file"
 
     - name: Assert SSL CA private key mode
       ansible.builtin.assert:
@@ -42,14 +42,14 @@
     - name: Assert SSL CA certificate file exists
       ansible.builtin.assert:
         that: ssl_ca_cert_stat.stat.exists
-        fail_msg: "SSL CA certificate does not exist at {{ ssl_certs_ca_path }}"
-        success_msg: "SSL CA certificate exists at {{ ssl_certs_ca_path }}"
+        fail_msg: "SSL CA certificate does not exist at '{{ ssl_certs_ca_path }}'"
+        success_msg: "SSL CA certificate exists at '{{ ssl_certs_ca_path }}'"
 
     - name: Assert SSL CA certificate is a regular file
       ansible.builtin.assert:
         that: ssl_ca_cert_stat.stat.isreg
-        fail_msg: "{{ ssl_certs_ca_path }} is not a regular file"
-        success_msg: "{{ ssl_certs_ca_path }} is a regular file"
+        fail_msg: "'{{ ssl_certs_ca_path }}' is not a regular file"
+        success_msg: "'{{ ssl_certs_ca_path }}' is a regular file"
 
     - name: Assert SSL CA certificate mode
       ansible.builtin.assert:
@@ -74,21 +74,21 @@
 
     - name: Assert SSL CA certificate subject contains domain
       ansible.builtin.assert:
-        that: "ssl_ca_cert_info.stdout is search('CN *= *{{ ssl_domain | regex_escape }}')"
+        that: "ssl_ca_cert_info.stdout is search('CN *= *' ~ (ssl_domain | regex_escape))"
         fail_msg: "SSL CA certificate subject does not contain expected domain"
         success_msg: "SSL CA certificate subject contains expected domain"
 
     - name: Assert SSL CA certificate is a CA certificate
       ansible.builtin.assert:
         that: "'CA:TRUE' in ssl_ca_cert_info.stdout"
-        fail_msg: "SSL CA certificate does not have CA:TRUE constraint"
-        success_msg: "SSL CA certificate has CA:TRUE constraint"
+        fail_msg: "SSL CA certificate does not have 'CA:TRUE' constraint"
+        success_msg: "SSL CA certificate has 'CA:TRUE' constraint"
 
     - name: Assert SSL CA certificate has basic constraints
       ansible.builtin.assert:
         that: "'Basic Constraints' in ssl_ca_cert_info.stdout"
-        fail_msg: "SSL CA certificate does not have Basic Constraints extension"
-        success_msg: "SSL CA certificate has Basic Constraints extension"
+        fail_msg: "SSL CA certificate does not have 'Basic Constraints' extension"
+        success_msg: "SSL CA certificate has 'Basic Constraints' extension"
 
     - name: Get SSL CA certificate validity
       ansible.builtin.command: openssl x509 -in "{{ ssl_certs_ca_path }}" -checkend 86400
