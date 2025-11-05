@@ -1,3 +1,7 @@
+# 2.6.1
+
+[#33 Wrong SSL Keys Server path](https://github.com/Scalified/ansible-setup-collection/issues/33)
+
 # 2.6.0
 
 [#31 SSL Directories as defaults](https://github.com/Scalified/ansible-setup-collection/issues/31)
