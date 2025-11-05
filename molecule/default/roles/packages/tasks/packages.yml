@@ -7,9 +7,9 @@
 
     - name: Assert packages installed
       ansible.builtin.assert:
-        that: "'{{ package }}' in ansible_facts.packages"
-        fail_msg: "{{ package }} package is not installed"
-        success_msg: "{{ package }} package is installed"
+        that: "package in ansible_facts.packages"
+        fail_msg: "'{{ package }}' package is not installed"
+        success_msg: "'{{ package }}' package is installed"
       loop:
         - python3-pexpect
         - ca-certificates
@@ -33,7 +33,9 @@
 
     - name: Assert each package in packages_list is installed
       ansible.builtin.assert:
-        that: "'{{ item }}' in ansible_facts.packages"
-        fail_msg: "Package '{{ item }}' is not installed"
-        success_msg: "Package '{{ item }}' is installed"
+        that: "package in ansible_facts.packages"
+        fail_msg: "Package 'package' is not installed"
+        success_msg: "Package 'package' is installed"
       loop: "{{ packages_list }}"
+      loop_control:
+        loop_var: package

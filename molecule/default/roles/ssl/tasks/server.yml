@@ -9,14 +9,14 @@
     - name: Assert SSL server private key file exists
       ansible.builtin.assert:
         that: ssl_server_key_stat.stat.exists
-        fail_msg: "SSL server private key file does not exist at {{ ssl_keys_server_path }}"
-        success_msg: "SSL server private key file exists at {{ ssl_keys_server_path }}"
+        fail_msg: "SSL server private key file does not exist at '{{ ssl_keys_server_path }}'"
+        success_msg: "SSL server private key file exists at '{{ ssl_keys_server_path }}'"
 
     - name: Assert SSL server private key file is a regular file
       ansible.builtin.assert:
         that: ssl_server_key_stat.stat.isreg
-        fail_msg: "{{ ssl_keys_server_path }} is not a regular file"
-        success_msg: "{{ ssl_keys_server_path }} is a regular file"
+        fail_msg: "'{{ ssl_keys_server_path }}' is not a regular file"
+        success_msg: "'{{ ssl_keys_server_path }}' is a regular file"
 
     - name: Assert SSL server private key file mode
       ansible.builtin.assert:
@@ -29,7 +29,9 @@
         that:
           - ssl_server_key_stat.stat.pw_name == 'root'
           - ssl_server_key_stat.stat.gr_name == 'root'
-        fail_msg: "SSL server private key file has incorrect ownership: {{ ssl_server_key_stat.stat.pw_name }}:{{ ssl_server_key_stat.stat.gr_name }}"
+        fail_msg: >-
+          SSL server private key file has incorrect ownership:
+          {{ ssl_server_key_stat.stat.pw_name }}:{{ ssl_server_key_stat.stat.gr_name }}
         success_msg: "SSL server private key file has correct ownership"
 
 - name: Verify SSL server certificate file attributes
@@ -48,8 +50,8 @@
     - name: Assert SSL server certificate file is a regular file
       ansible.builtin.assert:
         that: ssl_server_cert_stat.stat.isreg
-        fail_msg: "{{ ssl_certs_server_path }} is not a regular file"
-        success_msg: "{{ ssl_certs_server_path }} is a regular file"
+        fail_msg: "'{{ ssl_certs_server_path }}' is not a regular file"
+        success_msg: "'{{ ssl_certs_server_path }}' is a regular file"
 
     - name: Assert SSL server certificate file mode
       ansible.builtin.assert:
@@ -62,7 +64,9 @@
         that:
           - ssl_server_cert_stat.stat.pw_name == 'root'
           - ssl_server_cert_stat.stat.gr_name == 'root'
-        fail_msg: "SSL server certificate file has incorrect ownership: {{ ssl_server_cert_stat.stat.pw_name }}:{{ ssl_server_cert_stat.stat.gr_name }}"
+        fail_msg: >-
+          SSL server certificate file has incorrect ownership:
+          {{ ssl_server_cert_stat.stat.pw_name }}:{{ ssl_server_cert_stat.stat.gr_name }}
         success_msg: "SSL server certificate file has correct ownership"
 
 - name: Verify SSL server certificate content
@@ -74,43 +78,43 @@
 
     - name: Assert SSL server certificate subject contains wildcard domain
       ansible.builtin.assert:
-        that: "ssl_server_cert_info.stdout is search('CN *= *\\*\\.{{ ssl_domain | regex_escape }}')"
+        that: "ssl_server_cert_info.stdout is search('CN *= *\\*\\.' ~ (ssl_domain | regex_escape))"
         fail_msg: "SSL server certificate subject does not contain expected wildcard domain"
         success_msg: "SSL server certificate subject contains expected wildcard domain"
 
     - name: Assert SSL server certificate is not a CA certificate
       ansible.builtin.assert:
         that: "'CA:FALSE' in ssl_server_cert_info.stdout"
-        fail_msg: "SSL server certificate should not have CA:TRUE constraint"
-        success_msg: "SSL server certificate has CA:FALSE constraint"
+        fail_msg: "SSL server certificate should not have 'CA:TRUE' constraint"
+        success_msg: "SSL server certificate does not have 'CA:TRUE' constraint"
 
     - name: Assert SSL server certificate has basic constraints
       ansible.builtin.assert:
         that: "'Basic Constraints' in ssl_server_cert_info.stdout"
-        fail_msg: "SSL server certificate does not have Basic Constraints extension"
-        success_msg: "SSL server certificate has Basic Constraints extension"
+        fail_msg: "SSL server certificate does not have 'Basic Constraints' extension"
+        success_msg: "SSL server certificate has 'Basic Constraints' extension"
 
     - name: Assert SSL server certificate has extended key usage
       ansible.builtin.assert:
         that: "'TLS Web Server Authentication' in ssl_server_cert_info.stdout"
-        fail_msg: "SSL server certificate does not have TLS Web Server Authentication usage"
-        success_msg: "SSL server certificate has TLS Web Server Authentication usage"
+        fail_msg: "SSL server certificate does not have 'TLS Web Server Authentication' usage"
+        success_msg: "SSL server certificate has 'TLS Web Server Authentication' usage"
 
     - name: Assert SSL server certificate has subject alternative names
       ansible.builtin.assert:
         that: "'Subject Alternative Name' in ssl_server_cert_info.stdout"
-        fail_msg: "SSL server certificate does not have Subject Alternative Name extension"
-        success_msg: "SSL server certificate has Subject Alternative Name extension"
+        fail_msg: "SSL server certificate does not have 'Subject Alternative Name' extension"
+        success_msg: "SSL server certificate has 'Subject Alternative Name' extension"
 
     - name: Assert SSL server certificate contains domain in SAN
       ansible.builtin.assert:
-        that: "'DNS:{{ ssl_domain }}' in ssl_server_cert_info.stdout"
+        that: "('DNS:' ~ ssl_domain) in ssl_server_cert_info.stdout"
         fail_msg: "SSL server certificate SAN does not contain expected domain"
         success_msg: "SSL server certificate SAN contains expected domain"
 
     - name: Assert SSL server certificate contains wildcard domain in SAN
       ansible.builtin.assert:
-        that: "'DNS:*.{{ ssl_domain }}' in ssl_server_cert_info.stdout"
+        that: "('DNS:*.' ~ ssl_domain) in ssl_server_cert_info.stdout"
         fail_msg: "SSL server certificate SAN does not contain expected wildcard domain"
         success_msg: "SSL server certificate SAN contains expected wildcard domain"
 

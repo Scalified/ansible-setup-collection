@@ -9,8 +9,8 @@
     - name: Assert SSL bundle file exists
       ansible.builtin.assert:
         that: ssl_bundle_stat.stat.exists
-        fail_msg: "SSL bundle does not exist at {{ ssl_bundle_path }}"
-        success_msg: "SSL bundle exists at {{ ssl_bundle_path }}"
+        fail_msg: "SSL bundle does not exist at '{{ ssl_bundle_path }}'"
+        success_msg: "SSL bundle exists at '{{ ssl_bundle_path }}'"
 
     - name: Assert SSL bundle is a regular file
       ansible.builtin.assert:

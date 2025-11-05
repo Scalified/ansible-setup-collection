@@ -70,5 +70,5 @@ system_motd_contacts:
 ## Scripts
 
 | Name      | Description                                              | Usage Example |
-|-----------|----------------------------------------------------------|               |           
+|-----------|----------------------------------------------------------|---------------|           
 | `thermal` | Displays `thermal_zone*` temperature readings in Celsius | `thermal`     |

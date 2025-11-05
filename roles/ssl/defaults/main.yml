@@ -2,16 +2,44 @@
 ssl_domain: "{{ domain }}"
 
 ssl_keys_ca_name: ca.key
+ssl_keys_ca_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/private',
+      'redhat': '/etc/pki/CA/private'
+    }[system_os_family]
+  }}
 
 ssl_keys_server_name: "{{ ssl_domain }}.key"
+ssl_keys_server_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/private',
+      'redhat': '/etc/pki/tls/private'
+    }[system_os_family]
+  }}
 ssl_keys_server_mode: "0600"
 ssl_keys_server_owner: root
 ssl_keys_server_group: root
 
 ssl_certs_ca_name: ca.crt
+ssl_certs_ca_dir: >-
+  {{
+    {
+      'debian': '/usr/local/share/ca-certificates',
+      'redhat': '/etc/pki/ca-trust/source/anchors'
+    }[system_os_family]
+  }}
 
 ssl_certs_server_generate: true
 ssl_certs_server_name: "{{ ssl_domain }}.crt"
+ssl_certs_server_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/certs',
+      'redhat': '/etc/pki/tls/certs'
+    }[system_os_family]
+  }}
 ssl_certs_server_mode: "0644"
 ssl_certs_server_owner: root
 ssl_certs_server_group: root

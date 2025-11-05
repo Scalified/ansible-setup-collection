@@ -6,9 +6,6 @@
       - "  SSL: certificates and keys management"
       - "=========================================="
 
-- name: Include distribution-specific variables
-  ansible.builtin.include_vars: "{{ system_os_family }}/main.yml"
-
 - name: Include SSL setup tasks
   ansible.builtin.include_tasks: "setup.yml"
 

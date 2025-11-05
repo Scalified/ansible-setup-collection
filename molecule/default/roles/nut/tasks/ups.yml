@@ -29,7 +29,9 @@
         that:
           - nut_ups_conf_stat.stat.pw_name == 'root'
           - nut_ups_conf_stat.stat.gr_name == 'nut'
-        fail_msg: "NUT UPS configuration file has incorrect ownership: {{ nut_ups_conf_stat.stat.pw_name }}:{{ nut_ups_conf_stat.stat.gr_name }}"
+        fail_msg: >-
+          NUT UPS configuration file has incorrect ownership:
+          {{ nut_ups_conf_stat.stat.pw_name }}:{{ nut_ups_conf_stat.stat.gr_name }}
         success_msg: "NUT UPS configuration file has correct ownership"
 
 - name: Verify NUT UPS configuration file content
@@ -47,60 +49,69 @@
 
     - name: Assert UPS configuration contains defined UPS name
       ansible.builtin.assert:
-        that: "'[{{ nut_ups_name }}]' in (nut_ups_conf_content.content | b64decode)"
+        that: "('[' ~ nut_ups_name ~ ']') in (nut_ups_conf_content.content | b64decode)"
         fail_msg: "UPS configuration does not contain UPS name: {{ nut_ups_name }}"
         success_msg: "UPS configuration contains UPS name: {{ nut_ups_name }}"
 
     - name: Assert UPS configuration contains driver
       ansible.builtin.assert:
-        that: '''driver    = "{{ nut_ups_config.driver }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('driver    = "' ~ nut_ups_config.driver ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain driver: {{ nut_ups_config.driver }}"
         success_msg: "UPS configuration contains driver: {{ nut_ups_config.driver }}"
 
     - name: Assert UPS configuration contains port
       ansible.builtin.assert:
-        that: '''port      = "{{ nut_ups_config.port }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('port      = "' ~ nut_ups_config.port ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain port: {{ nut_ups_config.port }}"
         success_msg: "UPS configuration contains port: {{ nut_ups_config.port }}"
 
     - name: Assert UPS configuration contains vendor
       ansible.builtin.assert:
-        that: '''vendor    = "{{ nut_ups_config.vendor }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('vendor    = "' ~ nut_ups_config.vendor ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain vendor: {{ nut_ups_config.vendor }}"
         success_msg: "UPS configuration contains vendor: {{ nut_ups_config.vendor }}"
 
     - name: Assert UPS configuration contains vendorid
       ansible.builtin.assert:
-        that: '''vendorid  = "{{ nut_ups_config.vendorid }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('vendorid  = "' ~ nut_ups_config.vendorid ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain vendorid: {{ nut_ups_config.vendorid }}"
         success_msg: "UPS configuration contains vendorid: {{ nut_ups_config.vendorid }}"
 
     - name: Assert UPS configuration contains product
       ansible.builtin.assert:
-        that: '''product   = "{{ nut_ups_config.product }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('product   = "' ~ nut_ups_config.product ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain product: {{ nut_ups_config.product }}"
         success_msg: "UPS configuration contains product: {{ nut_ups_config.product }}"
 
     - name: Assert UPS configuration contains productid
       ansible.builtin.assert:
-        that: '''productid = "{{ nut_ups_config.productid }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('productid = "' ~ nut_ups_config.productid ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain productid: {{ nut_ups_config.productid }}"
         success_msg: "UPS configuration contains productid: {{ nut_ups_config.productid }}"
 
     - name: Assert UPS configuration contains serial
       ansible.builtin.assert:
-        that: '''serial    = "{{ nut_ups_config.serial }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('serial    = "' ~ nut_ups_config.serial ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain serial: {{ nut_ups_config.serial }}"
         success_msg: "UPS configuration contains serial: {{ nut_ups_config.serial }}"
 
     - name: Assert UPS configuration contains bus
       ansible.builtin.assert:
-        that: '''bus       = "{{ nut_ups_config.bus }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('bus       = "' ~ nut_ups_config.bus ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain bus: {{ nut_ups_config.bus }}"
         success_msg: "UPS configuration contains bus: {{ nut_ups_config.bus }}"
 
     - name: Assert UPS configuration contains extra properties
       ansible.builtin.assert:
-        that: '''extra     = "{{ nut_ups_config_extra.extra }}"'' in (nut_ups_conf_content.content | b64decode)'
+        that: >-
+          ('extra     = "' ~ nut_ups_config_extra.extra ~ '"') in (nut_ups_conf_content.content | b64decode)
         fail_msg: "UPS configuration does not contain extra: {{ nut_ups_config_extra.extra }}"
         success_msg: "UPS configuration contains extra: {{ nut_ups_config_extra.extra }}"

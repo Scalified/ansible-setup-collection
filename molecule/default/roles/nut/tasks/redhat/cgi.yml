@@ -8,5 +8,5 @@
     - name: Assert HTTPD service is stopped
       ansible.builtin.assert:
         that: services.httpd.state is not defined or services.httpd.state == 'stopped'
-        fail_msg: "HTTPD service is not stopped"
-        success_msg: "HTTPD service is stopped or not defined"
+        fail_msg: "'HTTPD' service is not stopped"
+        success_msg: "'HTTPD' service is stopped or not defined"

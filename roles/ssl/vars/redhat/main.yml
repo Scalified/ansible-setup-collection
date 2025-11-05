@@ -1,6 +1,0 @@
----
-ssl_keys_ca_dir: /etc/pki/CA/private
-ssl_keys_server_dir: /etc/pki/tls/private
-
-ssl_certs_ca_dir: /etc/pki/ca-trust/source/anchors
-ssl_certs_server_dir: /etc/pki/tls/certs
