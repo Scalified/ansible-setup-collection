@@ -1,6 +1,7 @@
 ---
 collections:
-  - ansible.posix
-  - community.general
-  - community.crypto
-  - community.docker
+  - name: ansible.posix
+  - name: community.general
+  - name: community.crypto
+  - name: community.docker
+    version: "4.8.2" # https://github.com/ansible-community/molecule-plugins/issues/346

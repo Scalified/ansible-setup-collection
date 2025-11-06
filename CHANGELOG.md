@@ -1,3 +1,7 @@
+# 2.6.2
+
+[#34 Downgrade community.docker to version 4.8.2](https://github.com/Scalified/ansible-setup-collection/issues/34)
+
 # 2.6.1
 
 [#33 Wrong SSL Keys Server path](https://github.com/Scalified/ansible-setup-collection/issues/33)
