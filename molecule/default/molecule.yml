@@ -5,7 +5,7 @@ driver:
   name: docker
 platforms:
   - name: debian
-    image: debian:bookworm
+    image: debian:trixie
   - name: rocky
     image: rockylinux/rockylinux:9
 provisioner:

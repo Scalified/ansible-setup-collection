@@ -51,8 +51,9 @@ ansible-galaxy collection install -r requirements.yml
 * [Mail](roles/mail/README.md)
 * [Baseline](roles/baseline/README.md)
 * [SSL](roles/ssl/README.md)
-* [Docker](roles/docker/README.md)
+* [NUT](roles/nut/README.md)
 * [Samba](roles/samba/README.md)
+* [Docker](roles/docker/README.md)
 
 ---
 
