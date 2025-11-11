@@ -1,3 +1,7 @@
+# 2.7.0
+
+[#35 Replace apt_key with deb822_repository](https://github.com/Scalified/ansible-setup-collection/issues/35)
+
 # 2.6.2
 
 [#34 Downgrade community.docker to version 4.8.2](https://github.com/Scalified/ansible-setup-collection/issues/34)

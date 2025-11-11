@@ -30,9 +30,9 @@
 - name: System Role - Baseline Configuration
   ansible.builtin.debug:
     msg:
-      - "==================================="
-      - "  System: Baseline Configuration"
-      - "==================================="
+      - "========================================="
+      - "     System: Baseline Configuration"
+      - "========================================="
       - "      Distribution:    {{ ansible_distribution }}"
       - "      OS Family:       {{ ansible_os_family }}"
       - "      Version:         {{ ansible_distribution_version }}"
@@ -41,7 +41,7 @@
       - "      FQDN:            {{ ansible_fqdn }}"
       - "      Systemd Managed: {{ system_systemd_managed }}"
       - "      Containerized:   {{ system_containerized }}"
-      - "==================================="
+      - "========================================="
 
 - name: Include update tasks
   ansible.builtin.include_tasks: update.yml
