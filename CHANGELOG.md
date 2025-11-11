@@ -1,3 +1,7 @@
+# 2.7.1
+
+[#37 Permission denied on initial docker networks creation](https://github.com/Scalified/ansible-setup-collection/issues/37)
+
 # 2.7.0
 
 [#35 Replace apt_key with deb822_repository](https://github.com/Scalified/ansible-setup-collection/issues/35)

@@ -9,6 +9,7 @@
     ipam_config: "{{ network.value.subnet is defined | ternary([{'subnet': network.value.subnet}], omit) }}"
     driver_options:
       com.docker.network.bridge.name: "{{ network.value.interface_name | default(omit) }}"
+  become: true
   with_dict: "{{ docker_networks }}"
   loop_control:
     loop_var: network
