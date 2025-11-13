@@ -1,3 +1,7 @@
+# 2.7.2
+
+[#38 Fix Idempotency](https://github.com/Scalified/ansible-setup-collection/issues/38)
+
 # 2.7.1
 
 [#37 Permission denied on initial docker networks creation](https://github.com/Scalified/ansible-setup-collection/issues/37)

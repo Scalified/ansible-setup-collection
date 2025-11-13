@@ -27,7 +27,7 @@
     - name: Assert NUT UPSSCHED run directory ownership
       ansible.builtin.assert:
         that:
-          - nut_upssched_run_dir_stat.stat.pw_name == 'root'
+          - nut_upssched_run_dir_stat.stat.pw_name == 'nut'
           - nut_upssched_run_dir_stat.stat.gr_name == 'nut'
         fail_msg: >-
           NUT UPSSCHED run directory has incorrect ownership:

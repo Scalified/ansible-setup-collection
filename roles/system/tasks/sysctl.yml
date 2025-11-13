@@ -3,6 +3,7 @@
   ansible.posix.sysctl:
     name: "{{ parameter.key }}"
     value: "{{ parameter.value }}"
+    sysctl_file: /etc/sysctl.d/99-custom.conf
     state: present
     reload: true
   loop: "{{ system_sysctl | dict2items }}"

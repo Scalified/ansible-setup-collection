@@ -27,7 +27,7 @@
     - name: Assert UPSD state path directory ownership
       ansible.builtin.assert:
         that:
-          - nut_upsd_statepath_stat.stat.pw_name == 'root'
+          - nut_upsd_statepath_stat.stat.pw_name == 'nut'
           - nut_upsd_statepath_stat.stat.gr_name == 'nut'
         fail_msg: >-
           UPSD state path directory has incorrect ownership:

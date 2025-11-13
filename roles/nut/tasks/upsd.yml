@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ nut_upsd_statepath }}"
     state: directory
-    owner: root
+    owner: nut
     group: nut
     mode: "0770"
   become: true
