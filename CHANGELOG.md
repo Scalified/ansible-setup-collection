@@ -1,3 +1,7 @@
+# 2.7.3
+
+[#39 Notify system reboot on NUT install](https://github.com/Scalified/ansible-setup-collection/issues/39)
+
 # 2.7.2
 
 [#38 Fix Idempotency](https://github.com/Scalified/ansible-setup-collection/issues/38)

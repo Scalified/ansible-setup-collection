@@ -29,5 +29,5 @@
     daemon-reload: true
     state: started
   become: true
-  notify: upsc test
+  notify: "system : reboot"
   when: system_systemd_managed
