@@ -1,3 +1,7 @@
+# 2.7.5
+
+[#41 Reboot after Docker setup](https://github.com/Scalified/ansible-setup-collection/issues/41)
+
 # 2.7.4
 
 [#40 Hashsum fix](https://github.com/Scalified/ansible-setup-collection/issues/40)

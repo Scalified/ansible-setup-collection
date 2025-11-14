@@ -15,7 +15,6 @@
   retries: 3
   delay: 10
   become: true
-  notify: "system : request reboot"
 
 - name: Add Docker user to the Docker group
   ansible.builtin.user:
@@ -32,3 +31,4 @@
     state: started
   become: true
   when: system_systemd_managed
+  notify: "system : reboot"
