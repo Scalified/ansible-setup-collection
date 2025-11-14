@@ -1,3 +1,7 @@
+# 2.7.4
+
+[#40 Hashsum fix](https://github.com/Scalified/ansible-setup-collection/issues/40)
+
 # 2.7.3
 
 [#39 Notify system reboot on NUT install](https://github.com/Scalified/ansible-setup-collection/issues/39)
