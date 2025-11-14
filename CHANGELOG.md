@@ -1,3 +1,8 @@
+# 2.7.6
+
+[#42 Retry NUT services start](https://github.com/Scalified/ansible-setup-collection/issues/42)
+[#43 Reset SSH connection handler](https://github.com/Scalified/ansible-setup-collection/issues/43)
+
 # 2.7.5
 
 [#41 Reboot after Docker setup](https://github.com/Scalified/ansible-setup-collection/issues/41)

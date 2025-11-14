@@ -14,6 +14,18 @@ Configures essential system settings and performs server setup
 
 ## Handlers
 
+**Reset SSH connection** to allow user changes to affect *current login user*
+
+```yaml
+- name: Add user to the group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: admins
+    append: true
+  become: true
+  notify: "system : reset connection"
+```
+
 **Reboot:** regardless of system state
 
 ```yaml

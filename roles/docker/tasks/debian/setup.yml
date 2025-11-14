@@ -29,7 +29,7 @@
   delay: 10
   become: true
 
-- name: Install Docker packages
+- name: Install Docker distribution-specific packages
   ansible.builtin.package:
     name:
       - "{{ 'docker-ce' ~ (('=' ~ docker_version) if docker_version is defined else '') }}"

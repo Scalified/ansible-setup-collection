@@ -1,4 +1,8 @@
 ---
+- name: Reset ssh connection
+  ansible.builtin.meta: reset_connection
+  listen: reset connection
+
 - name: Reboot
   ansible.builtin.reboot:
     msg: "Reboot initiated by Ansible"

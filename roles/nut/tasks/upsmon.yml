@@ -21,5 +21,7 @@
     enabled: true
     daemon-reload: true
     state: started
+  retries: 3
+  delay: 30
   become: true
   when: system_systemd_managed
