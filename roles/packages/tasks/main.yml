@@ -17,4 +17,6 @@
 
 - name: Include AGE tasks
   ansible.builtin.include_tasks: age.yml
-  when: packages_age_private_key_file is defined
+  when:
+    - packages_age_private_key_file is defined
+    - packages_age_private_key_file | length > 0

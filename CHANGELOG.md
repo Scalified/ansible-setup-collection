@@ -1,3 +1,7 @@
+# 2.7.7
+
+[#44 Skip Age tasks on empty age private key file](https://github.com/Scalified/ansible-setup-collection/issues/44)
+
 # 2.7.6
 
 [#42 Retry NUT services start](https://github.com/Scalified/ansible-setup-collection/issues/42)

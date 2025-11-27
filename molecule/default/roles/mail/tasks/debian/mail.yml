@@ -77,34 +77,34 @@
     - name: Stat passwd.client file
       ansible.builtin.stat:
         path: /etc/exim4/passwd.client
-      register: passwd_client_file_stat
+      register: mail_passwd_client_file_stat
 
     - name: Assert passwd.client file exists
       ansible.builtin.assert:
-        that: passwd_client_file_stat.stat.exists
+        that: mail_passwd_client_file_stat.stat.exists
         fail_msg: "'passwd.client' file does not exist in '/etc/exim4'"
         success_msg: "'passwd.client' file exists in '/etc/exim4'"
 
     - name: Assert passwd.client file is a regular file
       ansible.builtin.assert:
-        that: passwd_client_file_stat.stat.isreg
+        that: mail_passwd_client_file_stat.stat.isreg
         fail_msg: "'passwd.client' file is not a regular file"
         success_msg: "'passwd.client' file is a regular file"
 
     - name: Assert passwd.client file mode
       ansible.builtin.assert:
-        that: passwd_client_file_stat.stat.mode == '0640'
-        fail_msg: "'passwd.client' file has incorrect mode: {{ passwd_client_file_stat.stat.mode }}"
+        that: mail_passwd_client_file_stat.stat.mode == '0640'
+        fail_msg: "'passwd.client' file has incorrect mode: {{ mail_passwd_client_file_stat.stat.mode }}"
         success_msg: "'passwd.client' file has correct mode"
 
     - name: Assert passwd.client file ownership
       ansible.builtin.assert:
         that:
-          - passwd_client_file_stat.stat.pw_name == 'root'
-          - passwd_client_file_stat.stat.gr_name == 'Debian-exim'
+          - mail_passwd_client_file_stat.stat.pw_name == 'root'
+          - mail_passwd_client_file_stat.stat.gr_name == 'Debian-exim'
         fail_msg: >-
           'passwd.client' file has incorrect ownership:
-          {{ passwd_client_file_stat.stat.pw_name }}:{{ passwd_client_file_stat.stat.gr_name }}
+          {{ mail_passwd_client_file_stat.stat.pw_name }}:{{ mail_passwd_client_file_stat.stat.gr_name }}
         success_msg: "'passwd.client' file has correct ownership"
 
 - name: Verify passwd.client file content
@@ -112,11 +112,11 @@
     - name: Slurp passwd.client file content
       ansible.builtin.slurp:
         src: /etc/exim4/passwd.client
-      register: passwd_client_file_content
+      register: mail_passwd_client_file_content
 
     - name: Assert passwd.client file has Unix line endings
       ansible.builtin.assert:
-        that: "'\\r\\n' not in (passwd_client_file_content.content | b64decode)"
+        that: "'\\r\\n' not in (mail_passwd_client_file_content.content | b64decode)"
         fail_msg: "passwd.client file has Windows line endings (CRLF)"
         success_msg: "passwd.client file has Unix line endings (LF)"
 
@@ -124,7 +124,7 @@
       ansible.builtin.assert:
         that: >-
           (mail_smtp_server ~ ':' ~ mail_smtp_username ~ ':' ~ mail_smtp_password) in
-          (passwd_client_file_content.content | b64decode)
+          (mail_passwd_client_file_content.content | b64decode)
         fail_msg: "'passwd.client' file does not contain expected SMTP credentials"
         success_msg: "'passwd.client' file contains expected SMTP credentials"
 
