@@ -1,0 +1,19 @@
+---
+- name: Install locales
+  ansible.builtin.package:
+    name: "glibc-langpack-{{ locale.split('_')[0] }}"
+    state: present
+  become: true
+  loop: "{{ (system_locales + [system_locale_default]) | unique }}"
+  loop_control:
+    loop_var: locale
+
+- name: Set default locale
+  ansible.builtin.copy:
+    dest: /etc/locale.conf
+    content: |
+      LANG={{ system_locale_default }}
+    owner: root
+    group: root
+    mode: '0644'
+  become: true

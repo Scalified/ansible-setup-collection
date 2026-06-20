@@ -7,6 +7,9 @@
   ansible.builtin.include_tasks: time.yml
   when: not system_containerized
 
+- name: Include system locales configuration tasks
+  ansible.builtin.include_tasks: locales.yml
+
 - name: Include system kernel parameters tasks
   ansible.builtin.include_tasks: sysctl.yml
   when: not system_containerized
@@ -16,3 +19,7 @@
 
 - name: Include scripts tasks
   ansible.builtin.include_tasks: scripts.yml
+
+- name: Include services tasks
+  ansible.builtin.include_tasks: services.yml
+  when: not system_containerized

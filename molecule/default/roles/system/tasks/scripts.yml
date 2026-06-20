@@ -44,3 +44,55 @@
         that: "'\\r\\n' not in (system_thermal_script_content.content | b64decode)"
         fail_msg: "Thermal script has Windows line endings (CRLF)"
         success_msg: "Thermal script has Unix line endings (LF)"
+
+- name: Verify custom script attributes
+  block:
+    - name: Stat custom script
+      ansible.builtin.stat:
+        path: /usr/local/bin/system-test-script
+      register: system_custom_script_stat
+
+    - name: Assert custom script exists
+      ansible.builtin.assert:
+        that: system_custom_script_stat.stat.exists
+        fail_msg: "Custom script does not exist"
+        success_msg: "Custom script exists"
+
+    - name: Assert custom script is a regular file
+      ansible.builtin.assert:
+        that: system_custom_script_stat.stat.isreg
+        fail_msg: "Custom script is not a regular file"
+        success_msg: "Custom script is a regular file"
+
+    - name: Assert custom script mode
+      ansible.builtin.assert:
+        that: system_custom_script_stat.stat.mode == '0755'
+        fail_msg: "Custom script has incorrect mode: {{ system_custom_script_stat.stat.mode }}"
+        success_msg: "Custom script has correct mode"
+
+    - name: Assert custom script ownership
+      ansible.builtin.assert:
+        that:
+          - system_custom_script_stat.stat.pw_name == 'root'
+          - system_custom_script_stat.stat.gr_name == 'root'
+        fail_msg: "Custom script has incorrect ownership: {{ system_custom_script_stat.stat.pw_name }}:{{ system_custom_script_stat.stat.gr_name }}"
+        success_msg: "Custom script has correct ownership"
+
+- name: Verify custom script content
+  block:
+    - name: Slurp custom script content
+      ansible.builtin.slurp:
+        src: /usr/local/bin/system-test-script
+      register: system_custom_script_content
+
+    - name: Assert custom script has Unix line endings
+      ansible.builtin.assert:
+        that: "'\\r\\n' not in (system_custom_script_content.content | b64decode)"
+        fail_msg: "Custom script has Windows line endings (CRLF)"
+        success_msg: "Custom script has Unix line endings (LF)"
+
+    - name: Assert custom script expected marker is present
+      ansible.builtin.assert:
+        that: "'molecule custom script' in (system_custom_script_content.content | b64decode)"
+        fail_msg: "Custom script content does not match expected marker"
+        success_msg: "Custom script content includes expected marker"

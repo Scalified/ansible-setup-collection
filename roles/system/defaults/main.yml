@@ -14,6 +14,10 @@ system_hostname: "{{ ansible_hostname }}"
 # Timezone configuration
 system_timezone: "UTC"
 
+# Locales configuration
+system_locale_default: "en_US.UTF-8"
+system_locales: []
+
 # System kernel parameters
 system_sysctl:
   vm.max_map_count: 262144
@@ -22,3 +26,11 @@ system_sysctl:
 # MOTD settings
 system_motd_src: "motd"
 system_motd_contacts: []
+
+# Scripts
+system_scripts_default:
+  - thermal
+system_scripts: []
+
+# Services
+system_services: []

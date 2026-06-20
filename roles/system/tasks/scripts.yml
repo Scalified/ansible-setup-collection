@@ -2,12 +2,11 @@
 - name: Deploy scripts
   ansible.builtin.copy:
     src: "{{ script }}"
-    dest: "/usr/local/bin/{{ script }}"
+    dest: "/usr/local/bin/{{ script | basename }}"
     owner: root
     group: root
     mode: '0755'
   become: true
-  loop:
-    - thermal
+  loop: "{{ (system_scripts_default + system_scripts) | unique }}"
   loop_control:
     loop_var: script

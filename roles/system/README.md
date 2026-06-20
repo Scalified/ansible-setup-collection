@@ -45,18 +45,23 @@ Configures essential system settings and performs server setup
 
 ## Variables
 
-| Variable                        | Description                                     | Default Value            |
-|---------------------------------|-------------------------------------------------|--------------------------|
-| `system_reboot_timeout`         | Timeout in seconds for system reboot operations | `300`                    |
-| `system_update_only`            | Only perform system updates, skip other tasks   | `false`                  |
-| `system_update_type`            | Type of system updates: `safe` or `full`        | `safe`                   |
-| `system_update_autoremove`      | Remove unused packages after updates            | `true`                   |
-| `system_update_autoclean`       | Clean package cache after updates               | `true`                   |
-| `system_hostname`               | Hostname to set on target servers               | `{{ ansible_hostname }}` |
-| `system_timezone`               | Timezone to set on target servers               | `UTC`                    |
-| `system_vm_max_map_count`       | Virtual memory max map count for applications   | `262144`                 |
-| `system_motd_src`               | MOTD banner template source path                | `motd`                   |
-| `system_motd_contacts`          | Array of contact information for MOTD banner    | `[]`                     |
+| Variable                        | Description                                     | Default Value                                            |
+|---------------------------------|-------------------------------------------------|----------------------------------------------------------|
+| `system_reboot_timeout`         | Timeout in seconds for system reboot operations | `300`                                                    |
+| `system_update_only`            | Only perform system updates, skip other tasks   | `false`                                                  |
+| `system_update_type`            | Type of system updates: `safe` or `full`        | `safe`                                                   |
+| `system_update_autoremove`      | Remove unused packages after updates            | `true`                                                   |
+| `system_update_autoclean`       | Clean package cache after updates               | `true`                                                   |
+| `system_hostname`               | Hostname to set on target servers               | `{{ ansible_hostname }}`                                 |
+| `system_timezone`               | Timezone to set on target servers               | `UTC`                                                    |
+| `system_locales_default`        | Default system locale                           | `en_US.UTF-8`                                            |
+| `system_locales`                | List of system locales                          | `[]`                                                     |
+| `system_sysctl`                 | System kernel parameters                        | `{"vm.max_map_count": 262144, "fs.aio-max-nr": 1048576}` |
+| `system_motd_src`               | MOTD banner template source path                | `motd`                                                   |
+| `system_motd_contacts`          | Array of contact information for MOTD banner    | `[]`                                                     |
+| `system_scripts_default`        | Default scripts deployed to `/usr/local/bin`    | `['thermal']`                                            |
+| `system_scripts`                | Scripts deployed to `/usr/local/bin`            | `[]`                                                     |
+| `system_services`               | Service management (see [services](#services))  | `[]`                                                     |
 
 ### MOTD Contact Configuration
 
@@ -68,6 +73,18 @@ system_motd_contacts:
     position: "Job Title"         # Optional
     email: "email@domain.com"     # Optional
     mobile: "+1-555-0123"         # Optional
+```
+
+### Services
+
+The `system_services` variable accepts an array of services with the following structure:
+
+```yaml
+system_services:
+  - name: getty@tty1
+    enabled: false
+    state: stopped
+    masked: true
 ```
 
 ## Facts

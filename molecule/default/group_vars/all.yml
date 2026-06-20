@@ -1,6 +1,12 @@
 # System
 system_os_family: "{{ ansible_os_family | lower }}"
 
+system_locale_default: "en_US.UTF-8"
+system_locales:
+  - "en_GB.UTF-8"
+system_scripts:
+  - roles/system/files/system-test-script
+
 system_motd_contacts:
   - name: "John Doe"
     position: "System Administrator"
