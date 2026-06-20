@@ -57,7 +57,7 @@ Configures essential system settings and performs server setup
 | `system_locales_default`        | Default system locale                           | `en_US.UTF-8`                                            |
 | `system_locales`                | List of system locales                          | `[]`                                                     |
 | `system_sysctl`                 | System kernel parameters                        | `{"vm.max_map_count": 262144, "fs.aio-max-nr": 1048576}` |
-| `system_motd_src`               | MOTD banner template source path                | `motd`                                                   |
+| `system_motd_src`               | MOTD banner template source path                | `motd.j2`                                                |
 | `system_motd_contacts`          | Array of contact information for MOTD banner    | `[]`                                                     |
 | `system_scripts_default`        | Default scripts deployed to `/usr/local/bin`    | `['thermal']`                                            |
 | `system_scripts`                | Scripts deployed to `/usr/local/bin`            | `[]`                                                     |

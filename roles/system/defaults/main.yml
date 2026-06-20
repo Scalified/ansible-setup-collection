@@ -24,7 +24,7 @@ system_sysctl:
   fs.aio-max-nr: 1048576
 
 # MOTD settings
-system_motd_src: "motd"
+system_motd_src: "motd.j2"
 system_motd_contacts: []
 
 # Scripts

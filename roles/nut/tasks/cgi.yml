@@ -11,13 +11,13 @@
 - name: Deploy NUT CGI configurations
   ansible.builtin.template:
     src: "{{ file }}"
-    dest: "{{ nut_dir }}/{{ file }}"
+    dest: "{{ nut_dir }}/{{ file | splitext | first }}"
     owner: root
     group: nut
     mode: "0640"
   loop:
-    - hosts.conf
-    - upsset.conf
+    - hosts.conf.j2
+    - upsset.conf.j2
   loop_control:
     loop_var: file
   become: true
