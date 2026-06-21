@@ -83,6 +83,12 @@ ssl_certs_ca_name: "ca.crt"
 ssl_certs_server_name: "server.crt"
 ssl_bundle_generate: true
 ssl_bundle_name: "bundle.crt"
+ssl_clients:
+  - name: docker
+    common_name: pc-workstation
+    extensions:
+      - clientAuth
+      - emailProtection
 
 # Docker
 docker_user: "{{ ansible_user_id }}"

@@ -115,6 +115,23 @@
       loop_control:
         loop_var: alias
 
+    - name: Assert user-defined aliases separated by blank line
+      ansible.builtin.assert:
+        that:
+          - >-
+            "alias testls='ls -la'\n\n# Test alias for grep with line numbers"
+            in (packages_bash_aliases_content.content | b64decode)
+        fail_msg: "User-defined aliases are not separated by a blank line"
+        success_msg: "User-defined aliases are separated by a blank line"
+
+    - name: Assert .bash_aliases file is valid bash syntax
+      ansible.builtin.command:
+        argv:
+          - bash
+          - -n
+          - "{{ ansible_env.HOME }}/.bash_aliases"
+      changed_when: false
+
 - name: Verify .bashrc includes bash aliases
   block:
     - name: Stat .bashrc file exists

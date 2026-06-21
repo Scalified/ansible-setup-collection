@@ -1,0 +1,87 @@
+---
+- name: Stat SSL client private key file
+  ansible.builtin.stat:
+    path: "{{ ssl_keys_clients_dir }}/{{ client.name }}.key"
+  register: ssl_client_key_stat
+
+- name: Assert SSL client private key file exists and has correct attributes
+  ansible.builtin.assert:
+    that:
+      - ssl_client_key_stat.stat.exists
+      - ssl_client_key_stat.stat.isreg
+      - ssl_client_key_stat.stat.mode == '0600'
+      - ssl_client_key_stat.stat.pw_name == 'root'
+      - ssl_client_key_stat.stat.gr_name == 'root'
+    fail_msg: >-
+      SSL client private key file has incorrect attributes for '{{ client.name }}':
+      exists={{ ssl_client_key_stat.stat.exists }},
+      isreg={{ ssl_client_key_stat.stat.isreg }},
+      mode={{ ssl_client_key_stat.stat.mode }},
+      owner={{ ssl_client_key_stat.stat.pw_name }}:{{ ssl_client_key_stat.stat.gr_name }}
+    success_msg: "SSL client private key file has correct attributes for '{{ client.name }}'"
+
+- name: Stat SSL client certificate file
+  ansible.builtin.stat:
+    path: "{{ ssl_certs_clients_dir }}/{{ client.name }}.crt"
+  register: ssl_client_cert_stat
+
+- name: Assert SSL client certificate file exists and has correct attributes
+  ansible.builtin.assert:
+    that:
+      - ssl_client_cert_stat.stat.exists
+      - ssl_client_cert_stat.stat.isreg
+      - ssl_client_cert_stat.stat.mode == '0644'
+      - ssl_client_cert_stat.stat.pw_name == 'root'
+      - ssl_client_cert_stat.stat.gr_name == 'root'
+    fail_msg: >-
+      SSL client certificate file has incorrect attributes for '{{ client.name }}':
+      exists={{ ssl_client_cert_stat.stat.exists }},
+      isreg={{ ssl_client_cert_stat.stat.isreg }},
+      mode={{ ssl_client_cert_stat.stat.mode }},
+      owner={{ ssl_client_cert_stat.stat.pw_name }}:{{ ssl_client_cert_stat.stat.gr_name }}
+    success_msg: "SSL client certificate file has correct attributes for '{{ client.name }}'"
+
+- name: Get SSL client certificate information
+  ansible.builtin.command: openssl x509 -in "{{ ssl_certs_clients_dir }}/{{ client.name }}.crt" -text -noout
+  register: ssl_client_cert_info
+  changed_when: false
+
+- name: Assert SSL client certificate content
+  ansible.builtin.assert:
+    that:
+      - "ssl_client_cert_info.stdout is search('CN *= *' ~ (client.common_name | regex_escape))"
+      - "'CA:FALSE' in ssl_client_cert_info.stdout"
+      - "'TLS Web Client Authentication' in ssl_client_cert_info.stdout"
+    fail_msg: >-
+      SSL client certificate validation failed for '{{ client.name }}'
+    success_msg: "SSL client certificate is valid for '{{ client.name }}'"
+
+- name: Assert SSL client certificate has optional extended key usages
+  ansible.builtin.assert:
+    that: "optional_usage_mapped in ssl_client_cert_info.stdout"
+    fail_msg: "SSL client certificate does not have optional extended key usage '{{ optional_usage }}'"
+    success_msg: "SSL client certificate has optional extended key usage '{{ optional_usage }}'"
+  loop: "{{ client.extensions | default([]) | difference(['clientAuth']) }}"
+  loop_control:
+    loop_var: optional_usage
+  vars:
+    optional_usage_mapped: "{{ optional_usage | regex_replace('^emailProtection$', 'E-mail Protection') }}"
+  when: client.extensions | default([]) | difference(['clientAuth']) | length > 0
+
+- name: Check SSL client certificate validity
+  ansible.builtin.command: openssl x509 -in "{{ ssl_certs_clients_dir }}/{{ client.name }}.crt" -checkend 86400
+  register: ssl_client_cert_validity
+  changed_when: false
+  failed_when: ssl_client_cert_validity.rc != 0
+
+- name: Check SSL client certificate is signed by CA
+  ansible.builtin.command: >-
+    openssl verify -CAfile "{{ ssl_certs_ca_path }}" "{{ ssl_certs_clients_dir }}/{{ client.name }}.crt"
+  register: ssl_client_cert_chain
+  changed_when: false
+
+- name: Assert SSL client certificate chain is valid
+  ansible.builtin.assert:
+    that: "'OK' in ssl_client_cert_chain.stdout"
+    fail_msg: "SSL client certificate chain verification failed for '{{ client.name }}'"
+    success_msg: "SSL client certificate chain is valid for '{{ client.name }}'"

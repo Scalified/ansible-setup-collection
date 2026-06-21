@@ -14,13 +14,14 @@ Installs and configures Docker
 
 ## Variables
 
-| Variable                   | Description                                   | Default Value           |
-|----------------------------|-----------------------------------------------|-------------------------|
-| `docker_user`              | User to add to the docker group               | `{{ ansible_user_id }}` |
-| `docker_system_prune_cron` | Docker system prune cron schedule             | `17 1 * * *`            |
-| `docker_swarm_enabled`     | Enable Docker Swarm mode                      | `false`                 |
-| `docker_registries`        | Docker registry authentication configuration  |                         |
-| `docker_networks`          | Docker networks configuration                 |                         |
+| Variable                   | Description                                    | Default Value           |
+|----------------------------|------------------------------------------------|-------------------------|
+| `docker_user`              | User to add to the docker group                | `{{ ansible_user_id }}` |
+| `docker_system_prune_cron` | Docker system prune cron schedule              | `17 1 * * *`            |
+| `docker_swarm_enabled`     | Enable Docker Swarm mode                       | `false`                 |
+| `docker_qemu_enabled`      | Ename QEMU emulation for multi-platform builds | `false`                 |
+| `docker_registries`        | Docker registry authentication configuration   |                         |
+| `docker_networks`          | Docker networks configuration                  |                         |
 
 ## Docker Networks
 

@@ -42,3 +42,23 @@
   become: true
   loop_control:
     loop_var: dir
+
+- name: Create SSL client keys directory
+  ansible.builtin.file:
+    path: "{{ ssl_keys_clients_dir }}"
+    state: directory
+    owner: root
+    group: ssl-cert
+    mode: "0710"
+  become: true
+  when: ssl_clients | length > 0
+
+- name: Create SSL client certificates directory
+  ansible.builtin.file:
+    path: "{{ ssl_certs_clients_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+  when: ssl_clients | length > 0
