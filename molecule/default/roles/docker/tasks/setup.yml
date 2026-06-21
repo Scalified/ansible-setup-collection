@@ -32,3 +32,65 @@
         that: docker_user in docker_user_groups.stdout.split()
         fail_msg: "{{ docker_user }} user is not in the docker group"
         success_msg: "{{ docker_user }} user is in the docker group"
+
+- name: Verify Docker systemd override configuration
+  block:
+    - name: Stat Docker systemd override file
+      ansible.builtin.stat:
+        path: "{{ docker_systemd_override_dir }}/override.conf"
+      register: docker_systemd_override_stat
+
+    - name: Assert Docker systemd override file exists
+      ansible.builtin.assert:
+        that:
+          - docker_systemd_override_stat.stat.exists
+          - docker_systemd_override_stat.stat.isreg
+          - docker_systemd_override_stat.stat.mode == '0644'
+        fail_msg: "Docker systemd override file is missing or has incorrect attributes"
+        success_msg: "Docker systemd override file exists with correct attributes"
+
+    - name: Read Docker systemd override file
+      ansible.builtin.slurp:
+        src: "{{ docker_systemd_override_dir }}/override.conf"
+      register: docker_systemd_override_content
+
+    - name: Assert Docker systemd override file contains expected directives
+      ansible.builtin.assert:
+        that:
+          - "'ExecStart=' in (docker_systemd_override_content.content | b64decode)"
+          - "'--config-file=/etc/docker/daemon.json' in (docker_systemd_override_content.content | b64decode)"
+        fail_msg: "Docker systemd override file content does not match expected configuration"
+        success_msg: "Docker systemd override file contains expected directives"
+
+- name: Verify Docker daemon TLS configuration
+  block:
+    - name: Stat Docker daemon configuration file
+      ansible.builtin.stat:
+        path: /etc/docker/daemon.json
+      register: docker_daemon_json_stat
+
+    - name: Assert Docker daemon configuration file exists
+      ansible.builtin.assert:
+        that:
+          - docker_daemon_json_stat.stat.exists
+          - docker_daemon_json_stat.stat.isreg
+          - docker_daemon_json_stat.stat.mode == '0644'
+        fail_msg: "Docker daemon configuration file is missing or has incorrect attributes"
+        success_msg: "Docker daemon configuration file exists with correct attributes"
+
+    - name: Read Docker daemon configuration file
+      ansible.builtin.slurp:
+        src: /etc/docker/daemon.json
+      register: docker_daemon_json_content
+
+    - name: Assert Docker daemon TLS options are configured
+      ansible.builtin.assert:
+        that:
+          - daemon_json.tlsverify | bool
+          - daemon_json.tlscacert == docker_tls_ca_path
+          - daemon_json.tlskey == docker_tls_key_path
+          - daemon_json.tlscert == docker_tls_cert_path
+        fail_msg: "Docker daemon TLS configuration is missing or incorrect"
+        success_msg: "Docker daemon TLS configuration is valid"
+      vars:
+        daemon_json: "{{ docker_daemon_json_content.content | b64decode | from_json }}"

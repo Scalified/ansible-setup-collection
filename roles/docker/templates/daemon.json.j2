@@ -1,0 +1,13 @@
+{
+  "hosts": [
+{% for host in (([docker_default_host] + (docker_hosts | default([]))) | unique | list) %}
+    "{{ host }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+  ]{% if docker_tls_enabled | default(false) | bool %},
+  "tlsverify": true,
+  "tlscacert": "{{ docker_tls_ca_path }}",
+  "tlskey": "{{ docker_tls_key_path }}",
+  "tlscert": "{{ docker_tls_cert_path }}"{% endif %}
+
+}

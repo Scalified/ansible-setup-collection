@@ -1,5 +1,10 @@
 ---
 docker_user: "{{ ansible_user_id }}"
 docker_system_prune_cron: "17 1 * * *"
+docker_hosts: []
+docker_tls_enabled: false
+docker_tls_ca_path: "{{ ssl_certs_ca_path }}"
+docker_tls_key_path: "{{ ssl_keys_server_path }}"
+docker_tls_cert_path: "{{ ssl_certs_server_path }}"
 docker_swarm_enabled: false
 docker_qemu_enabled: false

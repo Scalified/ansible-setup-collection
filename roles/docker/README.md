@@ -14,14 +14,19 @@ Installs and configures Docker
 
 ## Variables
 
-| Variable                   | Description                                    | Default Value           |
-|----------------------------|------------------------------------------------|-------------------------|
-| `docker_user`              | User to add to the docker group                | `{{ ansible_user_id }}` |
-| `docker_system_prune_cron` | Docker system prune cron schedule              | `17 1 * * *`            |
-| `docker_swarm_enabled`     | Enable Docker Swarm mode                       | `false`                 |
-| `docker_qemu_enabled`      | Ename QEMU emulation for multi-platform builds | `false`                 |
-| `docker_registries`        | Docker registry authentication configuration   |                         |
-| `docker_networks`          | Docker networks configuration                  |                         |
+| Variable                   | Description                                     | Default Value                               |
+|----------------------------|-------------------------------------------------|---------------------------------------------|
+| `docker_user`              | User to add to the docker group                 | `{{ ansible_user_id }}`                     |
+| `docker_system_prune_cron` | Docker system prune cron schedule               | `17 1 * * *`                                |
+| `docker_hosts`             | List of docker daemon hosts                     | `[]`                                        |
+| `docker_tls_enabled`       | Enable Docker daemon TLS configuration          | `false`                                     |
+| `docker_tls_ca_path`       | Path to the Docker TLS CA certificate           | `{{ ssl_certs_ca_path }}`                   |
+| `docker_tls_key_path`      | Path to the Docker TLS private key              | `{{ ssl_keys_server_path }}`                |
+| `docker_tls_cert_path`     | Path to the Docker TLS server certificate       | `{{ ssl_certs_server_path }}`               |
+| `docker_networks`          | Docker networks configuration                   | See [Docker Networks](#docker-networks)     |
+| `docker_registries`        | Docker registry authentication configuration    | See [Docker Registries](#docker-registries) |
+| `docker_swarm_enabled`     | Enable Docker Swarm mode                        | `false`                                     |
+| `docker_qemu_enabled`      | Enable QEMU emulation for multi-platform builds | `false`                                     |
 
 ## Docker Networks
 

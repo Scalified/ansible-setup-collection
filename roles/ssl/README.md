@@ -95,7 +95,7 @@ Example:
 ```yaml
 ssl_clients:
   - name: docker
-    common_name: shell-workstation
+    common_name: pc-workstation
     extensions:
       - emailProtection
 ```
