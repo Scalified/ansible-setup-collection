@@ -1,0 +1,40 @@
+---
+- name: Verify RedHat locale packages installation
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert locale packages are installed
+      ansible.builtin.assert:
+        that: "package in ansible_facts.packages"
+        fail_msg: "'{{ package }}' package is not installed"
+        success_msg: "'{{ package }}' package is installed"
+      loop: "{{ (system_locales + [system_locale_default]) | unique | \
+        map('regex_replace', '^([^_]+)_.*$', 'glibc-langpack-\\1') | unique | list }}"
+      loop_control:
+        loop_var: package
+
+- name: Verify RedHat default locale configuration
+  block:
+    - name: Stat RedHat locale configuration file
+      ansible.builtin.stat:
+        path: /etc/locale.conf
+      register: system_redhat_locale_file_stat
+
+    - name: Assert RedHat locale configuration file exists
+      ansible.builtin.assert:
+        that: system_redhat_locale_file_stat.stat.exists
+        fail_msg: "'/etc/locale.conf' file does not exist"
+        success_msg: "'/etc/locale.conf' file exists"
+
+    - name: Slurp RedHat locale configuration file content
+      ansible.builtin.slurp:
+        src: /etc/locale.conf
+      register: system_redhat_locale_file_content
+
+    - name: Assert RedHat default locale is configured
+      ansible.builtin.assert:
+        that: "'LANG=' ~ system_locale_default in (system_redhat_locale_file_content.content | b64decode)"
+        fail_msg: "Default locale is not set to '{{ system_locale_default }}' in '/etc/locale.conf'"
+        success_msg: "Default locale is set to '{{ system_locale_default }}' in '/etc/locale.conf'"

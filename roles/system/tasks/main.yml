@@ -1,6 +1,6 @@
 - name: Set system containerized fact
   ansible.builtin.set_fact:
-    system_containerized: "{{ ansible_virtualization_type in ['docker', 'podman', 'lxc', 'systemd-nspawn'] }}"
+    system_containerized: "{{ ansible_virtualization_type in ['docker', 'container', 'podman', 'lxc', 'systemd-nspawn'] }}"
 
 - name: Detect PID 1 command
   ansible.builtin.slurp:

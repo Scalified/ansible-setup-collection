@@ -1,0 +1,29 @@
+---
+- name: Install locales package
+  ansible.builtin.package:
+    name: locales
+    state: present
+  become: true
+  retries: 3
+  delay: 10
+
+- name: Configure system locales
+  community.general.locale_gen:
+    name: "{{ locale }}"
+    state: present
+  become: true
+  loop: "{{ (system_locales + [system_locale_default]) | unique }}"
+  loop_control:
+    loop_var: locale
+
+- name: Read default locale file
+  ansible.builtin.slurp:
+    src: /etc/default/locale
+  register: system_locale_content
+
+- name: Set default locale
+  ansible.builtin.command:
+    cmd: update-locale LANG={{ system_locale_default }}
+  when: ('LANG=' ~ system_locale_default) not in (system_locale_content.content | b64decode)
+  changed_when: true
+  become: true

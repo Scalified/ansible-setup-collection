@@ -17,6 +17,29 @@
   become: true
   notify: "system : request reboot"
 
+- name: Create Docker systemd override directory
+  ansible.builtin.file:
+    path: "{{ docker_systemd_override_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Deploy Docker systemd override configuration
+  ansible.builtin.copy:
+    src: override.conf
+    dest: "{{ docker_systemd_override_dir }}/override.conf"
+    mode: "0644"
+  become: true
+  notify: "docker : restart"
+
+- name: Deploy Docker daemon configuration
+  ansible.builtin.template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: "0644"
+  become: true
+  notify: "docker : restart"
+
 - name: Add Docker user to the Docker group
   ansible.builtin.user:
     name: "{{ docker_user }}"

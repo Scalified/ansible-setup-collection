@@ -1,0 +1,50 @@
+---
+- name: Generate SSL client private keys
+  community.crypto.openssl_privatekey:
+    path: "{{ ssl_keys_clients_dir }}/{{ client.name }}.key"
+    owner: "{{ ssl_keys_clients_owner }}"
+    group: "{{ ssl_keys_clients_group }}"
+    mode: "{{ ssl_keys_clients_mode }}"
+  become: true
+  no_log: true
+  loop: "{{ ssl_clients }}"
+  loop_control:
+    loop_var: client
+  register: ssl_client_keys
+
+- name: Configure SSL client CSRs
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ ssl_keys_clients_dir }}/{{ client.name }}.key"
+    common_name: "{{ client.common_name }}"
+    basic_constraints:
+      - CA:FALSE
+    extended_key_usage: "{{ (['clientAuth'] + (client.extensions | default([]))) | unique }}"
+    use_common_name_for_san: false
+    create_subject_key_identifier: true
+  become: true
+  changed_when: ssl_client_keys.results[client_idx].changed
+  no_log: true
+  loop: "{{ ssl_clients }}"
+  loop_control:
+    loop_var: client
+    index_var: client_idx
+  register: ssl_client_csrs
+
+- name: Generate SSL client certificates
+  community.crypto.x509_certificate:
+    path: "{{ ssl_certs_clients_dir }}/{{ client.name }}.crt"
+    privatekey_path: "{{ ssl_keys_clients_dir }}/{{ client.name }}.key"
+    csr_content: "{{ ssl_client_csrs.results[client_idx].csr }}"
+    provider: ownca
+    ownca_path: "{{ ssl_certs_ca_path }}"
+    ownca_privatekey_path: "{{ ssl_keys_ca_path }}"
+    ownca_not_after: "{{ ssl_certs_not_after }}"
+    owner: "{{ ssl_certs_clients_owner }}"
+    group: "{{ ssl_certs_clients_group }}"
+    mode: "{{ ssl_certs_clients_mode }}"
+  become: true
+  no_log: true
+  loop: "{{ ssl_clients }}"
+  loop_control:
+    loop_var: client
+    index_var: client_idx

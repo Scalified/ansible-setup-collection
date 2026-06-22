@@ -10,3 +10,9 @@
 
 - name: Include SSL bundle verifications
   ansible.builtin.include_tasks: bundle.yml
+
+- name: Include SSL clients verifications
+  ansible.builtin.include_tasks: client.yml
+  loop: "{{ ssl_clients }}"
+  loop_control:
+    loop_var: client

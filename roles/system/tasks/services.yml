@@ -1,0 +1,12 @@
+---
+- name: Manage system services
+  ansible.builtin.systemd_service:
+    name: "{{ service.name }}"
+    state: "{{ service.state | default(omit) }}"
+    enabled: "{{ service.enabled | default(omit) }}"
+    masked: "{{ service.masked | default(omit) }}"
+  become: true
+  when: system_services | default([]) | length > 0
+  loop: "{{ system_services }}"
+  loop_control:
+    loop_var: service

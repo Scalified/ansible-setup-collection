@@ -1,0 +1,19 @@
+---
+- name: Include distribution-specific locale verification tasks
+  ansible.builtin.include_tasks: "{{ system_os_family }}/locales.yml"
+
+- name: Verify configured locales are generated
+  block:
+    - name: Collect generated locales
+      ansible.builtin.command: locale -a
+      register: system_generated_locales
+      changed_when: false
+
+    - name: Assert configured locales are generated
+      ansible.builtin.assert:
+        that: "(locale | lower | regex_replace('\\.utf-8$', '.utf8')) in (system_generated_locales.stdout_lines | map('lower') | list)"
+        fail_msg: "Locale '{{ locale }}' is not generated"
+        success_msg: "Locale '{{ locale }}' is generated"
+      loop: "{{ (system_locales + [system_locale_default]) | unique }}"
+      loop_control:
+        loop_var: locale

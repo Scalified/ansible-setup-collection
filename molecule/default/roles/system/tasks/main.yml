@@ -2,6 +2,9 @@
 - name: Include update verifications
   ansible.builtin.include_tasks: update.yml
 
+- name: Include locales verifications
+  ansible.builtin.include_tasks: locales.yml
+
 - name: Include motd verifications
   ansible.builtin.include_tasks: motd.yml
 

@@ -1,6 +1,8 @@
 ---
 ssl_domain: "{{ domain }}"
 
+ssl_clients: []
+
 ssl_keys_ca_name: ca.key
 ssl_keys_ca_dir: >-
   {{
@@ -21,6 +23,17 @@ ssl_keys_server_dir: >-
 ssl_keys_server_mode: "0600"
 ssl_keys_server_owner: root
 ssl_keys_server_group: root
+
+ssl_keys_clients_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/private/clients',
+      'redhat': '/etc/pki/tls/private/clients'
+    }[system_os_family]
+  }}
+ssl_keys_clients_mode: "0600"
+ssl_keys_clients_owner: root
+ssl_keys_clients_group: root
 
 ssl_certs_ca_name: ca.crt
 ssl_certs_ca_dir: >-
@@ -43,6 +56,17 @@ ssl_certs_server_dir: >-
 ssl_certs_server_mode: "0644"
 ssl_certs_server_owner: root
 ssl_certs_server_group: root
+
+ssl_certs_clients_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/certs/clients',
+      'redhat': '/etc/pki/tls/certs/clients'
+    }[system_os_family]
+  }}
+ssl_certs_clients_mode: "0644"
+ssl_certs_clients_owner: root
+ssl_certs_clients_group: root
 
 ssl_bundle_generate: false
 ssl_bundle_name: "{{ ssl_domain }}-bundle.pem"

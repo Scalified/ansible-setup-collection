@@ -1,0 +1,36 @@
+---
+- name: Verify Debian locales package installation
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert locales package is installed
+      ansible.builtin.assert:
+        that: "'locales' in ansible_facts.packages"
+        fail_msg: "'locales' package is not installed"
+        success_msg: "'locales' package is installed"
+
+- name: Verify Debian default locale configuration
+  block:
+    - name: Stat Debian default locale file
+      ansible.builtin.stat:
+        path: /etc/default/locale
+      register: system_debian_default_locale_stat
+
+    - name: Assert Debian default locale file exists
+      ansible.builtin.assert:
+        that: system_debian_default_locale_stat.stat.exists
+        fail_msg: "'/etc/default/locale' file does not exist"
+        success_msg: "'/etc/default/locale' file exists"
+
+    - name: Slurp Debian default locale file content
+      ansible.builtin.slurp:
+        src: /etc/default/locale
+      register: system_debian_default_locale_file_content
+
+    - name: Assert Debian default locale is configured
+      ansible.builtin.assert:
+        that: "'LANG=' ~ system_locale_default in (system_debian_default_locale_file_content.content | b64decode)"
+        fail_msg: "Default locale is not set to '{{ system_locale_default }}' in '/etc/default/locale'"
+        success_msg: "Default locale is set to '{{ system_locale_default }}' in '/etc/default/locale'"

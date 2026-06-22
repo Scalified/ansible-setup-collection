@@ -6,25 +6,18 @@ ssl_keys_ca_dir: >-
       'redhat': '/etc/pki/CA/private'
     }[system_os_family]
   }}
-ssl_keys_server_dir: >-
+ssl_keys_clients_dir: >-
   {{
     {
-      'debian': '/etc/ssl/private',
-      'redhat': '/etc/pki/tls/private'
+      'debian': '/etc/ssl/private/clients',
+      'redhat': '/etc/pki/tls/private/clients'
     }[system_os_family]
   }}
-ssl_certs_ca_dir: >-
+ssl_certs_clients_dir: >-
   {{
     {
-      'debian': '/usr/local/share/ca-certificates',
-      'redhat': '/etc/pki/ca-trust/source/anchors'
-    }[system_os_family]
-  }}
-ssl_certs_server_dir: >-
-  {{
-    {
-      'debian': '/etc/ssl/certs',
-      'redhat': '/etc/pki/tls/certs'
+      'debian': '/etc/ssl/certs/clients',
+      'redhat': '/etc/pki/tls/certs/clients'
     }[system_os_family]
   }}
 ssl_certs_ca_truststore_bundle: >-

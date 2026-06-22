@@ -1,6 +1,12 @@
 # System
 system_os_family: "{{ ansible_os_family | lower }}"
 
+system_locale_default: "en_US.UTF-8"
+system_locales:
+  - "en_GB.UTF-8"
+system_scripts:
+  - roles/system/files/system-test-script
+
 system_motd_contacts:
   - name: "John Doe"
     position: "System Administrator"
@@ -71,16 +77,51 @@ mail_recipient: "test@example.com"
 # SSL
 ssl_domain: "test.example.com"
 ssl_keys_ca_name: "ca.key"
+ssl_keys_server_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/private',
+      'redhat': '/etc/pki/tls/private'
+    }[system_os_family]
+  }}
 ssl_keys_server_name: "server.key"
+ssl_keys_server_path: "{{ ssl_keys_server_dir }}/{{ ssl_keys_server_name }}"
 ssl_certs_server_generate: true
+ssl_certs_ca_dir: >-
+  {{
+    {
+      'debian': '/usr/local/share/ca-certificates',
+      'redhat': '/etc/pki/ca-trust/source/anchors'
+    }[system_os_family]
+  }}
 ssl_certs_ca_name: "ca.crt"
+ssl_certs_ca_path: "{{ ssl_certs_ca_dir }}/{{ ssl_certs_ca_name }}"
+ssl_certs_server_dir: >-
+  {{
+    {
+      'debian': '/etc/ssl/certs',
+      'redhat': '/etc/pki/tls/certs'
+    }[system_os_family]
+  }}
 ssl_certs_server_name: "server.crt"
+ssl_certs_server_path: "{{ ssl_certs_server_dir }}/{{ ssl_certs_server_name }}"
 ssl_bundle_generate: true
 ssl_bundle_name: "bundle.crt"
+ssl_clients:
+  - name: docker
+    common_name: pc-workstation
+    extensions:
+      - clientAuth
+      - emailProtection
 
 # Docker
 docker_user: "{{ ansible_user_id }}"
+docker_systemd_override_dir: "/etc/systemd/system/docker.service.d"
 docker_system_prune_cron: ""
+docker_tls_enabled: true
+docker_tls_ca_path: "{{ ssl_certs_ca_path }}"
+docker_tls_key_path: "{{ ssl_keys_server_path }}"
+docker_tls_cert_path: "{{ ssl_certs_server_path }}"
 
 # Samba
 samba_interfaces:

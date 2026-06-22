@@ -11,21 +11,22 @@
 
 - name: Deploy exim4 passwd.client configuraiton
   ansible.builtin.template:
-    src: "{{ system_os_family }}/passwd.client"
+    src: "{{ system_os_family }}/passwd.client.j2"
     dest: /etc/exim4/passwd.client
     mode: "0640"
+  no_log: true
   become: true
 
 - name: Deploy exim4 rewrite rules
   ansible.builtin.template:
-    src: "{{ system_os_family }}/99_exim4-config_rewrite_rules"
+    src: "{{ system_os_family }}/99_exim4-config_rewrite_rules.j2"
     dest: /etc/exim4/conf.d/rewrite/99_exim4-config_rewrite_rules
     mode: "0644"
   become: true
 
 - name: Deploy exim4 update-exim4.conf.conf configuration
   ansible.builtin.template:
-    src: "{{ system_os_family }}/update-exim4.conf.conf"
+    src: "{{ system_os_family }}/update-exim4.conf.conf.j2"
     dest: /etc/exim4/update-exim4.conf.conf
     mode: "0644"
   become: true

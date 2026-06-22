@@ -1,3 +1,14 @@
+# 2.8.0
+
+[#45 Missing logic](https://github.com/Scalified/ansible-setup-collection/issues/45)
+
+* System: locales
+* System: scripts
+* System: services
+* j2 extensions for template files
+* SSL clients certificates generation
+* Docker: QEMU emulation, tcp host
+
 # 2.7.7
 
 [#44 Skip Age tasks on empty age private key file](https://github.com/Scalified/ansible-setup-collection/issues/44)

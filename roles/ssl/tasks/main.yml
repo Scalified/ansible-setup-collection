@@ -24,3 +24,7 @@
 - name: Include SSL bundle tasks
   ansible.builtin.include_tasks: "bundle.yml"
   when: ssl_bundle_generate
+
+- name: Include SSL clients tasks
+  ansible.builtin.include_tasks: "clients.yml"
+  when: ssl_clients | length > 0

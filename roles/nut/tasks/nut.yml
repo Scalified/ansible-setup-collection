@@ -13,7 +13,7 @@
 
 - name: Deploy NUT configuration
   ansible.builtin.template:
-    src: nut.conf
+    src: nut.conf.j2
     dest: "{{ nut_dir }}/nut.conf"
     owner: root
     group: nut
