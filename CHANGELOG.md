@@ -6,6 +6,7 @@
 * System: scripts
 * System: services
 * j2 extensions for template files
+* SSL clients certificates generation
 * Docker: QEMU emulation, tcp host
 
 # 2.7.7

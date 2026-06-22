@@ -54,7 +54,7 @@ Configures essential system settings and performs server setup
 | `system_update_autoclean`       | Clean package cache after updates               | `true`                                                   |
 | `system_hostname`               | Hostname to set on target servers               | `{{ ansible_hostname }}`                                 |
 | `system_timezone`               | Timezone to set on target servers               | `UTC`                                                    |
-| `system_locales_default`        | Default system locale                           | `en_US.UTF-8`                                            |
+| `system_locale_default`         | Default system locale                           | `en_US.UTF-8`                                            |
 | `system_locales`                | List of system locales                          | `[]`                                                     |
 | `system_sysctl`                 | System kernel parameters                        | `{"vm.max_map_count": 262144, "fs.aio-max-nr": 1048576}` |
 | `system_motd_src`               | MOTD banner template source path                | `motd.j2`                                                |

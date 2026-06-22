@@ -16,6 +16,7 @@
     src: "{{ system_os_family }}/sasl_passwd.j2"
     dest: /etc/postfix/sasl_passwd
     mode: "0600"
+  no_log: true
   become: true
   notify:
     - postmap sasl_password

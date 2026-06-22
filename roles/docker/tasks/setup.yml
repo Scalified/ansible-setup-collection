@@ -30,6 +30,7 @@
     dest: "{{ docker_systemd_override_dir }}/override.conf"
     mode: "0644"
   become: true
+  notify: "docker : restart"
 
 - name: Deploy Docker daemon configuration
   ansible.builtin.template:
@@ -37,6 +38,7 @@
     dest: /etc/docker/daemon.json
     mode: "0644"
   become: true
+  notify: "docker : restart"
 
 - name: Add Docker user to the Docker group
   ansible.builtin.user:

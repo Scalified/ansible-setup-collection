@@ -2,7 +2,7 @@
 - name: Manage system services
   ansible.builtin.systemd_service:
     name: "{{ service.name }}"
-    state: "{{ service.state }}"
+    state: "{{ service.state | default(omit) }}"
     enabled: "{{ service.enabled | default(omit) }}"
     masked: "{{ service.masked | default(omit) }}"
   become: true

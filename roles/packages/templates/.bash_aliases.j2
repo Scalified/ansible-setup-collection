@@ -18,7 +18,6 @@ alias hg='history|grep'
 {% if alias.comment is defined %}
 # {{ alias.comment }}
 {% endif %}
-alias {{ alias.alias }}='{{ alias.command | regex_replace("'", "'\"'\"'") }}'
+alias {{ alias.alias }}='{{ alias.command }}'
 
 {% endfor %}
-{% endif %}
