@@ -9,8 +9,7 @@ alias grep='grep --color=auto'
 
 # Find command in history
 alias hg='history|grep'
-
-{% if packages_bash_aliases is defined and packages_bash_aliases|length > 0 %}
+{% if packages_bash_aliases | default([]) | length > 0 %}
 
 # User-defined aliases
 
@@ -21,3 +20,4 @@ alias hg='history|grep'
 alias {{ alias.alias }}='{{ alias.command }}'
 
 {% endfor %}
+{% endif %}
